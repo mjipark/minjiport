@@ -1,12 +1,7 @@
 <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 480 360">
-  <defs>
-    <linearGradient id="g4" x1="0" y1="0" x2="0" y2="1">
-      <stop offset="0%" stop-color="#16131A"/>
-      <stop offset="100%" stop-color="#6A4CFF"/>
-    </linearGradient>
-  </defs>
-  <rect width="480" height="360" fill="url(#g4)"/>
-  <rect x="60" y="60" width="150" height="150" fill="#FF4433" transform="rotate(8 135 135)"/>
-  <rect x="260" y="150" width="150" height="150" fill="#CFFF5C" transform="rotate(-6 335 225)"/>
-  <rect x="180" y="40" width="120" height="120" fill="#F5EFDD" transform="rotate(12 240 100)"/>
+  <rect width="480" height="360" fill="#F5EFDD"/>
+  <rect x="24" y="24" width="432" height="312" fill="#FF4433"/>
+  <rect x="175" y="65" width="130" height="230" rx="22" fill="#16131A"/>
+  <rect x="195" y="95" width="90" height="150" fill="#F5EFDD"/>
+  <text x="40" y="330" font-family="monospace" font-size="20" fill="#16131A">proj_04</text>
 </svg>

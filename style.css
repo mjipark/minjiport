@@ -2,7 +2,7 @@
    TOKENS
    ============================================ */
 :root{
-  --cream: #33343B;
+  --cream: #121214;
   --ink: #FFFFFF;
   --coral: #FF4433;
   --coral-text: #FF7566;
@@ -254,7 +254,7 @@ section{ padding:clamp(70px,9vw,130px) clamp(20px,4vw,56px); max-width:var(--max
 /* cursor-follow preview */
 .cursor-preview{
   position:fixed; top:0; left:0; z-index:200;
-  width:260px; height:180px;
+  width:190px; height:130px;
   border:5px solid var(--ink);
   box-shadow:10px 10px 0 var(--coral);
   pointer-events:none;
