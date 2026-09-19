@@ -6,39 +6,45 @@ document.getElementById("year").textContent = new Date().getFullYear();
 const prefersReducedMotion = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
 
 // ============================================
-// Hero scroll "flip" transition
+// Hero scroll parallax transition
 // .hero sits inside a taller #heroFlip wrapper and
 // stays pinned (position:sticky, set in CSS) while
 // that extra height scrolls past. This maps that
-// scroll distance to a 3D rotateX + fade on .hero, so
-// it flips away like a card before the Background
-// section rises into view underneath — a deliberate
-// transition "gate" rather than a plain scroll cut.
-// Desktop only (CSS drops the wrapper's extra height
-// on narrow screens/reduced motion, so there's no
-// scroll-jack there either).
+// scroll distance to .hero's content drifting upward
+// and shrinking faster than the actual scroll, fading
+// out as it goes — content held in place while the
+// scene moves at a different rate, the classic
+// parallax depth cue (marsrejects.com, thetinypod.com)
+// — before the Background section rises into view
+// underneath, rather than a plain scroll cut. Desktop
+// only (CSS drops the wrapper's extra height on narrow
+// screens/reduced motion, so there's no scroll-jack
+// there either).
 // ============================================
-(function initHeroFlip(){
+(function initHeroParallax(){
   const wrapper = document.getElementById("heroFlip");
   const hero = document.getElementById("top");
-  if (!wrapper || !hero || prefersReducedMotion) return;
+  const intro = hero ? hero.querySelector(".hero__intro") : null;
+  if (!wrapper || !hero || !intro || prefersReducedMotion) return;
   if (!window.matchMedia("(min-width: 761px)").matches) return;
 
-  const MAX_ROTATE_DEG = 80;
+  const DRIFT_PX = 140;
+  const MIN_SCALE = 0.9;
   let ticking = false;
 
   function update(){
     ticking = false;
     const scrollable = wrapper.offsetHeight - window.innerHeight;
     if (scrollable <= 0) {
-      hero.style.transform = "";
-      hero.style.opacity = "";
+      intro.style.transform = "";
+      intro.style.opacity = "";
       return;
     }
     const rect = wrapper.getBoundingClientRect();
     const progress = Math.min(Math.max(-rect.top / scrollable, 0), 1);
-    hero.style.transform = `rotateX(${progress * -MAX_ROTATE_DEG}deg)`;
-    hero.style.opacity = String(1 - progress * 0.95);
+    const scale = 1 - progress * (1 - MIN_SCALE);
+    intro.style.transform = `translateY(${progress * -DRIFT_PX}px) scale(${scale})`;
+    intro.style.opacity = String(1 - progress);
   }
 
   window.addEventListener("scroll", () => {

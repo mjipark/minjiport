@@ -230,11 +230,13 @@ h1,h2,h3,p{ margin:0; }
   display:flex;
   flex-direction:column;
   justify-content:center;
+  align-items:center;
   background:var(--cream);
 }
 
 .hero__intro{
   position:relative; z-index:2;
+  text-align:center;
 }
 
 .hero__scroll-cue{
@@ -281,7 +283,7 @@ h1,h2,h3,p{ margin:0; }
   position:relative; z-index:1;
   font-size:clamp(1.3rem,2.8vw,2rem);
   line-height:1.65; max-width:840px;
-  margin-bottom:48px;
+  margin:0 auto 48px;
 }
 .hero__tagline em{
   font-style:normal; background:var(--lime); color:var(--cream);
@@ -337,32 +339,31 @@ h1,h2,h3,p{ margin:0; }
 }
 
 /* ============================================
-   HERO FLIP — a taller wrapper that keeps .hero
+   HERO PARALLAX — a taller wrapper that keeps .hero
    pinned (position:sticky) while its own extra height
-   scrolls past, so script.js (initHeroFlip) can drive
-   a 3D rotate-away + fade on .hero tied to that scroll
-   distance: a deliberate "flip" transition before the
-   Background section rises into view, rather than a
-   plain cut. Desktop only (see the max-width:760px
-   override below) — a pinned 3D scroll effect is more
-   likely to feel janky than bold on small screens, and
-   costs precious scroll distance there.
+   scrolls past, so script.js (initHeroParallax) can
+   drift/scale/fade .hero's content out at a different
+   rate than the actual scroll — the classic parallax
+   depth cue (marsrejects.com, thetinypod.com: content
+   pinned in place while the scene transforms around
+   it) — instead of a plain scroll cut into Background.
+   Desktop only (see the max-width:760px override
+   below) — a pinned scroll effect is more likely to
+   feel janky than smooth on small screens, and costs
+   precious scroll distance there.
    ============================================ */
 .hero-flip{
   position:relative;
   height:160vh;
-  perspective:1800px;
 }
 .hero{
-  transform-origin:center bottom;
-  backface-visibility:hidden;
   will-change:transform, opacity;
 }
 @media (min-width:761px){
   .hero{ position:sticky; top:0; }
 }
 @media (max-width:760px), (prefers-reduced-motion:reduce){
-  .hero-flip{ height:auto; perspective:none; }
+  .hero-flip{ height:auto; }
 }
 
 /* ============================================
