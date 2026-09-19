@@ -351,16 +351,16 @@ const prefersReducedMotion = window.matchMedia("(prefers-reduced-motion: reduce)
   if (!count) return;
 
   const isStackMode = () => window.matchMedia("(max-width:760px)").matches;
-  const SECONDS_PER_CARD = 32;
+  const SECONDS_PER_CARD = 22;
   const AUTOPLAY_SPEED = 1 / SECONDS_PER_CARD;
   const MAX_DT = 0.05;
   // velocity relaxes back to AUTOPLAY_SPEED as a damped spring
   // (STIFFNESS/DAMPING below) rather than a plain exponential
   // decay, so a released flick overshoots slightly and settles
   // with a touch of bounce instead of just gliding to a stop.
-  const SPRING_STIFFNESS = 70;
-  const SPRING_DAMPING = 6; // well under 2*sqrt(stiffness) (~16.7) for a clear, visible bounce
-  const MAX_FLING_SPEED = 2.6; // units/sec, keeps a hard flick in scale with the slow drift
+  const SPRING_STIFFNESS = 85;
+  const SPRING_DAMPING = 4; // well under 2*sqrt(stiffness) (~18.4) for a strong, multi-bounce spring
+  const MAX_FLING_SPEED = 3; // units/sec, keeps a hard flick in scale with the drift
 
   let pos = 0;
   let manualTarget = null;
