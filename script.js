@@ -79,45 +79,48 @@ const prefersReducedMotion = window.matchMedia("(prefers-reduced-motion: reduce)
 })();
 
 // ============================================
-// Work list cursor-follow preview
-// eylonmalkevich.com style: a floating image
-// trails the cursor while hovering a row and
-// swaps to that row's thumbnail.
+// Custom cursor
+// A small brand-colored ring that trails the real
+// pointer across every page (replaces the old
+// work-row-only image preview), swelling over links/
+// buttons and shrinking on click. The cursor element
+// and the html.has-custom-cursor class (which is what
+// actually hides the system cursor, via CSS) are only
+// added here in JS, so a script error or an
+// unsupported device just leaves the normal cursor
+// alone instead of vanishing.
 // ============================================
-(function initCursorPreview(){
-  const preview = document.getElementById("cursorPreview");
-  const previewImg = document.getElementById("cursorPreviewImg");
-  const rows = document.querySelectorAll(".work__row");
-  if (!preview || !rows.length) return;
+(function initCustomCursor(){
+  if (prefersReducedMotion) return;
+  if (!window.matchMedia("(hover: hover) and (pointer: fine)").matches) return;
 
-  let mouseX = 0, mouseY = 0;
-  let previewX = 0, previewY = 0;
-  let active = false;
+  const cursor = document.createElement("div");
+  cursor.className = "custom-cursor";
+  document.body.appendChild(cursor);
+  document.documentElement.classList.add("has-custom-cursor");
+
+  let mouseX = window.innerWidth / 2, mouseY = window.innerHeight / 2;
+  let x = mouseX, y = mouseY;
 
   window.addEventListener("mousemove", (e) => {
     mouseX = e.clientX;
     mouseY = e.clientY;
   });
 
-  rows.forEach((row) => {
-    row.addEventListener("mouseenter", () => {
-      previewImg.src = row.dataset.img;
-      preview.classList.add("is-visible");
-      active = true;
-    });
-    row.addEventListener("mouseleave", () => {
-      preview.classList.remove("is-visible");
-      active = false;
-    });
+  const interactiveSelector = "a, button, input, textarea, select, [role='button'], label";
+  document.addEventListener("mouseover", (e) => {
+    if (e.target.closest(interactiveSelector)) cursor.classList.add("is-hover");
   });
+  document.addEventListener("mouseout", (e) => {
+    if (e.target.closest(interactiveSelector)) cursor.classList.remove("is-hover");
+  });
+  window.addEventListener("mousedown", () => cursor.classList.add("is-down"));
+  window.addEventListener("mouseup", () => cursor.classList.remove("is-down"));
 
   function tick(){
-    if (active) {
-      previewX += (mouseX - previewX) * 0.18;
-      previewY += (mouseY - previewY) * 0.18;
-      preview.style.left = `${previewX}px`;
-      preview.style.top = `${previewY}px`;
-    }
+    x += (mouseX - x) * 0.25;
+    y += (mouseY - y) * 0.25;
+    cursor.style.transform = `translate(${x}px, ${y}px)`;
     requestAnimationFrame(tick);
   }
   requestAnimationFrame(tick);
