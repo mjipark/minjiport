@@ -219,14 +219,20 @@ const prefersReducedMotion = window.matchMedia("(prefers-reduced-motion: reduce)
 
 // ============================================
 // "Minji" cutout pop-in/out for the Background
-// section — pops in on the right each time the
-// section scrolls into view, and pops back out
-// (reverses the same animation) each time it
-// scrolls out, rather than a one-shot reveal.
+// section — pops in as soon as the section (not
+// just the cutout's own small corner of it) reaches
+// the viewport, and pops back out once the section
+// itself has scrolled off, rather than a one-shot
+// reveal. Watching the whole section (instead of the
+// cutout element, which sits near the top of a much
+// taller section) keeps it from popping back out
+// prematurely while you're still scrolled into the
+// middle of the section reading the bio.
 // ============================================
 (function initBackgroundMinjiReveal(){
+  const section = document.getElementById("background");
   const el = document.getElementById("backgroundMinji");
-  if (!el) return;
+  if (!section || !el) return;
 
   if (prefersReducedMotion || !("IntersectionObserver" in window)) {
     el.classList.add("is-visible");
@@ -237,9 +243,9 @@ const prefersReducedMotion = window.matchMedia("(prefers-reduced-motion: reduce)
     entries.forEach((entry) => {
       el.classList.toggle("is-visible", entry.isIntersecting);
     });
-  }, { threshold: 0.3 });
+  }, { threshold: 0, rootMargin: "0px" });
 
-  observer.observe(el);
+  observer.observe(section);
 })();
 
 // ============================================

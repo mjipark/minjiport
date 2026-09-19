@@ -512,8 +512,8 @@ section{ padding:clamp(70px,9vw,130px) clamp(20px,4vw,56px); max-width:var(--max
 .word-reveal{
   display:inline-block;
   opacity:0; transform:translateY(24px);
-  transition:opacity .5s ease, transform .6s cubic-bezier(.22,1,.36,1);
-  transition-delay:calc(var(--i,0) * 70ms);
+  transition:opacity .7s ease, transform .8s cubic-bezier(.16,1,.3,1);
+  transition-delay:calc(var(--i,0) * 90ms);
 }
 .reveal.is-visible .word-reveal,
 .hero__name.is-visible .word-reveal{
