@@ -178,7 +178,7 @@ const prefersReducedMotion = window.matchMedia("(prefers-reduced-motion: reduce)
   const rows = Array.from(list.querySelectorAll(".work__row[data-preview]"));
   if (!rows.length) return;
 
-  const TILTS = [-5, 4, -3, 5];
+  const TILTS = [-2, 1.5, -1, 2];
   const OFFSET_X = 32;
   const OFFSET_Y = -180;
   const MARGIN = 16;
@@ -281,26 +281,7 @@ const prefersReducedMotion = window.matchMedia("(prefers-reduced-motion: reduce)
       .join(" ");
   }
 
-  // hero name gets a further per-letter split (each
-  // letter wrapped inside its word's .word-reveal span,
-  // so the word-level rise-in above is unaffected) so
-  // initHeroFontCycle below can flip each letter's font
-  // independently instead of the whole name at once.
-  function splitWordsAndLetters(el){
-    const words = el.textContent.trim().split(/\s+/).filter(Boolean);
-    el.innerHTML = words
-      .map((w, i) => {
-        const letters = w
-          .split("")
-          .map((ch) => `<span class="hero__letter">${ch}</span>`)
-          .join("");
-        return `<span class="word-reveal" style="--i:${i}">${letters}</span>`;
-      })
-      .join(" ");
-  }
-
-  document.querySelectorAll(".section-head__title").forEach(splitWords);
-  document.querySelectorAll(".hero__name").forEach(splitWordsAndLetters);
+  document.querySelectorAll(".section-head__title, .hero__name").forEach(splitWords);
 
   if (prefersReducedMotion) return;
 
@@ -309,77 +290,6 @@ const prefersReducedMotion = window.matchMedia("(prefers-reduced-motion: reduce)
     requestAnimationFrame(() => {
       requestAnimationFrame(() => heroName.classList.add("is-visible"));
     });
-  }
-})();
-
-// ============================================
-// Hero name font-cycling
-// co-ux.framer.website-inspired, but toned down: only
-// 1-2 letters in "Minji Park" (see the .hero__letter
-// split above) glitch to an accent typeface at a time,
-// while the rest sit in the normal Fraunces italic —
-// which letters glitch keeps rotating every second.
-// Cycling every letter at once (an earlier version)
-// read as noise rather than a name; this keeps the
-// eye-catching flicker as an accent instead of
-// replacing the whole headline. Pauses when the hero
-// scrolls out of view (and never starts at all under
-// reduced motion) so it isn't running forever in the
-// background.
-// ============================================
-(function initHeroFontCycle(){
-  const heroName = document.querySelector(".hero__name");
-  const letters = heroName ? Array.from(heroName.querySelectorAll(".hero__letter")) : [];
-  if (!heroName || !letters.length || prefersReducedMotion) return;
-
-  const BASE_FONT = { family: "var(--font-display)", weight: 900, style: "italic" };
-  const ACCENT_FONTS = [
-    { family: "'Space Grotesk', sans-serif", weight: 700, style: "normal" },
-    { family: "'Space Mono', monospace", weight: 700, style: "normal" },
-    { family: "'Unbounded', sans-serif", weight: 900, style: "normal" },
-    { family: "'Instrument Serif', serif", weight: 400, style: "italic" },
-    { family: "'Bebas Neue', sans-serif", weight: 400, style: "normal" },
-  ];
-  const MAX_ACTIVE = Math.min(2, letters.length);
-  const STEP_MS = 1000;
-  const START_DELAY_MS = 1000;
-
-  let timer = null;
-
-  function applyFont(letterEl, font){
-    letterEl.style.fontFamily = font.family;
-    letterEl.style.fontWeight = font.weight;
-    letterEl.style.fontStyle = font.style;
-  }
-
-  function tick(){
-    letters.forEach((letterEl) => applyFont(letterEl, BASE_FONT));
-
-    const activeCount = 1 + Math.floor(Math.random() * MAX_ACTIVE);
-    const pool = letters.slice();
-    for (let i = 0; i < activeCount && pool.length; i++){
-      const letterEl = pool.splice(Math.floor(Math.random() * pool.length), 1)[0];
-      applyFont(letterEl, ACCENT_FONTS[Math.floor(Math.random() * ACCENT_FONTS.length)]);
-    }
-    timer = setTimeout(tick, STEP_MS);
-  }
-
-  function start(){
-    if (timer) return;
-    timer = setTimeout(tick, START_DELAY_MS);
-  }
-  function stop(){
-    clearTimeout(timer);
-    timer = null;
-  }
-
-  if ("IntersectionObserver" in window) {
-    const observer = new IntersectionObserver((entries) => {
-      entries.forEach((entry) => (entry.isIntersecting ? start() : stop()));
-    }, { threshold: 0 });
-    observer.observe(heroName);
-  } else {
-    start();
   }
 })();
 

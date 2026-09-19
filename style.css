@@ -10,9 +10,25 @@
   --violet: #9D8FFF;
   --muted: #9AA4BD;
 
+  /* deep/muted counterparts of the three accents — used for
+     full section backgrounds so color still marks each
+     section's identity without the bright accents themselves
+     washing an entire viewport in neon (reads premium/editorial
+     rather than a toy-bright poster). The bright tokens above
+     stay reserved for small accents: tags, links, icons, the
+     hero highlight. */
+  --coral-deep: #5C2318;
+  --lime-deep: #37401C;
+  --violet-deep: #2C2350;
+
   --font-display: "Fraunces", serif;
   --font-body: "Space Grotesk", sans-serif;
   --font-mono: "Space Mono", monospace;
+
+  /* smooth, no-overshoot easing for hover/entrance motion —
+     replaces an earlier springy overshoot curve that read as
+     more playful than intended. */
+  --ease: cubic-bezier(.16,1,.3,1);
 
   --edge: 6px;
   --max: 1240px;
@@ -34,7 +50,7 @@ html{ scroll-behavior:smooth; }
 }
 ::view-transition-group(*){
   animation-duration:.5s;
-  animation-timing-function:cubic-bezier(.34,1.56,.64,1);
+  animation-timing-function:var(--ease);
 }
 @media (prefers-reduced-motion:reduce){
   ::view-transition-group(*){ animation-duration:.001s; }
@@ -155,7 +171,7 @@ h1,h2,h3,p{ margin:0; }
   padding:9px 16px; border:2px solid var(--ink); border-radius:100px;
   transition:transform .15s, background .15s, color .15s;
 }
-.nav__cta:hover{ background:var(--ink); color:var(--cream); transform:rotate(-2deg); }
+.nav__cta:hover{ background:var(--ink); color:var(--cream); }
 
 @media (max-width:760px){
   .nav__left{ gap:16px; }
@@ -180,7 +196,7 @@ h1,h2,h3,p{ margin:0; }
 .mobile-drawer{
   position:fixed; top:0; left:0; bottom:0; z-index:300;
   width:min(78vw, 340px);
-  background:var(--coral);
+  background:var(--coral-deep);
   border-right:5px solid var(--ink);
   padding:28px 28px;
   display:flex; flex-direction:column; gap:40px;
@@ -192,20 +208,20 @@ h1,h2,h3,p{ margin:0; }
 .mobile-drawer__close{
   align-self:flex-end;
   font-family:var(--font-mono); font-size:1rem; font-weight:700;
-  background:none; border:2px solid var(--cream); color:var(--cream);
+  background:none; border:2px solid var(--ink); color:var(--ink);
   width:36px; height:36px; border-radius:50%; cursor:pointer;
 }
 
 .mobile-drawer__links{ display:flex; flex-direction:column; gap:26px; margin-top:20px; }
 .mobile-drawer__links a{
   font-family:var(--font-display); font-weight:900; font-style:italic;
-  font-size:1.8rem; color:var(--cream);
+  font-size:1.8rem; color:var(--ink);
   display:flex; align-items:baseline; gap:12px;
 }
 .mobile-drawer__cta{
   margin-top:auto;
   font-family:var(--font-mono); font-weight:700; font-size:0.85rem;
-  padding:12px 22px; background:var(--cream); color:var(--ink);
+  padding:12px 22px; background:var(--ink); color:var(--cream);
   border-radius:100px; text-align:center;
 }
 
@@ -393,12 +409,12 @@ h1,h2,h3,p{ margin:0; }
   transform-origin:center;
   will-change:transform, opacity;
   opacity:0;
-  transform:translateY(30px) rotate(-10deg) scale(0.88);
-  transition:transform .6s cubic-bezier(.34,1.56,.64,1), opacity .3s ease;
+  transform:translateY(30px) rotate(-3deg) scale(0.88);
+  transition:transform .6s var(--ease), opacity .3s ease;
 }
 .background__minji.is-visible{
   opacity:1;
-  transform:translateY(0) rotate(-4deg) scale(1);
+  transform:translateY(0) rotate(-1.5deg) scale(1);
 }
 .background__minji-img{
   width:100%; display:block;
@@ -411,8 +427,8 @@ h1,h2,h3,p{ margin:0; }
   border:1px solid rgba(0,0,0,0.15);
   box-shadow:0 2px 4px rgba(0,0,0,0.25);
 }
-.background__minji-tape--l{ top:-8px; left:8%; transform:rotate(-10deg); }
-.background__minji-tape--r{ top:-12px; right:12%; transform:rotate(8deg); }
+.background__minji-tape--l{ top:-8px; left:8%; transform:rotate(-4deg); }
+.background__minji-tape--r{ top:-12px; right:12%; transform:rotate(3deg); }
 
 @media (max-width:900px){
   .background__content{
@@ -455,32 +471,21 @@ h1,h2,h3,p{ margin:0; }
   background:var(--section-bg);
   z-index:-1;
 }
-/* section colors now reuse the site's own accent
-   tokens directly (the same coral/lime/violet
-   already seen on the hero sticker and the Design
-   skill card), rather than invented poster tones. */
-.background{ --section-bg:var(--coral); }
-.work{ --section-bg:var(--lime); }
+/* section colors use deep/muted counterparts of the
+   site's coral/lime/violet accents rather than the
+   bright tokens themselves, so each section still reads
+   with its own identity color without an entire
+   viewport-height block going neon — the bright accents
+   stay reserved for small marks (tags, links, icons). All
+   three stay dark enough for the site's usual white-on-dark
+   text, so no per-section text-color overrides are needed. */
+.background{ --section-bg:var(--coral-deep); }
+.work{ --section-bg:var(--lime-deep); }
 .experience{ --section-bg:#F4F0E6; }
-.skills{ --section-bg:var(--violet); }
+.skills{ --section-bg:var(--violet-deep); }
 .contact{ --section-bg:#000000; }
 
-/* Background (coral), Work (lime) and Skills (violet) are
-   all bright enough to need dark ink text/borders instead
-   of the site's usual white-on-dark, same pattern as
-   Experience's white block below. */
-.background{ color:#1A1410; }
-.background .section-head__note{ color:#5A4A42; }
-
-.work{ color:#1A1410; border-top-color:#1A1410; }
-.work .section-head__note{ color:#5A5A2A; }
-.work__list{ border-top-color:#1A1410; }
-.work__row{ border-bottom-color:#1A1410; }
-.work__desc{ color:#4A4A38; }
-
-.skills{ color:#1A1410; }
-
-/* Experience sits on the palette's "white" block, so it
+/* Experience sits on the palette's one light block, so it
    flips to dark ink text/borders instead of the site's
    usual white-on-dark — same pattern as Contact used to
    need back when it was the coral block. */
@@ -519,7 +524,7 @@ section{ padding:clamp(70px,9vw,130px) clamp(20px,4vw,56px); max-width:var(--max
 .word-reveal{
   display:inline-block;
   opacity:0; transform:translateY(36px) scale(0.6);
-  transition:opacity .5s ease, transform .7s cubic-bezier(.34,1.56,.64,1);
+  transition:opacity .5s ease, transform .7s var(--ease);
   transition-delay:calc(var(--i,0) * 90ms);
 }
 .reveal.is-visible .word-reveal,
@@ -540,19 +545,13 @@ section{ padding:clamp(70px,9vw,130px) clamp(20px,4vw,56px); max-width:var(--max
    ============================================ */
 .pop-in{
   opacity:0;
-  /* rotate(var(--r,0deg)) is a no-op (0deg) unless the
-     element also sets --r itself (e.g. .skills__cat's
-     resting tilt) — folded in here, rather than left on
-     the item's own class, so the entrance transform and
-     the resting rotation don't fight over the same
-     transform property on the same element. */
-  transform:translateY(28px) scale(0.85) rotate(var(--r,0deg));
-  transition:opacity .5s ease, transform .6s cubic-bezier(.34,1.56,.64,1);
+  transform:translateY(28px) scale(0.85);
+  transition:opacity .5s ease, transform .6s var(--ease);
   transition-delay:calc(var(--i,0) * 90ms);
 }
 .pop-in.is-visible{
   opacity:1;
-  transform:translateY(0) scale(1) rotate(var(--r,0deg));
+  transform:translateY(0) scale(1);
 }
 @media (prefers-reduced-motion:reduce){
   .pop-in{ transition:none; opacity:1; transform:none; }
@@ -644,8 +643,8 @@ section{ padding:clamp(70px,9vw,130px) clamp(20px,4vw,56px); max-width:var(--max
   background:var(--coral);
   pointer-events:none;
   opacity:0;
-  transition:width .2s cubic-bezier(.34,1.56,.64,1), height .2s cubic-bezier(.34,1.56,.64,1),
-             margin .2s cubic-bezier(.34,1.56,.64,1), background .2s ease, opacity .15s ease;
+  transition:width .2s var(--ease), height .2s var(--ease),
+             margin .2s var(--ease), background .2s ease, opacity .15s ease;
 }
 html.has-custom-cursor, html.has-custom-cursor *{ cursor:none !important; }
 html.has-custom-cursor .custom-cursor{ opacity:1; }
@@ -670,7 +669,7 @@ html.has-custom-cursor .custom-cursor.is-down{
   position:relative;
   display:grid; grid-template-columns:180px 1fr; gap:24px;
   padding:34px 0 34px 28px; border-top:3px solid var(--ink);
-  transition:transform .25s cubic-bezier(.34,1.56,.64,1);
+  transition:transform .25s var(--ease);
 }
 .experience__item:last-child{ border-bottom:3px solid var(--ink); }
 .experience__item--coral{ --accent:var(--coral); }
@@ -686,26 +685,21 @@ html.has-custom-cursor .custom-cursor.is-down{
   position:absolute; left:0; top:0; bottom:0;
   width:5px; background:var(--accent, var(--coral));
   transform:scaleY(0); transform-origin:top;
-  transition:transform .3s cubic-bezier(.34,1.56,.64,1);
+  transition:transform .3s var(--ease);
 }
-.experience__item:hover{ transform:translateX(10px); }
+.experience__item:hover{ transform:translateX(4px); }
 .experience__item:hover::before{ transform:scaleY(1); }
 
 .experience__dates{
   font-family:var(--font-mono); font-weight:700; font-size:0.8rem;
   text-transform:uppercase; letter-spacing:0.02em;
-  color:#1A1410;
-  background:var(--accent, var(--violet));
-  border:2px solid var(--ink);
+  color:var(--accent, var(--violet));
+  border:1.5px solid var(--accent, var(--violet));
   border-radius:100px;
   padding:6px 14px;
   display:inline-flex; width:fit-content;
   white-space:nowrap;
-  transform:rotate(-3deg);
-  transition:transform .25s cubic-bezier(.34,1.56,.64,1);
 }
-.experience__item:nth-child(2n) .experience__dates{ transform:rotate(3deg); }
-.experience__item:hover .experience__dates{ transform:rotate(0deg) scale(1.05); }
 
 .experience__body h3{
   font-family:var(--font-display); font-weight:700; font-size:1.5rem;
@@ -725,7 +719,7 @@ html.has-custom-cursor .custom-cursor.is-down{
 .experience__tags{ display:flex; gap:8px; flex-wrap:wrap; }
 .experience__tags span{
   font-family:var(--font-mono); font-size:0.7rem; text-transform:uppercase;
-  background:var(--lime); color:var(--cream); border:1.5px solid var(--ink); border-radius:100px;
+  border:1.5px solid currentColor; border-radius:100px;
   padding:3px 10px;
 }
 
@@ -736,20 +730,18 @@ html.has-custom-cursor .custom-cursor.is-down{
 /* ============================================
    SKILLS
    ============================================ */
-/* stacked-deck layout: flex-wrap + a per-card nth-child
-   stagger and inline --r rotation, instead of a rigid
-   grid, so the cards read as a loosely tossed stack
-   (matches the hero/hobbies collage language) rather
-   than a uniform table. */
+/* aligned grid, evenly sized cards — a level, orderly
+   row reads more like a credentials shelf than a tossed
+   stack, while the hover lift + hard shadow still gives
+   each card some tactility. */
 .skills__grid{
-  display:flex; flex-wrap:wrap;
-  gap:32px 24px;
+  display:grid;
+  grid-template-columns:repeat(auto-fit, minmax(230px, 1fr));
+  gap:24px;
   padding-top:10px;
 }
 .skills__cat{
   position:relative; z-index:1;
-  flex:none;
-  width:clamp(230px, 24vw, 300px);
   /* dark card face for every category (was a full
      color fill per card) — the category color now
      lives only in the icon + hard shadow below, via
@@ -760,17 +752,11 @@ html.has-custom-cursor .custom-cursor.is-down{
   border:4px solid var(--ink); border-radius:2px;
   padding:26px;
   box-shadow:8px 8px 0 var(--accent, var(--coral));
-  /* resting transform (incl. rotate(var(--r))) is set
-     by .pop-in/.pop-in.is-visible above, since JS adds
-     that class to every .skills__cat — kept off this
-     rule so the two don't fight over `transform`. */
-  transition:transform .25s cubic-bezier(.34,1.56,.64,1), box-shadow .25s cubic-bezier(.34,1.56,.64,1);
+  transition:transform .25s var(--ease), box-shadow .25s var(--ease);
 }
-.skills__cat:nth-child(2n){ margin-top:34px; }
-.skills__cat:nth-child(3n){ margin-top:-16px; }
 .skills__cat:hover{
   z-index:5;
-  transform:translate(-6px,-6px) rotate(var(--r, 0deg));
+  transform:translate(-6px,-6px);
   box-shadow:16px 16px 0 var(--accent, var(--coral));
 }
 .skills__cat h3{
@@ -808,7 +794,7 @@ html.has-custom-cursor .custom-cursor.is-down{
 }
 .skills__icon--circle{ border-radius:50%; }
 .skills__icon--diamond{ transform:rotate(45deg); }
-.skills__icon--rounded{ border-radius:30%; transform:rotate(-6deg); }
+.skills__icon--rounded{ border-radius:30%; }
 .skills__icon--tri{
   width:0; height:0;
   border-left:20px solid transparent;
@@ -818,16 +804,7 @@ html.has-custom-cursor .custom-cursor.is-down{
 }
 
 @media (max-width:760px){
-  .skills__grid{ flex-direction:column; align-items:center; gap:24px; }
-  .skills__cat{
-    width:min(340px, 86vw);
-    margin-top:0 !important;
-    /* zeroes the rotate() inside .pop-in's own transform
-       (see style.css above) rather than overriding
-       transform directly here, so the pop-in scale/rise
-       entrance still plays on mobile — just without tilt. */
-    --r:0deg !important; /* inline style="--r:…" on each card otherwise wins over this media query */
-  }
+  .skills__grid{ grid-template-columns:1fr; }
 }
 
 /* ============================================
@@ -865,7 +842,7 @@ html.has-custom-cursor .custom-cursor.is-down{
   padding:12px 22px; background:var(--ink); color:var(--cream);
   border-radius:100px; transition:transform .15s;
 }
-.contact__resume:hover{ transform:rotate(-2deg) scale(1.03); background:var(--coral); }
+.contact__resume:hover{ transform:scale(1.03); background:var(--coral); }
 
 /* ============================================
    FOOTER
@@ -981,14 +958,14 @@ html.has-custom-cursor .custom-cursor.is-down{
   font:inherit; color:inherit; text-align:left; cursor:pointer;
   border:4px solid var(--ink);
   box-shadow:10px 10px 0 rgba(0,0,0,0.35);
-  transition:transform .25s cubic-bezier(.34,1.56,.64,1), box-shadow .25s cubic-bezier(.34,1.56,.64,1);
+  transition:transform .25s var(--ease), box-shadow .25s var(--ease);
 }
 .hobby-card__btn__frame{
   display:block; width:100%; height:100%; overflow:hidden;
 }
 .hobby-card__btn img{
   display:block; width:100%; height:100%; object-fit:cover;
-  transition:transform .35s cubic-bezier(.34,1.56,.64,1), filter .35s ease;
+  transition:transform .35s var(--ease), filter .35s ease;
 }
 .hobby-card__label{
   position:absolute; left:10px; bottom:10px; z-index:1;
@@ -1092,7 +1069,7 @@ html.has-custom-cursor .custom-cursor.is-down{
   opacity:0;
   pointer-events:auto;
   transform:scale(0.92);
-  transition:transform .3s cubic-bezier(.34,1.56,.64,1), opacity .2s ease, top .18s ease, left .18s ease;
+  transition:transform .3s var(--ease), opacity .2s ease, top .18s ease, left .18s ease;
 }
 .lightbox.is-open .lightbox__panel{
   opacity:1;
