@@ -317,7 +317,13 @@ h1,h2,h3,p{ margin:0; }
   background:var(--ink);
 }
 .hero .marquee-line{
-  position:absolute; left:0; right:0; bottom:0; z-index:2;
+  /* .hero is a <section>, which the shared rule below
+     caps at max-width:1240px — left:0/right:0 here would
+     only span that inner box, not the viewport. Break out
+     to the true edges with the same 100vw trick used for
+     the section color blocks. */
+  position:absolute; bottom:0; z-index:2;
+  left:50%; width:100vw; margin-left:-50vw;
 }
 .marquee-line::before{
   content:"";
@@ -350,7 +356,11 @@ h1,h2,h3,p{ margin:0; }
   .hero__collage img.parallax-item{ width:96px; }
   .sticker--tape{ align-self:center; }
   .sticker--circle{ width:90px; height:90px; font-size:0.68rem; flex:none; }
-  .hero .marquee-line{ position:relative; margin-top:40px; }
+  .hero .marquee-line{
+    position:relative; left:auto;
+    width:100vw; margin-left:calc(50% - 50vw);
+    margin-top:40px;
+  }
 }
 
 /* ============================================
@@ -358,7 +368,7 @@ h1,h2,h3,p{ margin:0; }
    ============================================ */
 .background__content{
   display:grid;
-  grid-template-columns: minmax(0, 600px) auto;
+  grid-template-columns: auto minmax(0, 560px);
   justify-content:space-between;
   align-items:center;
   gap:40px;
@@ -369,14 +379,14 @@ h1,h2,h3,p{ margin:0; }
 .background__avatar{
   flex:none; width:140px; height:140px; border-radius:50%;
   overflow:hidden; border:4px solid var(--ink);
-  box-shadow:6px 6px 0 var(--coral);
+  box-shadow:6px 6px 0 #1A1410;
 }
 .background__avatar img{ width:100%; height:100%; object-fit:cover; }
 .background__bio{ font-size:1.05rem; line-height:1.7; padding-top:6px; }
 
 .background__minji{
   position:relative; flex:none; z-index:1; pointer-events:none;
-  width:clamp(160px, 16vw, 240px);
+  width:clamp(280px, 30vw, 460px);
   margin:0 auto;
   transform-origin:center;
   will-change:transform, opacity;
@@ -447,14 +457,34 @@ h1,h2,h3,p{ margin:0; }
   background:var(--section-bg);
   z-index:-1;
 }
-/* a small repeating poster palette — black, red, white,
-   purple — cycling back to black so the last section
-   (Contact) reads as a return to the opening black. */
-.background{ --section-bg:#000000; }
-.work{ --section-bg:#D7263D; }
+/* section colors now reuse the site's own accent
+   tokens directly (the same coral/lime/violet
+   already seen on the hero sticker and the Design
+   skill card), rather than invented poster tones. */
+.background{ --section-bg:var(--coral); }
+.work{ --section-bg:var(--lime); }
 .experience{ --section-bg:#F4F0E6; }
-.skills{ --section-bg:#5B2A86; }
+.skills{ --section-bg:var(--violet); }
 .contact{ --section-bg:#000000; }
+
+/* Background (coral), Work (lime) and Skills (violet) are
+   all bright enough to need dark ink text/borders instead
+   of the site's usual white-on-dark, same pattern as
+   Experience's white block below. */
+.background{ color:#1A1410; }
+.background .section-head__num{ color:#1A1410; }
+.background .section-head__note{ color:#5A4A42; }
+.background__avatar{ box-shadow:6px 6px 0 #1A1410; }
+
+.work{ color:#1A1410; border-top-color:#1A1410; }
+.work .section-head__num{ color:#1A1410; }
+.work .section-head__note{ color:#5A5A2A; }
+.work__list{ border-top-color:#1A1410; }
+.work__row{ border-bottom-color:#1A1410; }
+.work__desc{ color:#4A4A38; }
+
+.skills{ color:#1A1410; }
+.skills .section-head__num{ color:#1A1410; }
 
 /* Experience sits on the palette's "white" block, so it
    flips to dark ink text/borders instead of the site's
@@ -706,6 +736,9 @@ section{ padding:clamp(70px,9vw,130px) clamp(20px,4vw,56px); max-width:var(--max
    ============================================ */
 .footer{
   padding:0 clamp(20px,4vw,56px) 40px;
+}
+.footer .marquee-line{
+  width:100vw; margin-left:calc(50% - 50vw);
 }
 .footer__top, .footer__copy{
   max-width:var(--max); margin:0 auto;
