@@ -74,7 +74,12 @@ h1,h2,h3,p{ margin:0; }
 .nav__cta:hover{ background:var(--ink); color:var(--cream); transform:rotate(-2deg); }
 
 @media (max-width:760px){
-  .nav__links{ display:none; }
+  .nav__links{ gap:14px; }
+  .nav__label{ display:none; }
+}
+@media (max-width:480px){
+  .nav__cta{ padding:8px 12px; font-size:0.7rem; }
+  .nav__links{ gap:10px; }
 }
 
 /* ============================================
