@@ -162,6 +162,71 @@ const prefersReducedMotion = window.matchMedia("(prefers-reduced-motion: reduce)
 })();
 
 // ============================================
+// Work row hover preview
+// A small polaroid-style thumbnail trails the cursor
+// while hovering a .work__row, reusing each row's
+// data-preview image (see .work-preview in style.css).
+// Lerped toward the pointer like the custom cursor
+// above, but offset up-and-right and clamped to the
+// viewport so it never gets clipped off-screen.
+// ============================================
+(function initWorkPreview(){
+  const list = document.querySelector(".work__list");
+  if (!list || prefersReducedMotion) return;
+  if (!window.matchMedia("(hover: hover) and (pointer: fine)").matches) return;
+
+  const rows = Array.from(list.querySelectorAll(".work__row[data-preview]"));
+  if (!rows.length) return;
+
+  const TILTS = [-5, 4, -3, 5];
+  const OFFSET_X = 32;
+  const OFFSET_Y = -180;
+  const MARGIN = 16;
+  const WIDTH = 200;
+
+  const preview = document.createElement("div");
+  preview.className = "work-preview";
+  preview.setAttribute("aria-hidden", "true");
+  const img = document.createElement("img");
+  img.alt = "";
+  preview.appendChild(img);
+  document.body.appendChild(preview);
+
+  let mouseX = window.innerWidth / 2, mouseY = window.innerHeight / 2;
+  let x = mouseX, y = mouseY;
+  let activeRow = null;
+
+  function setActive(row){
+    if (activeRow === row) return;
+    activeRow = row;
+    if (row){
+      img.src = row.dataset.preview;
+      preview.style.setProperty("--tilt", `${TILTS[rows.indexOf(row) % TILTS.length]}deg`);
+      preview.classList.add("is-visible");
+    } else {
+      preview.classList.remove("is-visible");
+    }
+  }
+
+  list.addEventListener("mousemove", (e) => {
+    mouseX = e.clientX;
+    mouseY = e.clientY;
+    setActive(e.target.closest(".work__row"));
+  });
+  list.addEventListener("mouseleave", () => setActive(null));
+
+  function tick(){
+    x += (mouseX - x) * 0.2;
+    y += (mouseY - y) * 0.2;
+    const px = Math.min(x + OFFSET_X, window.innerWidth - WIDTH - MARGIN);
+    const py = Math.max(y + OFFSET_Y, MARGIN);
+    preview.style.transform = `translate(${px}px, ${py}px) rotate(var(--tilt, 0deg))`;
+    requestAnimationFrame(tick);
+  }
+  requestAnimationFrame(tick);
+})();
+
+// ============================================
 // Mobile drawer — tapping the "YN." mark opens
 // a full nav sidebar on narrow screens.
 // ============================================

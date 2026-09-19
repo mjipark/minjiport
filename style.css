@@ -470,18 +470,15 @@ h1,h2,h3,p{ margin:0; }
    of the site's usual white-on-dark, same pattern as
    Experience's white block below. */
 .background{ color:#1A1410; }
-.background .section-head__num{ color:#1A1410; }
 .background .section-head__note{ color:#5A4A42; }
 
 .work{ color:#1A1410; border-top-color:#1A1410; }
-.work .section-head__num{ color:#1A1410; }
 .work .section-head__note{ color:#5A5A2A; }
 .work__list{ border-top-color:#1A1410; }
 .work__row{ border-bottom-color:#1A1410; }
 .work__desc{ color:#4A4A38; }
 
 .skills{ color:#1A1410; }
-.skills .section-head__num{ color:#1A1410; }
 
 /* Experience sits on the palette's "white" block, so it
    flips to dark ink text/borders instead of the site's
@@ -491,11 +488,8 @@ h1,h2,h3,p{ margin:0; }
   color:#1A1410;
   border-top-color:#1A1410;
 }
-.experience .section-head__num{ color:#A5261A; }
-.experience__dates{ color:#4B1F73; }
 .experience__body h3 span{ color:#6B6B6B; }
 .experience__item, .experience__item:last-child{ border-color:#1A1410; }
-.experience__body li::before{ color:#A5261A; }
 
 /* ============================================
    SHARED SECTION HEAD
@@ -505,10 +499,6 @@ section{ padding:clamp(70px,9vw,130px) clamp(20px,4vw,56px); max-width:var(--max
 .section-head{
   display:flex; align-items:baseline; gap:18px; flex-wrap:wrap;
   margin-bottom:clamp(40px,6vw,70px);
-}
-.section-head__num{
-  font-family:var(--font-mono); font-weight:700; color:var(--coral-text);
-  font-size:1.1rem;
 }
 .section-head__title{
   font-family:var(--font-display); font-weight:900;
@@ -607,6 +597,35 @@ section{ padding:clamp(70px,9vw,130px) clamp(20px,4vw,56px); max-width:var(--max
 .work__links a:hover{ border-color:currentColor; }
 
 /* ============================================
+   WORK HOVER PREVIEW — a floating polaroid-style
+   thumbnail that trails the cursor while hovering a
+   .work__row (script.js initWorkPreview), making good
+   on the section note's "Hover a row to preview →".
+   Sits below the custom cursor's z-index so the ring
+   still reads on top of it. Desktop, fine-pointer,
+   motion-OK only — see the JS gate and the media
+   queries below.
+   ============================================ */
+.work-preview{
+  position:fixed; top:0; left:0; z-index:450;
+  width:200px; aspect-ratio:4/3;
+  border:4px solid var(--ink);
+  box-shadow:10px 10px 0 rgba(0,0,0,0.4);
+  overflow:hidden;
+  background:var(--cream);
+  opacity:0;
+  pointer-events:none;
+  transition:opacity .18s ease;
+  will-change:transform, opacity;
+}
+.work-preview.is-visible{ opacity:1; }
+.work-preview img{ width:100%; height:100%; object-fit:cover; display:block; }
+
+@media (hover:none), (pointer:coarse), (max-width:760px){
+  .work-preview{ display:none; }
+}
+
+/* ============================================
    CUSTOM CURSOR — a small brand-colored ring that
    trails the pointer across the whole site (script.js
    initCustomCursor, appended once to <body> so every
@@ -648,14 +667,46 @@ html.has-custom-cursor .custom-cursor.is-down{
    ============================================ */
 .experience__list{ display:flex; flex-direction:column; }
 .experience__item{
+  position:relative;
   display:grid; grid-template-columns:180px 1fr; gap:24px;
-  padding:34px 0; border-top:3px solid var(--ink);
+  padding:34px 0 34px 28px; border-top:3px solid var(--ink);
+  transition:transform .25s cubic-bezier(.34,1.56,.64,1);
 }
 .experience__item:last-child{ border-bottom:3px solid var(--ink); }
-.experience__dates{
-  font-family:var(--font-mono); font-weight:700; font-size:0.9rem;
-  color:var(--violet);
+.experience__item--coral{ --accent:var(--coral); }
+.experience__item--lime{ --accent:var(--lime); }
+.experience__item--violet{ --accent:var(--violet); }
+
+/* accent rail — a colored bar that grows in from the
+   top on hover, same "flag" gesture as the skills
+   cards' hard-shadow lift, scaled down for a full-width
+   row instead of a standalone card. */
+.experience__item::before{
+  content:"";
+  position:absolute; left:0; top:0; bottom:0;
+  width:5px; background:var(--accent, var(--coral));
+  transform:scaleY(0); transform-origin:top;
+  transition:transform .3s cubic-bezier(.34,1.56,.64,1);
 }
+.experience__item:hover{ transform:translateX(10px); }
+.experience__item:hover::before{ transform:scaleY(1); }
+
+.experience__dates{
+  font-family:var(--font-mono); font-weight:700; font-size:0.8rem;
+  text-transform:uppercase; letter-spacing:0.02em;
+  color:#1A1410;
+  background:var(--accent, var(--violet));
+  border:2px solid var(--ink);
+  border-radius:100px;
+  padding:6px 14px;
+  display:inline-flex; width:fit-content;
+  white-space:nowrap;
+  transform:rotate(-3deg);
+  transition:transform .25s cubic-bezier(.34,1.56,.64,1);
+}
+.experience__item:nth-child(2n) .experience__dates{ transform:rotate(3deg); }
+.experience__item:hover .experience__dates{ transform:rotate(0deg) scale(1.05); }
+
 .experience__body h3{
   font-family:var(--font-display); font-weight:700; font-size:1.5rem;
   margin-bottom:14px;
@@ -669,7 +720,7 @@ html.has-custom-cursor .custom-cursor.is-down{
   font-size:0.95rem; line-height:1.55; padding-left:20px; position:relative;
 }
 .experience__body li::before{
-  content:"→"; position:absolute; left:0; color:var(--coral-text); font-weight:700;
+  content:"→"; position:absolute; left:0; color:var(--accent, var(--coral-text)); font-weight:700;
 }
 .experience__tags{ display:flex; gap:8px; flex-wrap:wrap; }
 .experience__tags span{
