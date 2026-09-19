@@ -6,6 +6,25 @@ document.getElementById("year").textContent = new Date().getFullYear();
 const prefersReducedMotion = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
 
 // ============================================
+// Nav height → --nav-h custom property
+// Keeps --nav-h (style.css's fallback is 84px, used by
+// .hero-flip's negative margin to slide the hero up
+// under the sticky nav so it's truly centered in the
+// viewport) in sync with the nav's actual rendered
+// height, rather than trusting that fallback to stay
+// accurate forever.
+// ============================================
+(function syncNavHeight(){
+  const nav = document.querySelector(".nav");
+  if (!nav) return;
+  function sync(){
+    document.documentElement.style.setProperty("--nav-h", `${nav.offsetHeight}px`);
+  }
+  sync();
+  window.addEventListener("resize", sync);
+})();
+
+// ============================================
 // Hero scroll parallax transition
 // .hero sits inside a taller #heroFlip wrapper and
 // stays pinned (position:sticky, set in CSS) while

@@ -16,6 +16,7 @@
 
   --edge: 6px;
   --max: 1240px;
+  --nav-h: 84px; /* fallback; script.js measures the real height on load/resize */
 }
 
 *{ box-sizing:border-box; }
@@ -355,6 +356,13 @@ h1,h2,h3,p{ margin:0; }
 .hero-flip{
   position:relative;
   height:160vh;
+  /* slide up under the sticky nav so .hero's own
+     min-height:100svh box actually starts at the true
+     top of the viewport — otherwise the nav's reserved
+     flow height pushes .hero (and its centered content)
+     down, off true screen-center by half the nav's
+     height. */
+  margin-top:calc(-1 * var(--nav-h));
 }
 .hero{
   will-change:transform, opacity;
