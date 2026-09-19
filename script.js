@@ -76,44 +76,6 @@ const prefersReducedMotion = window.matchMedia("(prefers-reduced-motion: reduce)
 })();
 
 // ============================================
-// Ambient background field mouse parallax
-// the fixed shape layer behind every section
-// drifts opposite the cursor, same depth-based
-// lerp technique as the hero collage, layered
-// on top of each shape's own CSS float loop via
-// the --mx/--my custom properties it animates.
-// ============================================
-(function initBgFieldParallax(){
-  const field = document.getElementById("bgField");
-  const isDesktop = window.matchMedia("(min-width: 761px)").matches;
-  if (!field || prefersReducedMotion || !isDesktop) return;
-
-  const shapes = Array.from(field.querySelectorAll(".bg-shape"));
-  let targetX = 0, targetY = 0;
-  let currentX = 0, currentY = 0;
-
-  window.addEventListener("mousemove", (e) => {
-    const { innerWidth, innerHeight } = window;
-    targetX = (e.clientX / innerWidth - 0.5) * 2;
-    targetY = (e.clientY / innerHeight - 0.5) * 2;
-  });
-
-  function tick(){
-    currentX += (targetX - currentX) * 0.04;
-    currentY += (targetY - currentY) * 0.04;
-
-    shapes.forEach((shape) => {
-      const depth = parseFloat(shape.dataset.depth) || 0.3;
-      shape.style.setProperty("--mx", `${currentX * depth * -50}px`);
-      shape.style.setProperty("--my", `${currentY * depth * -50}px`);
-    });
-
-    requestAnimationFrame(tick);
-  }
-  requestAnimationFrame(tick);
-})();
-
-// ============================================
 // Custom cursor
 // A small brand-colored ring that trails the real
 // pointer across every page (replaces the old

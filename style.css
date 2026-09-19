@@ -10,16 +10,11 @@
   --violet: #9D8FFF;
   --muted: #9AA4BD;
 
-  /* deep/muted counterparts of the three accents — used for
-     full section backgrounds so color still marks each
-     section's identity without the bright accents themselves
-     washing an entire viewport in neon (reads premium/editorial
-     rather than a toy-bright poster). The bright tokens above
-     stay reserved for small accents: tags, links, icons, the
-     hero highlight. */
+  /* deep counterpart of coral — used for the mobile nav
+     drawer's panel so it reads as a dark surface rather
+     than a bright poster color, matching the rest of the
+     site's near-black canvas. */
   --coral-deep: #5C2318;
-  --lime-deep: #37401C;
-  --violet-deep: #2C2350;
 
   --font-display: "Fraunces", serif;
   --font-body: "Space Grotesk", sans-serif;
@@ -71,70 +66,6 @@ ul,ol{ list-style:none; margin:0; padding:0; }
 h1,h2,h3,p{ margin:0; }
 
 ::selection{ background:var(--ink); color:var(--cream); }
-
-/* ============================================
-   AMBIENT BACKGROUND FIELD
-   fixed layer of drifting shapes behind every
-   section (nav sits above it — it's opaque).
-   ============================================ */
-.bg-field{
-  position:fixed; inset:0; z-index:0;
-  overflow:hidden; pointer-events:none;
-}
-.bg-shape{
-  position:absolute; left:var(--x); top:var(--y);
-  opacity:0.16;
-  will-change:transform;
-  animation:bgFloat 10s ease-in-out infinite;
-}
-.bg-shape--coral{ background:var(--coral); color:var(--coral); }
-.bg-shape--lime{ background:var(--lime); color:var(--lime); }
-.bg-shape--violet{ background:var(--violet); color:var(--violet); }
-
-.bg-shape--circle{ width:64px; height:64px; border-radius:50%; }
-
-.bg-shape--tri{
-  width:0; height:0; background:none !important;
-  border-left:34px solid transparent;
-  border-right:34px solid transparent;
-  border-bottom:58px solid currentColor;
-}
-
-.bg-shape--dash{ width:84px; height:6px; border-radius:3px; }
-
-.bg-shape--plus{ width:48px; height:48px; background:none !important; }
-.bg-shape--plus::before,
-.bg-shape--plus::after{
-  content:""; position:absolute; top:50%; left:50%;
-  background:currentColor; transform:translate(-50%,-50%);
-}
-.bg-shape--plus::before{ width:100%; height:7px; }
-.bg-shape--plus::after{ width:7px; height:100%; }
-
-.bg-shape:nth-of-type(2){ animation-duration:12s; animation-delay:-2s; }
-.bg-shape:nth-of-type(3){ animation-duration:8s; animation-delay:-5s; }
-.bg-shape:nth-of-type(4){ animation-duration:13s; animation-delay:-1s; }
-.bg-shape:nth-of-type(5){ animation-duration:9s; animation-delay:-6s; }
-.bg-shape:nth-of-type(6){ animation-duration:11s; animation-delay:-3s; }
-.bg-shape:nth-of-type(7){ animation-duration:14s; animation-delay:-7s; }
-.bg-shape:nth-of-type(8){ animation-duration:9.5s; animation-delay:-4s; }
-
-@keyframes bgFloat{
-  0%,100%{ transform:translate(var(--mx,0px), var(--my,0px)) rotate(0deg); }
-  50%{ transform:translate(var(--mx,0px), calc(var(--my,0px) - 22px)) rotate(8deg); }
-}
-
-@media (max-width:640px){
-  .bg-shape{ opacity:0.1; }
-  .bg-shape--circle{ width:44px; height:44px; }
-  .bg-shape--tri{ border-left-width:22px; border-right-width:22px; border-bottom-width:38px; }
-  .bg-shape--dash{ width:56px; height:5px; }
-  .bg-shape--plus{ width:34px; height:34px; }
-}
-
-@media (prefers-reduced-motion:reduce){
-  .bg-shape{ animation:none; }
-}
 
 /* grain texture overlay */
 .grain{
@@ -443,58 +374,18 @@ h1,h2,h3,p{ margin:0; }
 }
 
 /* ============================================
-   SECTION COLOR BLOCKS
-   each section gets its own full-bleed color via
-   a breakout pseudo-element (the classic
-   left:50%/margin-left:-50vw full-bleed trick)
-   sized to the section's own height — NOT a
-   box-shadow-on-overflow:hidden trick, since
-   overflow:hidden on the same element that casts
-   the shadow clips the shadow to nothing (it
-   paints outside the border box).
-   z-index:0 forces each section to own a local
-   stacking context, so the negative-z fill stays
-   scoped behind that section's content instead of
-   comparing against the page's other layers.
+   SECTION DIVIDERS
+   one continuous background (the same var(--cream)
+   as the hero) runs the whole page instead of each
+   section carrying its own full-bleed color block —
+   a thin rule marks where one section ends and the
+   next begins, and color stays reserved for small
+   marks (tags, links, icons, the accent rail in
+   Experience) rather than whole-viewport fills.
    ============================================ */
 .background, .work, .experience, .skills, .contact{
-  position:relative;
-  z-index:0;
-  border-top:4px solid var(--ink);
+  border-top:3px solid var(--ink);
 }
-.background::before, .work::before, .experience::before,
-.skills::before, .contact::before{
-  content:"";
-  position:absolute;
-  top:0; bottom:0; left:50%; right:50%;
-  width:100vw; margin-left:-50vw;
-  background:var(--section-bg);
-  z-index:-1;
-}
-/* section colors use deep/muted counterparts of the
-   site's coral/lime/violet accents rather than the
-   bright tokens themselves, so each section still reads
-   with its own identity color without an entire
-   viewport-height block going neon — the bright accents
-   stay reserved for small marks (tags, links, icons). All
-   three stay dark enough for the site's usual white-on-dark
-   text, so no per-section text-color overrides are needed. */
-.background{ --section-bg:var(--coral-deep); }
-.work{ --section-bg:var(--lime-deep); }
-.experience{ --section-bg:#F4F0E6; }
-.skills{ --section-bg:var(--violet-deep); }
-.contact{ --section-bg:#000000; }
-
-/* Experience sits on the palette's one light block, so it
-   flips to dark ink text/borders instead of the site's
-   usual white-on-dark — same pattern as Contact used to
-   need back when it was the coral block. */
-.experience{
-  color:#1A1410;
-  border-top-color:#1A1410;
-}
-.experience__body h3 span{ color:#6B6B6B; }
-.experience__item, .experience__item:last-child{ border-color:#1A1410; }
 
 /* ============================================
    SHARED SECTION HEAD
