@@ -536,8 +536,51 @@ section{ padding:clamp(70px,9vw,130px) clamp(20px,4vw,56px); max-width:var(--max
 
 /* ============================================
    WORK
+   .work__layout splits the list beside a pinned side
+   panel — position:sticky, released once .work__layout
+   itself (taller than the panel, thanks to the 4 stacked
+   rows) scrolls past — the "something stays fixed while
+   you scroll" interaction from the idealworks reference,
+   applied here instead of scroll-jacking the whole page.
    ============================================ */
-.work__list{ border-top:3px solid var(--ink); }
+.work__layout{
+  display:flex; align-items:flex-start;
+  gap:clamp(24px,4vw,56px);
+}
+.work__pin{
+  position:sticky;
+  top:calc(var(--nav-h) + 32px);
+  flex:none;
+  isolation:isolate;
+  width:clamp(140px,16vw,220px);
+  height:clamp(220px,30vw,340px);
+  background:var(--ink);
+  border-radius:2px;
+  overflow:hidden;
+  display:flex; align-items:flex-end;
+  padding:18px;
+}
+.work__pin-dots{
+  position:absolute; inset:0;
+  background-image:radial-gradient(circle, rgba(255,255,255,0.4) 1.5px, transparent 1.5px);
+  background-size:24px 24px;
+  -webkit-mask-image:linear-gradient(to bottom, transparent, black 65%);
+  mask-image:linear-gradient(to bottom, transparent, black 65%);
+}
+.work__pin-mark{
+  position:relative; z-index:1;
+  font-family:var(--font-shout); font-size:1.3rem;
+  color:var(--cream);
+}
+.work__pin-mark .dot{ color:var(--coral-text); }
+
+.work__list{ flex:1; min-width:0; border-top:3px solid var(--ink); }
+
+@media (max-width:760px){
+  .work__layout{ flex-direction:column; }
+  .work__pin{ position:static; width:100%; height:120px; align-items:center; justify-content:center; }
+  .work__pin-mark{ font-size:1.1rem; }
+}
 .work__row{
   position:relative;
   display:flex; justify-content:space-between; align-items:flex-start; gap:24px;
