@@ -343,6 +343,52 @@ const prefersReducedMotion = window.matchMedia("(prefers-reduced-motion: reduce)
 })();
 
 // ============================================
+// Scroll pop-in for repeated items
+// work rows, experience entries, skill cards, and the
+// contact block's lines each get a staggered --i index
+// and .pop-in class here, then pop up (scale + rise,
+// see .pop-in in style.css) one after another as their
+// section scrolls into view — the same one-shot
+// IntersectionObserver pattern as initReveal above,
+// just at the individual-item level instead of the
+// whole section.
+// ============================================
+(function initPopIn(){
+  const groups = [
+    document.querySelectorAll(".work__row"),
+    document.querySelectorAll(".experience__item"),
+    document.querySelectorAll(".skills__cat"),
+    document.querySelectorAll(".contact__cta, .contact__sub, .contact__email, .contact__row"),
+  ];
+
+  const targets = [];
+  groups.forEach((group) => {
+    group.forEach((el, i) => {
+      el.classList.add("pop-in");
+      el.style.setProperty("--i", i);
+      targets.push(el);
+    });
+  });
+  if (!targets.length) return;
+
+  if (!("IntersectionObserver" in window)) {
+    targets.forEach((t) => t.classList.add("is-visible"));
+    return;
+  }
+
+  const observer = new IntersectionObserver((entries) => {
+    entries.forEach((entry) => {
+      if (entry.isIntersecting) {
+        entry.target.classList.add("is-visible");
+        observer.unobserve(entry.target);
+      }
+    });
+  }, { threshold: 0.2 });
+
+  targets.forEach((t) => observer.observe(t));
+})();
+
+// ============================================
 // "Minji" cutout pop-in/out for the Background
 // section — pops in as soon as the section (not
 // just the cutout's own small corner of it) reaches
