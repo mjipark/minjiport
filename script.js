@@ -326,6 +326,150 @@ const prefersReducedMotion = window.matchMedia("(prefers-reduced-motion: reduce)
 })();
 
 // ============================================
+// Skills card carousel (mobile)
+// Horizontal "book page" carousel. One card is active
+// (.is-active), centered and fully visible, while its
+// neighbors peek in from the edges — every card's position
+// is driven by --dist, its signed circular distance from
+// the active index (0 = active, ±1 = the previous/next
+// page, ±2 = parked just off-screen — see the
+// max-width:760px rules in style.css), so paging always
+// slides the whole row together and loops at the ends.
+// Dragging the active card left/right past a threshold (or
+// tapping the Prev/Next controls below the deck) flips to
+// that neighbor. Scrolling the whole grid out of view
+// resets it back to the first page.
+// ============================================
+(function initSkillsStack(){
+  const grid = document.querySelector(".skills__grid");
+  if (!grid) return;
+  const cards = Array.from(grid.querySelectorAll(".skills__cat"));
+  const count = cards.length;
+  if (!count) return;
+
+  const isStackMode = () => window.matchMedia("(max-width:760px)").matches;
+  const DRAG_THRESHOLD = 60;
+
+  let activeIndex = 0;
+  let drag = null;
+
+  const nav = document.createElement("div");
+  nav.className = "skills__nav";
+  const prevBtn = document.createElement("button");
+  prevBtn.type = "button";
+  prevBtn.textContent = "‹ Prev";
+  const sep = document.createElement("span");
+  sep.className = "skills__nav__sep";
+  sep.textContent = "|";
+  const nextBtn = document.createElement("button");
+  nextBtn.type = "button";
+  nextBtn.textContent = "Next ›";
+  nav.append(prevBtn, sep, nextBtn);
+  grid.after(nav);
+
+  function signedDist(i){
+    let d = ((i - activeIndex) % count + count) % count;
+    if (d > count / 2) d -= count;
+    return d;
+  }
+
+  function render(){
+    cards.forEach((card, i) => {
+      const dist = signedDist(i);
+      const isActive = dist === 0;
+      card.classList.toggle("is-active", isActive);
+      card.style.setProperty("--dist", dist);
+      card.style.setProperty("--absdist", Math.abs(dist));
+      if (isStackMode()) card.setAttribute("tabindex", isActive ? "0" : "-1");
+    });
+  }
+
+  function next(){
+    activeIndex = (activeIndex + 1) % count;
+    render();
+  }
+
+  function prev(){
+    activeIndex = (activeIndex - 1 + count) % count;
+    render();
+  }
+
+  function reset(){
+    activeIndex = 0;
+    render();
+  }
+
+  function syncInteractivity(){
+    const stackable = isStackMode();
+    cards.forEach((card) => {
+      if (stackable){
+        card.setAttribute("role", "group");
+      } else {
+        card.removeAttribute("role");
+        card.removeAttribute("tabindex");
+      }
+    });
+    if (!stackable) reset();
+  }
+
+  prevBtn.addEventListener("click", prev);
+  nextBtn.addEventListener("click", next);
+
+  grid.addEventListener("pointerdown", (e) => {
+    if (!isStackMode()) return;
+    const card = e.target.closest(".skills__cat");
+    if (!card || !card.classList.contains("is-active")) return;
+    drag = { startX: e.clientX, dx: 0, pointerId: e.pointerId };
+    card.classList.add("is-dragging");
+    grid.classList.add("is-dragging");
+    card.setPointerCapture(e.pointerId);
+  });
+
+  grid.addEventListener("pointermove", (e) => {
+    if (!drag || e.pointerId !== drag.pointerId) return;
+    drag.dx = e.clientX - drag.startX;
+    grid.style.transform = `translateX(${drag.dx}px)`;
+  });
+
+  function endDrag(e){
+    if (!drag || (e.pointerId !== undefined && e.pointerId !== drag.pointerId)) return;
+    const { dx } = drag;
+    drag = null;
+    grid.classList.remove("is-dragging");
+    const activeCard = cards.find((c) => c.classList.contains("is-active"));
+    if (activeCard) activeCard.classList.remove("is-dragging");
+
+    grid.style.transform = "";
+    if (dx < -DRAG_THRESHOLD) next();
+    else if (dx > DRAG_THRESHOLD) prev();
+  }
+
+  grid.addEventListener("pointerup", endDrag);
+  grid.addEventListener("pointercancel", endDrag);
+
+  cards.forEach((card) => {
+    card.addEventListener("keydown", (e) => {
+      if (!isStackMode() || !card.classList.contains("is-active")) return;
+      if (e.key === "ArrowLeft"){ e.preventDefault(); prev(); }
+      if (e.key === "ArrowRight"){ e.preventDefault(); next(); }
+    });
+  });
+
+  render();
+  syncInteractivity();
+  window.addEventListener("resize", syncInteractivity);
+
+  if ("IntersectionObserver" in window){
+    const observer = new IntersectionObserver((entries) => {
+      entries.forEach((entry) => {
+        if (!entry.isIntersecting) reset();
+      });
+    }, { threshold: 0 });
+    observer.observe(grid);
+  }
+})();
+
+// ============================================
 // "Minji" cutout pop-in/out for the Background
 // section — pops in as soon as the section (not
 // just the cutout's own small corner of it) reaches

@@ -852,8 +852,83 @@ html.has-custom-cursor .custom-cursor.is-down{
   filter:drop-shadow(5px 5px 0 var(--ink));
 }
 
+.skills__nav{ display:none; }
+
 @media (max-width:760px){
-  .skills__grid{ grid-template-columns:1fr; }
+  /* Horizontal "book page" carousel. Every card is pinned
+     into the same grid cell and positioned by --dist — its
+     signed circular distance from the active card (0 =
+     active/centered, ±1 = the previous/next page peeking
+     at the edges, ±2 = further pages parked just off-screen
+     — see initSkillsStack in script.js) — so flipping pages
+     always slides the whole row together. Dragging the
+     active card left/right past a threshold (or tapping
+     Prev/Next below) advances to that neighbor, looping at
+     the ends. */
+  .skills__grid{
+    display:grid;
+    grid-template-columns:1fr;
+    overflow:hidden;
+    transition:transform .4s var(--ease);
+  }
+  .skills__cat{
+    grid-row:1; grid-column:1;
+    width:82%;
+    margin:0 auto;
+    min-height:270px;
+    padding:20px 22px;
+    z-index:calc(10 - var(--absdist,0));
+    opacity:calc(1 - var(--absdist,0) * 0.4);
+    transition:transform .4s var(--ease), opacity .4s var(--ease), box-shadow .3s var(--ease);
+  }
+  /* .skills__grid-prefixed so this beats .pop-in.is-visible's
+     transform (script.js's scroll-reveal stagger, same
+     0,0,2,0 specificity but declared earlier in the file) —
+     without it every card snaps flat once its pop-in
+     reveal fires, killing the deck. */
+  .skills__grid .skills__cat{
+    transform:translateX(calc(var(--dist,0) * 105%));
+  }
+  /* only the active page is draggable, and touch-action:pan-y
+     hands its horizontal touch fully to our own pointer
+     handling (script.js) while still letting a vertical
+     drag started on it scroll the page normally. */
+  .skills__cat.is-active{
+    box-shadow:12px 12px 0 var(--accent, var(--coral));
+    z-index:50;
+    cursor:grab;
+    touch-action:pan-y;
+  }
+  .skills__cat.is-dragging{ cursor:grabbing; }
+  .skills__grid.is-dragging{ transition:none; }
+  .skills__cat:focus-visible{
+    outline:3px solid var(--ink); outline-offset:2px;
+  }
+
+  .skills__cat__head{
+    display:flex; align-items:center; gap:12px;
+  }
+  .skills__cat .skills__icon{ margin-bottom:0; flex-shrink:0; }
+  .skills__cat .skills__icon--circle,
+  .skills__cat .skills__icon--diamond,
+  .skills__cat .skills__icon--rounded{ width:30px; height:30px; }
+  .skills__cat .skills__icon--tri{
+    border-left-width:14px; border-right-width:14px; border-bottom-width:24px;
+  }
+  .skills__cat h3{ margin-bottom:0; font-size:1.05rem; }
+  .skills__tags{ margin-top:16px; }
+
+  /* Prev | Next page controls below the carousel. */
+  .skills__nav{
+    display:flex; align-items:center; justify-content:center; gap:14px;
+    margin-top:18px;
+    font-family:var(--font-mono); font-size:0.8rem; letter-spacing:.02em;
+  }
+  .skills__nav button{
+    background:none; border:none; padding:6px; cursor:pointer;
+    color:var(--ink); font:inherit;
+  }
+  .skills__nav__sep{ opacity:.4; }
 }
 
 /* ============================================
