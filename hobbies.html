@@ -75,45 +75,56 @@
       <p class="section-head__note">Click a photo →</p>
     </div>
 
-    <ul class="hobby-bento">
+    <div class="hobby-collage" id="hobbyCollage">
 
-      <li class="hobby-tile hobby-tile--large" style="--r:-3deg;">
+      <div class="hobby-collage__item hobby-collage__item--lg parallax-item" data-depth="0.4"
+        style="--x:2%; --y:0px; --r:-6deg;">
         <button type="button" class="hobby-card__btn" data-title="Running" data-img="images/hobby-1.svg"
           data-caption="Chasing a slow, unbothered 5K most mornings — it's when I do my best thinking.">
           <img src="images/hobby-1.svg" alt="Running — placeholder, replace with your own photo">
           <span class="hobby-card__label">Running</span>
         </button>
-      </li>
+      </div>
 
-      <li class="hobby-tile hobby-tile--wide" style="--r:2deg;">
+      <div class="sticker sticker--tape parallax-item" data-depth="0.2" style="--x:42%; --y:-6px; --r:-3deg;">
+        Off Duty</div>
+
+      <div class="hobby-collage__item hobby-collage__item--md parallax-item" data-depth="0.3"
+        style="--x:62%; --y:36px; --r:8deg;">
         <button type="button" class="hobby-card__btn" data-title="Coffee &amp; Friends" data-img="images/hobby-2.svg"
           data-caption="Most of my best ideas get bounced around over coffee before they ever touch a screen.">
           <img src="images/hobby-2.svg" alt="Coffee and friends — placeholder, replace with your own photo">
           <span class="hobby-card__label">Coffee &amp; Friends</span>
         </button>
-      </li>
+      </div>
 
-      <li class="hobby-tile hobby-tile--tall" style="--r:-2deg;">
+      <div class="hobby-collage__item hobby-collage__item--md parallax-item" data-depth="0.5"
+        style="--x:16%; --y:400px; --r:-9deg;">
         <button type="button" class="hobby-card__btn" data-title="Photography" data-img="images/hobby-3.svg"
           data-caption="Mostly street shots and bad light — same instinct as design, just slower and quieter.">
           <img src="images/hobby-3.svg" alt="Photography — placeholder, replace with your own photo">
           <span class="hobby-card__label">Photography</span>
         </button>
-      </li>
+      </div>
 
-      <li class="hobby-tile hobby-tile--wide" style="--r:3deg;">
+      <div class="sticker sticker--circle parallax-item" data-depth="0.45" style="--x:84%; --y:400px; --r:0deg;">
+        For fun<br>↗</div>
+
+      <div class="hobby-collage__item hobby-collage__item--lg parallax-item" data-depth="0.35"
+        style="--x:56%; --y:460px; --r:5deg;">
         <button type="button" class="hobby-card__btn" data-title="Coloring &amp; Drawing" data-img="images/hobby-4.svg"
           data-caption="No brief, no client, no undo button — just color for the sake of it.">
           <img src="images/hobby-4.svg" alt="Coloring and drawing — placeholder, replace with your own photo">
           <span class="hobby-card__label">Coloring &amp; Drawing</span>
         </button>
-      </li>
+      </div>
 
-      <!-- duplicate an <li class="hobby-tile"> block above to add another photo.
-           Size variants: hobby-tile (2x2), hobby-tile--wide (3x2),
-           hobby-tile--tall (2x3), hobby-tile--large (3x3). -->
+      <!-- duplicate a "hobby-collage__item" block above to add another photo.
+           Size variants: hobby-collage__item--md, hobby-collage__item--lg.
+           Position with --x/--y (top-left offset within the collage) and
+           --r (tilt). data-depth controls how far it drifts on mouse move. -->
 
-    </ul>
+    </div>
   </section>
 
   <footer class="footer">

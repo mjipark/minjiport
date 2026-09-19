@@ -11,11 +11,9 @@ const prefersReducedMotion = window.matchMedia("(prefers-reduced-motion: reduce)
 // mouse position, scaled by each item's data-depth.
 // ============================================
 (function initParallax(){
-  const collage = document.getElementById("heroCollage");
   const isDesktop = window.matchMedia("(min-width: 761px)").matches;
-  if (!collage || prefersReducedMotion || !isDesktop) return;
-
-  const items = Array.from(collage.querySelectorAll(".parallax-item"));
+  const items = Array.from(document.querySelectorAll(".parallax-item"));
+  if (!items.length || prefersReducedMotion || !isDesktop) return;
   let targetX = 0, targetY = 0;
   let currentX = 0, currentY = 0;
 

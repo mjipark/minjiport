@@ -804,70 +804,72 @@ section{ padding:clamp(70px,9vw,130px) clamp(20px,4vw,56px); max-width:var(--max
 }
 
 /* ============================================
-   HOBBIES — bento/masonry moodboard (hobbies.html)
-   varied-size tiles in a dense grid, same
-   bordered-photo language as the hero collage
-   (thick ink border + hard shadow), each tile
-   holding a slight fixed tilt via --r and
-   popping straight/forward on hover. Clicking
-   opens the side-panel lightbox below.
+   HOBBIES — scattered photo-wall collage (hobbies.html)
+   same language as the hero collage: photos and
+   stickers absolutely placed via --x/--y/--r and
+   drifting on mouse move (.parallax-item, see
+   script.js initParallax), thick ink border + hard
+   shadow on every photo. Clicking a photo opens the
+   side-panel lightbox below.
    ============================================ */
-.hobby-bento{
-  display:grid;
-  grid-template-columns:repeat(6, 1fr);
-  grid-auto-rows:100px;
-  grid-auto-flow:row dense;
-  gap:22px;
+.hobby-collage{
+  position:relative;
+  min-height:820px;
+  margin:12px 0 40px;
 }
-.hobby-tile{
-  grid-column:span 2; grid-row:span 2;
+.hobby-collage__item{
+  position:absolute;
+  left:var(--x); top:var(--y);
   transform:rotate(var(--r,0deg));
-  transition:transform .2s;
+  will-change:transform;
 }
-.hobby-tile:hover{ z-index:2; }
-.hobby-tile--large{ grid-column:span 3; grid-row:span 3; }
-.hobby-tile--wide{ grid-column:span 3; grid-row:span 2; }
-.hobby-tile--tall{ grid-column:span 2; grid-row:span 3; }
+.hobby-collage__item:hover,
+.hobby-collage__item:focus-within{ z-index:5; }
+.hobby-collage__item--md{ width:clamp(150px,18vw,210px); }
+.hobby-collage__item--lg{ width:clamp(190px,23vw,270px); }
 
 .hobby-card__btn{
-  display:flex; flex-direction:column;
-  width:100%; height:100%;
+  display:block;
+  width:100%;
   background:none; border:none; padding:0; margin:0;
   font:inherit; color:inherit; text-align:left; cursor:pointer;
-  transition:transform .35s cubic-bezier(.34,1.56,.64,1);
 }
 .hobby-card__btn img{
-  flex:1; min-height:0; width:100%; object-fit:cover;
+  display:block; width:100%; aspect-ratio:300/340; object-fit:cover;
   border:5px solid var(--ink);
   box-shadow:8px 8px 0 var(--ink);
-  transition:box-shadow .35s cubic-bezier(.34,1.56,.64,1);
+  transition:transform .35s cubic-bezier(.34,1.56,.64,1), box-shadow .35s cubic-bezier(.34,1.56,.64,1);
 }
 .hobby-card__label{
+  display:block;
   font-family:var(--font-mono); font-weight:700; font-size:0.85rem;
-  padding:10px 2px 0; flex:none;
+  padding:10px 2px 0;
 }
 
-.hobby-card__btn:hover,
-.hobby-card__btn:focus-visible{
-  transform:rotate(0deg) translateY(-6px) scale(1.03);
-}
 .hobby-card__btn:hover img,
 .hobby-card__btn:focus-visible img{
+  transform:rotate(0deg) translateY(-6px) scale(1.05);
   box-shadow:12px 12px 0 var(--coral);
 }
 .hobby-card__btn:focus-visible{ outline:2px solid var(--coral); outline-offset:6px; }
 
+.hobby-collage .sticker{ position:absolute; left:var(--x); top:var(--y); transform:rotate(var(--r,0deg)); }
+
 @media (prefers-reduced-motion:reduce){
-  .hobby-tile{ transition:none; }
-  .hobby-card__btn{ transition:none; }
   .hobby-card__btn img{ transition:none; }
 }
 
 @media (max-width:760px){
-  .hobby-bento{ grid-template-columns:repeat(2, 1fr); grid-auto-rows:150px; }
-  .hobby-tile, .hobby-tile--large, .hobby-tile--wide, .hobby-tile--tall{
-    grid-column:span 2; grid-row:span 2; transform:none;
+  .hobby-collage{
+    position:static; min-height:0;
+    display:flex; flex-direction:column; align-items:center; gap:36px;
+    margin:32px 0 8px;
   }
+  .hobby-collage__item, .hobby-collage .sticker{
+    position:static !important; transform:rotate(var(--r)) !important;
+  }
+  .hobby-collage__item--md, .hobby-collage__item--lg{ width:min(300px, 78vw); }
+  .hobby-collage .sticker--circle{ width:90px; height:90px; font-size:0.68rem; }
 }
 
 /* ============================================
