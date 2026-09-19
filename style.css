@@ -54,6 +54,7 @@ h1,h2,h3,p{ margin:0; }
   background:var(--cream);
   border-bottom:3px solid var(--ink);
 }
+.nav__left{ display:flex; align-items:center; gap:clamp(20px,4vw,48px); }
 .nav__mark{
   font-family:var(--font-display); font-weight:900; font-size:1.4rem;
 }
@@ -74,11 +75,13 @@ h1,h2,h3,p{ margin:0; }
 .nav__cta:hover{ background:var(--ink); color:var(--cream); transform:rotate(-2deg); }
 
 @media (max-width:760px){
+  .nav__left{ gap:16px; }
   .nav__links{ gap:14px; }
   .nav__label{ display:none; }
 }
 @media (max-width:480px){
   .nav__cta{ padding:8px 12px; font-size:0.7rem; }
+  .nav__left{ gap:12px; }
   .nav__links{ gap:10px; }
 }
 
