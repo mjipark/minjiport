@@ -218,9 +218,11 @@ const prefersReducedMotion = window.matchMedia("(prefers-reduced-motion: reduce)
 })();
 
 // ============================================
-// "Minji" cutout pop-in for the Background section
-// appears on the right once the section scrolls
-// into view, one-shot like the other reveals.
+// "Minji" cutout pop-in/out for the Background
+// section — pops in on the right each time the
+// section scrolls into view, and pops back out
+// (reverses the same animation) each time it
+// scrolls out, rather than a one-shot reveal.
 // ============================================
 (function initBackgroundMinjiReveal(){
   const el = document.getElementById("backgroundMinji");
@@ -233,10 +235,7 @@ const prefersReducedMotion = window.matchMedia("(prefers-reduced-motion: reduce)
 
   const observer = new IntersectionObserver((entries) => {
     entries.forEach((entry) => {
-      if (entry.isIntersecting) {
-        el.classList.add("is-visible");
-        observer.unobserve(entry.target);
-      }
+      el.classList.toggle("is-visible", entry.isIntersecting);
     });
   }, { threshold: 0.3 });
 
