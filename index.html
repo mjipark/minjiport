@@ -23,7 +23,10 @@
 <!-- ============ NAV ============ -->
 <header class="nav">
   <div class="nav__left">
-    <a href="#top" class="nav__mark">YN<span class="dot">.</span></a>
+    <a href="#top" class="nav__mark" id="navMark" aria-label="Open menu" aria-expanded="false" aria-controls="mobileDrawer">
+      YN<span class="dot">.</span>
+      <span class="nav__menu-hint" aria-hidden="true"><span></span><span></span><span></span></span>
+    </a>
     <nav class="nav__links">
       <a href="#work"><span class="nav__num">01</span><span class="nav__label">Work</span></a>
       <a href="#experience"><span class="nav__num">02</span><span class="nav__label">Experience</span></a>
@@ -34,6 +37,19 @@
   <a href="#contact" class="nav__cta">Let's talk →</a>
 </header>
 
+<!-- ============ MOBILE DRAWER ============ -->
+<div class="mobile-drawer__overlay" id="mobileDrawerOverlay"></div>
+<div class="mobile-drawer" id="mobileDrawer" aria-hidden="true">
+  <button class="mobile-drawer__close" id="mobileDrawerClose" aria-label="Close menu">✕</button>
+  <nav class="mobile-drawer__links">
+    <a href="#work"><span class="nav__num">01</span>Work</a>
+    <a href="#experience"><span class="nav__num">02</span>Experience</a>
+    <a href="#skills"><span class="nav__num">03</span>Skills</a>
+    <a href="#contact"><span class="nav__num">04</span>Contact</a>
+  </nav>
+  <a href="#contact" class="mobile-drawer__cta">Let's talk →</a>
+</div>
+
 <!-- ============ HERO / BACKGROUND ============ -->
 <section class="hero" id="top">
   <div class="hero__collage" id="heroCollage">
@@ -43,6 +59,8 @@
     <div class="sticker sticker--tape parallax-item" data-depth="0.2" style="--x:44%; --y:0%; --r:-4deg;">EST. 2026</div>
     <div class="sticker sticker--circle parallax-item" data-depth="0.5" style="--x:70%; --y:58%; --r:0deg;">Open to<br>work ↗</div>
   </div>
+
+  <img src="images/minji-sticker.png" class="hero__minji" id="heroMinji" alt="Cutout portrait sticker of Minji">
 
   <p class="hero__eyebrow">Hello, I'm</p>
   <h1 class="hero__name">Your Name</h1>
