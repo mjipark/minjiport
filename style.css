@@ -303,15 +303,11 @@ h1,h2,h3,p{ margin:0; }
   padding:0 6px; box-decoration-break:clone;
 }
 
-.hero__marquee{
-  position:absolute; left:0; right:0; bottom:0; z-index:2;
-  margin:0;
-}
-
 /* ============================================
    MARQUEE LINE — a bare strip of moving dashes,
-   no text. Reused for the hero footer bar and
-   the site footer bar.
+   no text. Reused for the hero footer bar (pinned
+   to the hero's bottom edge) and the site footer
+   bar (sits in normal flow there).
    ============================================ */
 .marquee-line{
   position:relative;
@@ -319,6 +315,9 @@ h1,h2,h3,p{ margin:0; }
   overflow:hidden;
   border-top:3px solid var(--ink); border-bottom:3px solid var(--ink);
   background:var(--ink);
+}
+.hero .marquee-line{
+  position:absolute; left:0; right:0; bottom:0; z-index:2;
 }
 .marquee-line::before{
   content:"";
@@ -351,7 +350,7 @@ h1,h2,h3,p{ margin:0; }
   .hero__collage img.parallax-item{ width:96px; }
   .sticker--tape{ align-self:center; }
   .sticker--circle{ width:90px; height:90px; font-size:0.68rem; flex:none; }
-  .hero__marquee{ position:relative; margin-top:40px; }
+  .hero .marquee-line{ position:relative; margin-top:40px; }
 }
 
 /* ============================================
@@ -421,23 +420,38 @@ h1,h2,h3,p{ margin:0; }
 
 /* ============================================
    SECTION COLOR BLOCKS
-   each section gets its own full-bleed color —
-   the "0 0 0 100vmax" box-shadow trick paints
-   past the max-width column while the section's
-   own overflow:hidden clips it to that section's
-   height, so no extra wrapper markup is needed.
+   each section gets its own full-bleed color via
+   a breakout pseudo-element (the classic
+   left:50%/margin-left:-50vw full-bleed trick)
+   sized to the section's own height — NOT a
+   box-shadow-on-overflow:hidden trick, since
+   overflow:hidden on the same element that casts
+   the shadow clips the shadow to nothing (it
+   paints outside the border box).
+   z-index:0 forces each section to own a local
+   stacking context, so the negative-z fill stays
+   scoped behind that section's content instead of
+   comparing against the page's other layers.
    ============================================ */
 .background, .work, .experience, .skills, .hobbies, .contact{
   position:relative;
-  overflow:hidden;
-  box-shadow:0 0 0 100vmax var(--section-bg);
+  z-index:0;
   border-top:4px solid var(--ink);
 }
-.background{ --section-bg:#1b1330; }
-.work{ --section-bg:#2a1210; }
-.experience{ --section-bg:#0f1f18; }
-.skills{ --section-bg:#10152b; }
-.hobbies{ --section-bg:#241a10; }
+.background::before, .work::before, .experience::before,
+.skills::before, .hobbies::before, .contact::before{
+  content:"";
+  position:absolute;
+  top:0; bottom:0; left:50%; right:50%;
+  width:100vw; margin-left:-50vw;
+  background:var(--section-bg);
+  z-index:-1;
+}
+.background{ --section-bg:#2E1A4D; }
+.work{ --section-bg:#4A1B12; }
+.experience{ --section-bg:#123B26; }
+.skills{ --section-bg:#142A66; }
+.hobbies{ --section-bg:#4A3110; }
 .contact{ --section-bg:var(--coral); }
 
 /* ============================================
@@ -605,6 +619,33 @@ section{ padding:clamp(70px,9vw,130px) clamp(20px,4vw,56px); max-width:var(--max
 .skills__tags span{
   font-family:var(--font-mono); font-size:0.75rem;
   border:1.5px solid currentColor; border-radius:100px; padding:5px 12px;
+}
+
+/* cutout-sticker icons — same paper-cutout
+   language as the hero collage (solid shape,
+   thick ink border/shadow) rather than icon-font
+   glyphs, so the category badges read as part of
+   the same scrapbook rather than a different kit. */
+.skills__icon{
+  display:block; margin-bottom:18px;
+}
+.skills__icon--circle,
+.skills__icon--diamond,
+.skills__icon--rounded{
+  width:42px; height:42px;
+  background:var(--cream);
+  border:3px solid var(--ink);
+  box-shadow:5px 5px 0 var(--ink);
+}
+.skills__icon--circle{ border-radius:50%; }
+.skills__icon--diamond{ transform:rotate(45deg); }
+.skills__icon--rounded{ border-radius:30%; transform:rotate(-6deg); }
+.skills__icon--tri{
+  width:0; height:0;
+  border-left:20px solid transparent;
+  border-right:20px solid transparent;
+  border-bottom:36px solid var(--cream);
+  filter:drop-shadow(5px 5px 0 var(--ink));
 }
 
 /* ============================================
