@@ -275,17 +275,17 @@ h1,h2,h3,p{ margin:0; }
   font-weight:900; font-style:italic;
   font-size:clamp(3.6rem, 13vw, 11rem);
   line-height:0.9; letter-spacing:-0.01em;
-  margin-bottom:26px;
+  margin-bottom:clamp(28px, 5vw, 56px);
 }
 .hero__tagline{
   position:relative; z-index:1;
   font-size:clamp(1.3rem,2.8vw,2rem);
-  line-height:1.35; max-width:840px;
+  line-height:1.65; max-width:840px;
   margin-bottom:48px;
 }
 .hero__tagline em{
   font-style:normal; background:var(--lime); color:var(--cream);
-  padding:0 6px; box-decoration-break:clone;
+  padding:3px 6px; box-decoration-break:clone;
 }
 
 /* ============================================
