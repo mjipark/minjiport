@@ -141,15 +141,37 @@ h1,h2,h3,p{ margin:0; }
    ============================================ */
 .hero{
   position:relative;
-  padding:clamp(60px,10vw,120px) clamp(20px,4vw,56px) 0;
+  padding:clamp(20px,4vw,56px);
   overflow:hidden;
-  min-height:78vh;
+  min-height:100vh;
+  min-height:100svh;
+  display:flex;
+  flex-direction:column;
+  justify-content:center;
+}
+
+.hero__intro{
+  position:relative; z-index:2;
+}
+
+.hero__scroll-cue{
+  font-family:var(--font-mono); font-size:0.8rem; text-transform:uppercase;
+  letter-spacing:0.08em; color:var(--muted);
+  margin-top:56px;
+  animation:scrollCueBob 1.8s ease-in-out infinite;
+}
+@keyframes scrollCueBob{
+  0%,100%{ transform:translateY(0); opacity:0.6; }
+  50%{ transform:translateY(8px); opacity:1; }
 }
 
 .hero__collage{
   position:absolute; inset:0; z-index:0;
   pointer-events:none;
+  opacity:0;
+  transition:opacity .8s ease;
 }
+.hero__collage.is-visible{ opacity:1; }
 .parallax-item{
   position:absolute;
   left:var(--x); top:var(--y);
@@ -230,25 +252,12 @@ h1,h2,h3,p{ margin:0; }
   padding:0 6px; box-decoration-break:clone;
 }
 
-.hero__bio-row{
-  position:relative; z-index:1;
-  display:flex; gap:36px; align-items:flex-start;
-  max-width:760px; margin-bottom:96px;
-}
-.hero__avatar{
-  flex:none; width:140px; height:140px; border-radius:50%;
-  overflow:hidden; border:4px solid var(--ink);
-  box-shadow:6px 6px 0 var(--coral);
-}
-.hero__avatar img{ width:100%; height:100%; object-fit:cover; }
-.hero__bio{ font-size:1.05rem; line-height:1.7; padding-top:6px; }
-
 .hero__marquee{
-  position:relative; z-index:1;
+  position:absolute; left:0; right:0; bottom:0; z-index:2;
   border-top:3px solid var(--ink); border-bottom:3px solid var(--ink);
   background:var(--ink); color:var(--cream);
   overflow:hidden; white-space:nowrap;
-  margin:56px -1px 0;
+  margin:0;
 }
 .hero__marquee-track{
   display:inline-flex; animation:marquee 22s linear infinite;
@@ -263,24 +272,53 @@ h1,h2,h3,p{ margin:0; }
 }
 
 /* On narrow screens the absolutely-positioned collage overlaps
-   the text column, so it collapses into a static horizontal strip
-   above the copy instead. */
+   the text column, so once revealed it collapses into a static
+   horizontal strip above the copy instead. Both stay taken out of
+   the flex flow (position:absolute) until scroll reveals them, so
+   the hero opens as text-only with no reserved blank space. */
 @media (max-width:760px){
   .hero{ padding-top:40px; overflow:visible; }
   .hero__collage{
-    position:static; display:flex; align-items:flex-start; gap:14px;
-    overflow-x:auto; padding:4px 4px 24px; margin:0 -4px 28px;
+    display:flex; align-items:flex-start; gap:14px;
+    overflow-x:auto; padding:4px 4px 24px;
+  }
+  .hero__collage.is-visible{
+    position:static; margin:0 -4px 28px;
   }
   .parallax-item{ position:static !important; transform:rotate(var(--r)) !important; flex:none; }
   .hero__collage img.parallax-item{ width:96px; }
   .sticker--tape{ align-self:center; }
   .sticker--circle{ width:90px; height:90px; font-size:0.68rem; flex:none; }
   .hero__minji{
-    position:static; display:block; margin:0 auto 28px;
+    display:block;
     width:min(60vw, 220px);
-    transform:rotate(-3deg); transition:none;
+    transition:none;
+  }
+  .hero__minji.is-stuck{
+    position:static; margin:0 auto 28px;
+    transform:rotate(-3deg);
   }
   .hero__minji-img{ filter:drop-shadow(6px 8px 0 var(--ink)); }
+  .hero__marquee{ position:relative; margin-top:40px; }
+}
+
+/* ============================================
+   BACKGROUND
+   ============================================ */
+.background__row{
+  display:flex; gap:36px; align-items:flex-start;
+  max-width:760px;
+}
+.background__avatar{
+  flex:none; width:140px; height:140px; border-radius:50%;
+  overflow:hidden; border:4px solid var(--ink);
+  box-shadow:6px 6px 0 var(--coral);
+}
+.background__avatar img{ width:100%; height:100%; object-fit:cover; }
+.background__bio{ font-size:1.05rem; line-height:1.7; padding-top:6px; }
+
+@media (max-width:640px){
+  .background__row{ flex-direction:column; gap:20px; }
 }
 
 /* ============================================

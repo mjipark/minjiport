@@ -127,44 +127,42 @@ const prefersReducedMotion = window.matchMedia("(prefers-reduced-motion: reduce)
 })();
 
 // ============================================
-// Scroll-driven "minji" hero reveal
-// sticks the cutout onto the page like a note
-// being pressed down once the user scrolls a
-// little way into the hero — a snappy one-shot
-// pop, not a continuous scrub.
+// Scroll-driven hero reveal
+// the hero opens as text-only; once the user
+// scrolls a little way into it, the collage
+// (polaroids/stickers) and the "minji" cutout
+// pop in together like notes being pressed
+// onto the page — a snappy one-shot reveal,
+// not a continuous scrub.
 // ============================================
-(function initMinjiScroll(){
-  const el = document.getElementById("heroMinji");
+(function initHeroReveal(){
+  const collage = document.getElementById("heroCollage");
+  const minji = document.getElementById("heroMinji");
   const hero = document.getElementById("top");
-  if (!el || !hero) return;
+  if (!hero) return;
 
-  const isDesktop = window.matchMedia("(min-width: 761px)").matches;
-
-  if (prefersReducedMotion || !isDesktop) {
-    el.style.opacity = 1;
+  if (prefersReducedMotion) {
+    if (collage) collage.classList.add("is-visible");
+    if (minji) minji.classList.add("is-stuck");
     return;
   }
 
-  const STICK_AT = 0.08; // fraction of hero scrolled before it "sticks"
+  const STICK_AT = 0.08; // fraction of hero scrolled before it reveals
   let stuck = false;
 
   function tick(){
-    if (!stuck) {
-      const rect = hero.getBoundingClientRect();
-      const total = Math.max(rect.height, 1);
-      const progress = Math.min(1, Math.max(0, -rect.top / total));
-      if (progress >= STICK_AT) {
-        el.classList.add("is-stuck");
-        stuck = true;
-      }
-    } else {
-      const rect = hero.getBoundingClientRect();
-      const total = Math.max(rect.height, 1);
-      const progress = -rect.top / total;
-      if (progress < STICK_AT * 0.6) {
-        el.classList.remove("is-stuck");
-        stuck = false;
-      }
+    const rect = hero.getBoundingClientRect();
+    const total = Math.max(rect.height, 1);
+    const progress = Math.min(1, Math.max(0, -rect.top / total));
+
+    if (!stuck && progress >= STICK_AT) {
+      collage && collage.classList.add("is-visible");
+      minji && minji.classList.add("is-stuck");
+      stuck = true;
+    } else if (stuck && progress < STICK_AT * 0.6) {
+      collage && collage.classList.remove("is-visible");
+      minji && minji.classList.remove("is-stuck");
+      stuck = false;
     }
     requestAnimationFrame(tick);
   }

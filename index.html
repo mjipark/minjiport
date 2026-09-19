@@ -1,311 +1,344 @@
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
-<meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Your Name — Portfolio</title>
-<meta name="description" content="Designer & developer portfolio.">
-<link rel="preconnect" href="https://fonts.googleapis.com">
-<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-<link href="https://fonts.googleapis.com/css2?family=Fraunces:ital,opsz,wght@0,9..144,300;0,9..144,600;0,9..144,900;1,9..144,600;1,9..144,900&family=Space+Grotesk:wght@400;500;700&family=Space+Mono:wght@400;700&display=swap" rel="stylesheet">
-<link rel="stylesheet" href="style.css">
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Your Name — Portfolio</title>
+  <meta name="description" content="Designer & developer portfolio.">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link
+    href="https://fonts.googleapis.com/css2?family=Fraunces:ital,opsz,wght@0,9..144,300;0,9..144,600;0,9..144,900;1,9..144,600;1,9..144,900&family=Space+Grotesk:wght@400;500;700&family=Space+Mono:wght@400;700&display=swap"
+    rel="stylesheet">
+  <link rel="stylesheet" href="style.css">
 </head>
+
 <body>
 
-<!-- grain overlay -->
-<div class="grain" aria-hidden="true"></div>
+  <!-- grain overlay -->
+  <div class="grain" aria-hidden="true"></div>
 
-<!-- cursor-follow preview (Work section) -->
-<div class="cursor-preview" id="cursorPreview" aria-hidden="true">
-  <img id="cursorPreviewImg" src="" alt="">
-</div>
+  <!-- cursor-follow preview (Work section) -->
+  <div class="cursor-preview" id="cursorPreview" aria-hidden="true">
+    <img id="cursorPreviewImg" src="" alt="">
+  </div>
 
-<!-- ============ NAV ============ -->
-<header class="nav">
-  <div class="nav__left">
-    <a href="#top" class="nav__mark" id="navMark" aria-label="Open menu" aria-expanded="false" aria-controls="mobileDrawer">
-      YN<span class="dot">.</span>
-    </a>
-    <nav class="nav__links">
-      <a href="#work"><span class="nav__num">01</span><span class="nav__label">Work</span></a>
-      <a href="#experience"><span class="nav__num">02</span><span class="nav__label">Experience</span></a>
-      <a href="#skills"><span class="nav__num">03</span><span class="nav__label">Skills</span></a>
-      <a href="#contact"><span class="nav__num">04</span><span class="nav__label">Contact</span></a>
+  <!-- ============ NAV ============ -->
+  <header class="nav">
+    <div class="nav__left">
+      <a href="#top" class="nav__mark" id="navMark" aria-label="Open menu" aria-expanded="false"
+        aria-controls="mobileDrawer">
+        MJ<span class="dot">.</span>
+      </a>
+      <nav class="nav__links">
+        <a href="#background"><span class="nav__num">01</span><span class="nav__label">Background</span></a>
+        <a href="#work"><span class="nav__num">02</span><span class="nav__label">Work</span></a>
+        <a href="#experience"><span class="nav__num">03</span><span class="nav__label">Experience</span></a>
+        <a href="#skills"><span class="nav__num">04</span><span class="nav__label">Skills</span></a>
+        <a href="#contact"><span class="nav__num">05</span><span class="nav__label">Contact</span></a>
+      </nav>
+    </div>
+    <a href="#contact" class="nav__cta">Let's talk →</a>
+  </header>
+
+  <!-- ============ MOBILE DRAWER ============ -->
+  <div class="mobile-drawer__overlay" id="mobileDrawerOverlay"></div>
+  <div class="mobile-drawer" id="mobileDrawer" aria-hidden="true">
+    <button class="mobile-drawer__close" id="mobileDrawerClose" aria-label="Close menu">✕</button>
+    <nav class="mobile-drawer__links">
+      <a href="#background"><span class="nav__num">01</span>Background</a>
+      <a href="#work"><span class="nav__num">02</span>Work</a>
+      <a href="#experience"><span class="nav__num">03</span>Experience</a>
+      <a href="#skills"><span class="nav__num">04</span>Skills</a>
+      <a href="#contact"><span class="nav__num">05</span>Contact</a>
     </nav>
-  </div>
-  <a href="#contact" class="nav__cta">Let's talk →</a>
-</header>
-
-<!-- ============ MOBILE DRAWER ============ -->
-<div class="mobile-drawer__overlay" id="mobileDrawerOverlay"></div>
-<div class="mobile-drawer" id="mobileDrawer" aria-hidden="true">
-  <button class="mobile-drawer__close" id="mobileDrawerClose" aria-label="Close menu">✕</button>
-  <nav class="mobile-drawer__links">
-    <a href="#work"><span class="nav__num">01</span>Work</a>
-    <a href="#experience"><span class="nav__num">02</span>Experience</a>
-    <a href="#skills"><span class="nav__num">03</span>Skills</a>
-    <a href="#contact"><span class="nav__num">04</span>Contact</a>
-  </nav>
-  <a href="#contact" class="mobile-drawer__cta">Let's talk →</a>
-</div>
-
-<!-- ============ HERO / BACKGROUND ============ -->
-<section class="hero" id="top">
-  <div class="hero__collage" id="heroCollage">
-    <img src="images/polaroid-1.svg" class="parallax-item" data-depth="0.6" style="--x:80%; --y:2%; --r:-8deg;" alt="collage object 1 — replace with your own photo">
-    <img src="images/polaroid-2.svg" class="parallax-item" data-depth="0.3" style="--x:58%; --y:28%; --r:10deg;" alt="collage object 2 — replace with your own photo">
-    <img src="images/polaroid-3.svg" class="parallax-item" data-depth="0.45" style="--x:80%; --y:56%; --r:-5deg;" alt="collage object 3 — replace with your own photo">
-    <div class="sticker sticker--tape parallax-item" data-depth="0.2" style="--x:44%; --y:0%; --r:-4deg;">EST. 2026</div>
-    <div class="sticker sticker--circle parallax-item" data-depth="0.5" style="--x:70%; --y:58%; --r:0deg;">Open to<br>work ↗</div>
+    <a href="#contact" class="mobile-drawer__cta">Let's talk →</a>
   </div>
 
-  <div class="hero__minji" id="heroMinji">
-    <img src="images/minji-sticker.png" class="hero__minji-img" alt="Cutout portrait sticker of Minji">
-    <span class="hero__minji-tape hero__minji-tape--l" aria-hidden="true"></span>
-    <span class="hero__minji-tape hero__minji-tape--r" aria-hidden="true"></span>
-  </div>
-
-  <p class="hero__eyebrow">Hello, I'm</p>
-  <h1 class="hero__name">Your Name</h1>
-  <p class="hero__tagline">Product designer &amp; front-end developer who builds<br>
-  <em>loud, tactile, story-driven</em> interfaces.</p>
-
-  <div class="hero__bio-row">
-    <div class="hero__avatar">
-      <img src="images/polaroid-1.svg" alt="portrait placeholder — replace with your own photo">
-    </div>
-    <p class="hero__bio">
-      I'm a designer-developer hybrid based in [City]. Over the past [X] years
-      I've shipped brand sites, product UI, and playful web experiments for
-      teams that want more personality than a template allows. I care about
-      craft, motion, and interfaces that feel like they were made by hand.
-    </p>
-  </div>
-
-  <div class="hero__marquee">
-    <div class="hero__marquee-track">
-      <span>UI/UX DESIGN ✦ FRONT-END DEV ✦ BRAND SYSTEMS ✦ MOTION ✦ UI/UX DESIGN ✦ FRONT-END DEV ✦ BRAND SYSTEMS ✦ MOTION ✦ </span>
-      <span aria-hidden="true">UI/UX DESIGN ✦ FRONT-END DEV ✦ BRAND SYSTEMS ✦ MOTION ✦ UI/UX DESIGN ✦ FRONT-END DEV ✦ BRAND SYSTEMS ✦ MOTION ✦ </span>
-    </div>
-  </div>
-</section>
-
-<!-- ============ WORK ============ -->
-<section class="work reveal" id="work">
-  <div class="section-head">
-    <span class="section-head__num">01</span>
-    <h2 class="section-head__title">Selected&nbsp;Work</h2>
-    <p class="section-head__note">Hover a row to preview →</p>
-  </div>
-
-  <ul class="work__list">
-
-    <li class="work__row" data-img="images/work-1.svg">
-      <div class="work__row-main">
-        <h3 class="work__title">Project One — Rebrand &amp; Site</h3>
-        <p class="work__desc">A full rebrand and marketing site for a print studio, built to feel handmade and slightly chaotic on purpose.</p>
+  <!-- ============ HERO / BACKGROUND ============ -->
+  <section class="hero" id="top">
+    <div class="hero__collage" id="heroCollage">
+      <img src="images/polaroid-1.svg" class="parallax-item" data-depth="0.6" style="--x:80%; --y:2%; --r:-8deg;"
+        alt="collage object 1 — replace with your own photo">
+      <img src="images/polaroid-2.svg" class="parallax-item" data-depth="0.3" style="--x:58%; --y:28%; --r:10deg;"
+        alt="collage object 2 — replace with your own photo">
+      <img src="images/polaroid-3.svg" class="parallax-item" data-depth="0.45" style="--x:80%; --y:56%; --r:-5deg;"
+        alt="collage object 3 — replace with your own photo">
+      <div class="sticker sticker--tape parallax-item" data-depth="0.2" style="--x:44%; --y:0%; --r:-4deg;">EST. 2026
       </div>
-      <div class="work__row-meta">
-        <div class="work__tags">
-          <span>React</span><span>GSAP</span><span>Figma</span>
+      <div class="sticker sticker--circle parallax-item" data-depth="0.5" style="--x:70%; --y:58%; --r:0deg;">Open
+        to<br>work ↗</div>
+    </div>
+
+    <div class="hero__minji" id="heroMinji">
+      <img src="images/minji-sticker.png" class="hero__minji-img" alt="Cutout portrait sticker of Minji">
+      <span class="hero__minji-tape hero__minji-tape--l" aria-hidden="true"></span>
+      <span class="hero__minji-tape hero__minji-tape--r" aria-hidden="true"></span>
+    </div>
+
+    <div class="hero__intro">
+      <p class="hero__eyebrow">Hello, I'm</p>
+      <h1 class="hero__name">Minji Park</h1>
+      <p class="hero__tagline">Product designer &amp; front-end developer who builds<br>
+        <em>loud, tactile, story-driven</em> interfaces.
+      </p>
+      <p class="hero__scroll-cue" aria-hidden="true">Scroll ↓</p>
+    </div>
+
+    <div class="hero__marquee">
+      <div class="hero__marquee-track">
+        <span> ----- ✦ ----- ✦ ----- ✦ ----- ✦ ----- ✦ ----- ✦ ----- ✦
+          MOTION ✦ </span>
+        <span aria-hidden="true">----- ✦ ----- ✦ ----- ✦ ----- ✦ ----- ✦ ----- ✦
+          ----- ✦ ----- ✦ </span>
+      </div>
+    </div>
+  </section>
+
+  <!-- ============ BACKGROUND ============ -->
+  <section class="background reveal" id="background">
+    <div class="section-head">
+      <span class="section-head__num">01</span>
+      <h2 class="section-head__title">Background</h2>
+      <p class="section-head__note">A little about me →</p>
+    </div>
+
+    <div class="background__row">
+      <div class="background__avatar">
+        <img src="images/polaroid-1.svg" alt="portrait placeholder — replace with your own photo">
+      </div>
+      <p class="background__bio">
+        I'm a designer-developer hybrid based in [City]. Over the past [X] years
+        I've shipped brand sites, product UI, and playful web experiments for
+        teams that want more personality than a template allows. I care about
+        craft, motion, and interfaces that feel like they were made by hand.
+      </p>
+    </div>
+  </section>
+
+  <!-- ============ WORK ============ -->
+  <section class="work reveal" id="work">
+    <div class="section-head">
+      <span class="section-head__num">02</span>
+      <h2 class="section-head__title">Selected&nbsp;Work</h2>
+      <p class="section-head__note">Hover a row to preview →</p>
+    </div>
+
+    <ul class="work__list">
+
+      <li class="work__row" data-img="images/work-1.svg">
+        <div class="work__row-main">
+          <h3 class="work__title">Project One — Rebrand &amp; Site</h3>
+          <p class="work__desc">A full rebrand and marketing site for a print studio, built to feel handmade and
+            slightly chaotic on purpose.</p>
         </div>
-        <div class="work__links">
-          <a href="#" target="_blank" rel="noopener">Live ↗</a>
-          <a href="#" target="_blank" rel="noopener">GitHub ↗</a>
+        <div class="work__row-meta">
+          <div class="work__tags">
+            <span>React</span><span>GSAP</span><span>Figma</span>
+          </div>
+          <div class="work__links">
+            <a href="#" target="_blank" rel="noopener">Live ↗</a>
+            <a href="#" target="_blank" rel="noopener">GitHub ↗</a>
+          </div>
         </div>
-      </div>
-    </li>
+      </li>
 
-    <li class="work__row" data-img="images/work-2.svg">
-      <div class="work__row-main">
-        <h3 class="work__title">Project Two — Interactive Dashboard</h3>
-        <p class="work__desc">Internal analytics dashboard with custom charting and a dense, information-rich layout.</p>
-      </div>
-      <div class="work__row-meta">
-        <div class="work__tags">
-          <span>TypeScript</span><span>D3.js</span><span>Node</span>
+      <li class="work__row" data-img="images/work-2.svg">
+        <div class="work__row-main">
+          <h3 class="work__title">Project Two — Interactive Dashboard</h3>
+          <p class="work__desc">Internal analytics dashboard with custom charting and a dense, information-rich layout.
+          </p>
         </div>
-        <div class="work__links">
-          <a href="#" target="_blank" rel="noopener">Live ↗</a>
-          <a href="#" target="_blank" rel="noopener">GitHub ↗</a>
+        <div class="work__row-meta">
+          <div class="work__tags">
+            <span>TypeScript</span><span>D3.js</span><span>Node</span>
+          </div>
+          <div class="work__links">
+            <a href="#" target="_blank" rel="noopener">Live ↗</a>
+            <a href="#" target="_blank" rel="noopener">GitHub ↗</a>
+          </div>
         </div>
-      </div>
-    </li>
+      </li>
 
-    <li class="work__row" data-img="images/work-3.svg">
-      <div class="work__row-main">
-        <h3 class="work__title">Project Three — Experimental Site</h3>
-        <p class="work__desc">A personal experiment in scroll-driven storytelling and WebGL-flavored transitions.</p>
-      </div>
-      <div class="work__row-meta">
-        <div class="work__tags">
-          <span>Three.js</span><span>Vite</span><span>CSS</span>
+      <li class="work__row" data-img="images/work-3.svg">
+        <div class="work__row-main">
+          <h3 class="work__title">Project Three — Experimental Site</h3>
+          <p class="work__desc">A personal experiment in scroll-driven storytelling and WebGL-flavored transitions.</p>
         </div>
-        <div class="work__links">
-          <a href="#" target="_blank" rel="noopener">Live ↗</a>
-          <a href="#" target="_blank" rel="noopener">GitHub ↗</a>
+        <div class="work__row-meta">
+          <div class="work__tags">
+            <span>Three.js</span><span>Vite</span><span>CSS</span>
+          </div>
+          <div class="work__links">
+            <a href="#" target="_blank" rel="noopener">Live ↗</a>
+            <a href="#" target="_blank" rel="noopener">GitHub ↗</a>
+          </div>
         </div>
-      </div>
-    </li>
+      </li>
 
-    <li class="work__row" data-img="images/work-4.svg">
-      <div class="work__row-main">
-        <h3 class="work__title">Project Four — Mobile App UI</h3>
-        <p class="work__desc">End-to-end UI for a habit-tracking app, from wireframes through a shipped design system.</p>
-      </div>
-      <div class="work__row-meta">
-        <div class="work__tags">
-          <span>Swift UI</span><span>Figma</span><span>Lottie</span>
+      <li class="work__row" data-img="images/work-4.svg">
+        <div class="work__row-main">
+          <h3 class="work__title">Project Four — Mobile App UI</h3>
+          <p class="work__desc">End-to-end UI for a habit-tracking app, from wireframes through a shipped design system.
+          </p>
         </div>
-        <div class="work__links">
-          <a href="#" target="_blank" rel="noopener">Live ↗</a>
-          <a href="#" target="_blank" rel="noopener">GitHub ↗</a>
+        <div class="work__row-meta">
+          <div class="work__tags">
+            <span>Swift UI</span><span>Figma</span><span>Lottie</span>
+          </div>
+          <div class="work__links">
+            <a href="#" target="_blank" rel="noopener">Live ↗</a>
+            <a href="#" target="_blank" rel="noopener">GitHub ↗</a>
+          </div>
         </div>
-      </div>
-    </li>
+      </li>
 
-    <!-- duplicate a <li class="work__row" data-img="images/work-X.svg"> block above to add a 5th project -->
+      <!-- duplicate a <li class="work__row" data-img="images/work-X.svg"> block above to add a 5th project -->
 
-  </ul>
-</section>
+    </ul>
+  </section>
 
-<!-- ============ EXPERIENCE ============ -->
-<section class="experience reveal" id="experience">
-  <div class="section-head">
-    <span class="section-head__num">02</span>
-    <h2 class="section-head__title">Experience</h2>
-  </div>
-
-  <ol class="experience__list">
-
-    <li class="experience__item">
-      <div class="experience__dates">2024 — Present</div>
-      <div class="experience__body">
-        <h3>Senior Product Designer <span>@ Company Name</span></h3>
-        <ul>
-          <li>Led redesign of the core product surface, improving key task completion by [X]%.</li>
-          <li>Built and maintained a token-based design system adopted across 5+ product teams.</li>
-          <li>Partnered directly with engineering to ship high-fidelity, animation-heavy UI.</li>
-        </ul>
-        <div class="experience__tags"><span>Figma</span><span>React</span><span>Design Systems</span></div>
-      </div>
-    </li>
-
-    <li class="experience__item">
-      <div class="experience__dates">2022 — 2024</div>
-      <div class="experience__body">
-        <h3>Front-End Developer <span>@ Previous Company</span></h3>
-        <ul>
-          <li>Shipped and maintained customer-facing marketing pages and campaign microsites.</li>
-          <li>Reduced page load time by [X]% through asset and animation performance work.</li>
-          <li>Collaborated with design to prototype and ship experimental interaction patterns.</li>
-        </ul>
-        <div class="experience__tags"><span>JavaScript</span><span>GSAP</span><span>Webflow</span></div>
-      </div>
-    </li>
-
-    <li class="experience__item">
-      <div class="experience__dates">2020 — 2022</div>
-      <div class="experience__body">
-        <h3>UI/UX Designer <span>@ First Company / Studio</span></h3>
-        <ul>
-          <li>Designed end-to-end flows for [product], from research through hi-fi prototypes.</li>
-          <li>Ran usability sessions and translated findings directly into shipped iterations.</li>
-        </ul>
-        <div class="experience__tags"><span>Sketch</span><span>User Research</span><span>Prototyping</span></div>
-      </div>
-    </li>
-
-    <!-- duplicate an <li class="experience__item"> block above to add another role -->
-
-  </ol>
-</section>
-
-<!-- ============ SKILLS ============ -->
-<section class="skills reveal" id="skills">
-  <div class="section-head">
-    <span class="section-head__num">03</span>
-    <h2 class="section-head__title">Skills</h2>
-  </div>
-
-  <div class="skills__grid">
-
-    <div class="skills__cat skills__cat--coral">
-      <h3>Frontend</h3>
-      <div class="skills__tags">
-        <span>HTML/CSS</span><span>JavaScript</span><span>TypeScript</span>
-        <span>React</span><span>Next.js</span><span>GSAP</span>
-      </div>
+  <!-- ============ EXPERIENCE ============ -->
+  <section class="experience reveal" id="experience">
+    <div class="section-head">
+      <span class="section-head__num">03</span>
+      <h2 class="section-head__title">Experience</h2>
     </div>
 
-    <div class="skills__cat skills__cat--lime">
-      <h3>Backend</h3>
-      <div class="skills__tags">
-        <span>Node.js</span><span>Express</span><span>PostgreSQL</span>
-        <span>REST APIs</span><span>Firebase</span>
+    <ol class="experience__list">
+
+      <li class="experience__item">
+        <div class="experience__dates">2024 — Present</div>
+        <div class="experience__body">
+          <h3>Senior Product Designer <span>@ Company Name</span></h3>
+          <ul>
+            <li>Led redesign of the core product surface, improving key task completion by [X]%.</li>
+            <li>Built and maintained a token-based design system adopted across 5+ product teams.</li>
+            <li>Partnered directly with engineering to ship high-fidelity, animation-heavy UI.</li>
+          </ul>
+          <div class="experience__tags"><span>Figma</span><span>React</span><span>Design Systems</span></div>
+        </div>
+      </li>
+
+      <li class="experience__item">
+        <div class="experience__dates">2022 — 2024</div>
+        <div class="experience__body">
+          <h3>Front-End Developer <span>@ Previous Company</span></h3>
+          <ul>
+            <li>Shipped and maintained customer-facing marketing pages and campaign microsites.</li>
+            <li>Reduced page load time by [X]% through asset and animation performance work.</li>
+            <li>Collaborated with design to prototype and ship experimental interaction patterns.</li>
+          </ul>
+          <div class="experience__tags"><span>JavaScript</span><span>GSAP</span><span>Webflow</span></div>
+        </div>
+      </li>
+
+      <li class="experience__item">
+        <div class="experience__dates">2020 — 2022</div>
+        <div class="experience__body">
+          <h3>UI/UX Designer <span>@ First Company / Studio</span></h3>
+          <ul>
+            <li>Designed end-to-end flows for [product], from research through hi-fi prototypes.</li>
+            <li>Ran usability sessions and translated findings directly into shipped iterations.</li>
+          </ul>
+          <div class="experience__tags"><span>Sketch</span><span>User Research</span><span>Prototyping</span></div>
+        </div>
+      </li>
+
+      <!-- duplicate an <li class="experience__item"> block above to add another role -->
+
+    </ol>
+  </section>
+
+  <!-- ============ SKILLS ============ -->
+  <section class="skills reveal" id="skills">
+    <div class="section-head">
+      <span class="section-head__num">04</span>
+      <h2 class="section-head__title">Skills</h2>
+    </div>
+
+    <div class="skills__grid">
+
+      <div class="skills__cat skills__cat--coral">
+        <h3>Frontend</h3>
+        <div class="skills__tags">
+          <span>HTML/CSS</span><span>JavaScript</span><span>TypeScript</span>
+          <span>React</span><span>Next.js</span><span>GSAP</span>
+        </div>
+      </div>
+
+      <div class="skills__cat skills__cat--lime">
+        <h3>Backend</h3>
+        <div class="skills__tags">
+          <span>Node.js</span><span>Express</span><span>PostgreSQL</span>
+          <span>REST APIs</span><span>Firebase</span>
+        </div>
+      </div>
+
+      <div class="skills__cat skills__cat--violet">
+        <h3>Design</h3>
+        <div class="skills__tags">
+          <span>Figma</span><span>Design Systems</span><span>Motion / Prototyping</span>
+          <span>Typography</span><span>Illustration</span>
+        </div>
+      </div>
+
+      <div class="skills__cat skills__cat--ink">
+        <h3>Tools &amp; Other</h3>
+        <div class="skills__tags">
+          <span>Git/GitHub</span><span>Figma → Code</span><span>Webflow</span>
+          <span>Notion</span><span>Vercel</span>
+        </div>
+      </div>
+
+      <div class="skills__cat skills__cat--coral">
+        <h3>Soft Skills</h3>
+        <div class="skills__tags">
+          <span>Storytelling</span><span>Cross-team collaboration</span>
+          <span>Mentorship</span><span>Client communication</span>
+        </div>
+      </div>
+
+    </div>
+  </section>
+
+  <!-- ============ CONTACT ============ -->
+  <section class="contact reveal" id="contact">
+    <div class="section-head">
+      <span class="section-head__num">05</span>
+      <h2 class="section-head__title">Contact</h2>
+    </div>
+
+    <h3 class="contact__cta">Let's make<br>something loud.</h3>
+    <p class="contact__sub">Open to freelance, full-time, and everything weird in between.</p>
+
+    <a class="contact__email" href="mailto:mj.minjipark@gmail.com">mj.minjipark@gmail.com ↗</a>
+
+    <div class="contact__row">
+      <div class="contact__links">
+        <a href="https://github.com/yourusername" target="_blank" rel="noopener">GitHub</a>
+        <a href="https://linkedin.com/in/yourusername" target="_blank" rel="noopener">LinkedIn</a>
+        <a href="https://twitter.com/yourusername" target="_blank" rel="noopener">Twitter</a>
+      </div>
+      <a class="contact__resume" href="resume.pdf" download>Download Résumé ↓</a>
+    </div>
+  </section>
+
+  <footer class="footer">
+    <div class="footer__marquee">
+      <div class="footer__marquee-track">
+        <span>THANKS FOR SCROLLING ✦ BUILT WITH TOO MUCH COFFEE ✦ THANKS FOR SCROLLING ✦ BUILT WITH TOO MUCH COFFEE ✦
+        </span>
+        <span aria-hidden="true">THANKS FOR SCROLLING ✦ BUILT WITH TOO MUCH COFFEE ✦ THANKS FOR SCROLLING ✦ BUILT WITH
+          TOO MUCH COFFEE ✦ </span>
       </div>
     </div>
+    <a href="#top" class="footer__top">Back to top ↑</a>
+    <p class="footer__copy">© <span id="year"></span> Minji Park. All rights reserved.</p>
+  </footer>
 
-    <div class="skills__cat skills__cat--violet">
-      <h3>Design</h3>
-      <div class="skills__tags">
-        <span>Figma</span><span>Design Systems</span><span>Motion / Prototyping</span>
-        <span>Typography</span><span>Illustration</span>
-      </div>
-    </div>
-
-    <div class="skills__cat skills__cat--ink">
-      <h3>Tools &amp; Other</h3>
-      <div class="skills__tags">
-        <span>Git/GitHub</span><span>Figma → Code</span><span>Webflow</span>
-        <span>Notion</span><span>Vercel</span>
-      </div>
-    </div>
-
-    <div class="skills__cat skills__cat--coral">
-      <h3>Soft Skills</h3>
-      <div class="skills__tags">
-        <span>Storytelling</span><span>Cross-team collaboration</span>
-        <span>Mentorship</span><span>Client communication</span>
-      </div>
-    </div>
-
-  </div>
-</section>
-
-<!-- ============ CONTACT ============ -->
-<section class="contact reveal" id="contact">
-  <div class="section-head">
-    <span class="section-head__num">04</span>
-    <h2 class="section-head__title">Contact</h2>
-  </div>
-
-  <h3 class="contact__cta">Let's make<br>something loud.</h3>
-  <p class="contact__sub">Open to freelance, full-time, and everything weird in between.</p>
-
-  <a class="contact__email" href="mailto:you@example.com">you@example.com ↗</a>
-
-  <div class="contact__row">
-    <div class="contact__links">
-      <a href="https://github.com/yourusername" target="_blank" rel="noopener">GitHub</a>
-      <a href="https://linkedin.com/in/yourusername" target="_blank" rel="noopener">LinkedIn</a>
-      <a href="https://twitter.com/yourusername" target="_blank" rel="noopener">Twitter</a>
-    </div>
-    <a class="contact__resume" href="resume.pdf" download>Download Résumé ↓</a>
-  </div>
-</section>
-
-<footer class="footer">
-  <div class="footer__marquee">
-    <div class="footer__marquee-track">
-      <span>THANKS FOR SCROLLING ✦ BUILT WITH TOO MUCH COFFEE ✦ THANKS FOR SCROLLING ✦ BUILT WITH TOO MUCH COFFEE ✦ </span>
-      <span aria-hidden="true">THANKS FOR SCROLLING ✦ BUILT WITH TOO MUCH COFFEE ✦ THANKS FOR SCROLLING ✦ BUILT WITH TOO MUCH COFFEE ✦ </span>
-    </div>
-  </div>
-  <a href="#top" class="footer__top">Back to top ↑</a>
-  <p class="footer__copy">© <span id="year"></span> Your Name. All rights reserved.</p>
-</footer>
-
-<script src="script.js"></script>
+  <script src="script.js"></script>
 </body>
+
 </html>
