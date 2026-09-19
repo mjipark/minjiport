@@ -266,15 +266,16 @@ const prefersReducedMotion = window.matchMedia("(prefers-reduced-motion: reduce)
 })();
 
 // ============================================
-// Hobby photo lightbox
-// clicking a photo in the Hobbies moodboard pops a
-// small card that floats right next to that photo
-// (not a sidebar/modal) with the full image and a
-// caption, staying pinned beside it on scroll/resize.
-// On narrow screens, where there's no room to float
-// beside it, it falls back to a centered card with a
-// dimmed backdrop. Closes on the close button,
-// backdrop click, or Escape.
+// Hobby photo caption popup
+// hovering a photo in the Hobbies moodboard floats a
+// small text-only card (title + blurb, no repeated
+// image) right next to that tile, pinned beside it on
+// scroll/resize. On hover-capable pointers it's purely
+// hover-driven — no click needed, no close button, it
+// just follows the mouse on and off each tile. On
+// touch/coarse pointers, where hover doesn't exist, it
+// falls back to tap-to-toggle with a centered card, a
+// dimmed backdrop, and a visible close button.
 // ============================================
 (function initHobbyLightbox(){
   const lightbox = document.getElementById("hobbyLightbox");
@@ -282,7 +283,6 @@ const prefersReducedMotion = window.matchMedia("(prefers-reduced-motion: reduce)
   if (!lightbox || !cards.length) return;
 
   const panel = lightbox.querySelector(".lightbox__panel");
-  const img = document.getElementById("lightboxImg");
   const title = document.getElementById("lightboxTitle");
   const caption = document.getElementById("lightboxCaption");
   const closeBtn = document.getElementById("lightboxClose");
@@ -290,8 +290,11 @@ const prefersReducedMotion = window.matchMedia("(prefers-reduced-motion: reduce)
 
   const GAP = 18;
   const MARGIN = 16;
+  const HOVER_CLOSE_DELAY = 120;
+  const canHover = window.matchMedia("(hover: hover) and (pointer: fine)").matches;
   let lastFocused = null;
   let openCard = null;
+  let closeTimer = null;
 
   function isCentered(){
     return window.matchMedia("(max-width: 760px)").matches;
@@ -331,40 +334,64 @@ const prefersReducedMotion = window.matchMedia("(prefers-reduced-motion: reduce)
     panel.style.transform = lightbox.classList.contains("is-open") ? "scale(1)" : "scale(0.92)";
   }
 
-  function open(card){
-    lastFocused = document.activeElement;
+  function show(card){
     openCard = card;
-    img.src = card.dataset.img;
-    img.alt = card.dataset.title;
     title.textContent = card.dataset.title;
     caption.textContent = card.dataset.caption;
-
     lightbox.classList.add("is-open");
     lightbox.setAttribute("aria-hidden", "false");
     position();
     requestAnimationFrame(position);
-    closeBtn.focus();
   }
 
-  function close(){
+  function hide(){
     lightbox.classList.remove("is-open");
     lightbox.setAttribute("aria-hidden", "true");
     panel.style.transform = isCentered()
       ? "translate(-50%, -50%) scale(0.92)"
       : "scale(0.92)";
     openCard = null;
-    if (lastFocused) lastFocused.focus();
   }
 
-  cards.forEach((card) => {
-    card.addEventListener("click", () => open(card));
-  });
+  if (canHover){
+    cards.forEach((card) => {
+      card.addEventListener("mouseenter", () => {
+        clearTimeout(closeTimer);
+        show(card);
+      });
+      card.addEventListener("mouseleave", () => {
+        clearTimeout(closeTimer);
+        closeTimer = setTimeout(hide, HOVER_CLOSE_DELAY);
+      });
+      card.addEventListener("focus", () => show(card));
+      card.addEventListener("blur", () => hide());
+    });
+    window.addEventListener("keydown", (e) => {
+      if (e.key === "Escape" && lightbox.classList.contains("is-open")) hide();
+    });
+  } else {
+    function openClick(card){
+      lastFocused = document.activeElement;
+      show(card);
+      closeBtn.focus();
+    }
+    function closeClick(){
+      hide();
+      if (lastFocused) lastFocused.focus();
+    }
+    cards.forEach((card) => {
+      card.addEventListener("click", () => {
+        if (openCard === card) closeClick();
+        else openClick(card);
+      });
+    });
+    closeBtn.addEventListener("click", closeClick);
+    backdrop.addEventListener("click", closeClick);
+    window.addEventListener("keydown", (e) => {
+      if (e.key === "Escape" && lightbox.classList.contains("is-open")) closeClick();
+    });
+  }
 
-  closeBtn.addEventListener("click", close);
-  backdrop.addEventListener("click", close);
-  window.addEventListener("keydown", (e) => {
-    if (e.key === "Escape" && lightbox.classList.contains("is-open")) close();
-  });
   window.addEventListener("resize", () => {
     if (lightbox.classList.contains("is-open")) position();
   });

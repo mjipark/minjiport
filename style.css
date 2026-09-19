@@ -917,14 +917,20 @@ html.has-custom-cursor .custom-cursor.is-down{
 }
 
 /* ============================================
-   LIGHTBOX — a small card that pops up floating
-   right beside the photo you clicked (not a
-   sidebar/modal). JS (script.js) measures the
-   clicked tile and the panel, then positions it to
-   whichever side has room, staying anchored to that
-   tile instead of the viewport edge. Falls back to a
-   centered card with a dimmed backdrop on narrow
-   screens where there's no room to float beside it.
+   LIGHTBOX — really just a floating text caption now
+   (title + blurb, no repeated image — the photo's
+   already right there in the tile). On hover-capable
+   pointers it opens/closes purely on hover (script.js
+   initHobbyLightbox), so the backdrop stays
+   click-through (pointer-events:none) and the close
+   button is hidden — nothing to dismiss, it just
+   follows the mouse. JS measures the hovered tile and
+   the panel, then floats it to whichever side has
+   room, staying anchored to that tile instead of the
+   viewport edge. On touch/coarse pointers, where hover
+   doesn't exist, it falls back to tap-to-toggle with a
+   centered card, a dimmed clickable backdrop, and a
+   visible close button.
    ============================================ */
 .lightbox{
   position:fixed; inset:0; z-index:400;
@@ -935,30 +941,32 @@ html.has-custom-cursor .custom-cursor.is-down{
 }
 .lightbox.is-open{
   visibility:visible; opacity:1;
-  pointer-events:auto;
   transition:opacity .2s ease;
 }
 .lightbox__backdrop{
   position:absolute; inset:0;
   background:transparent;
+  pointer-events:none;
 }
-.lightbox.is-centered .lightbox__backdrop{
+.lightbox.is-centered.is-open .lightbox__backdrop{
   background:rgba(0,0,0,0.55);
   backdrop-filter:blur(2px);
+  pointer-events:auto;
 }
 .lightbox__panel{
   position:fixed; z-index:1;
   top:0; left:0;
-  width:min(320px, 88vw);
+  width:min(240px, 82vw);
   background:var(--cream);
   color:var(--ink);
   border:5px solid var(--ink);
   box-shadow:10px 10px 0 var(--coral);
-  padding:20px 22px 22px;
-  max-height:min(78vh, 560px);
+  padding:16px 18px;
+  max-height:min(70vh, 400px);
   overflow-y:auto;
   display:flex; flex-direction:column;
   opacity:0;
+  pointer-events:auto;
   transform:scale(0.92);
   transition:transform .3s cubic-bezier(.34,1.56,.64,1), opacity .2s ease, top .18s ease, left .18s ease;
 }
@@ -979,19 +987,20 @@ html.has-custom-cursor .custom-cursor.is-down{
   transition:transform .2s, background .2s, color .2s;
 }
 .lightbox__close:hover{ background:var(--coral); transform:rotate(90deg); }
-.lightbox__img{
-  width:100%; aspect-ratio:300/280; object-fit:cover;
-  flex:none;
-}
 .lightbox__title{
   font-family:var(--font-display); font-weight:700; font-style:italic;
-  font-size:1.25rem; margin:16px 0 8px;
+  font-size:1.15rem; margin:0 0 8px;
 }
-.lightbox__caption{ font-size:0.88rem; line-height:1.5; color:var(--muted); }
+.lightbox__caption{ font-size:0.85rem; line-height:1.5; color:var(--muted); }
+
+@media (hover:hover) and (pointer:fine){
+  .lightbox__close{ display:none; }
+}
 
 @media (max-width:640px){
   .lightbox__panel{
-    width:min(340px, 88vw);
+    width:min(280px, 84vw);
+    padding:20px 22px 22px;
   }
 }
 
