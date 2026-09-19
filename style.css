@@ -17,6 +17,7 @@
   --coral-deep: #5C2318;
 
   --font-display: "Fraunces", serif;
+  --font-shout: "Archivo Black", sans-serif;
   --font-body: "Space Grotesk", sans-serif;
   --font-mono: "Space Mono", monospace;
 
@@ -86,17 +87,18 @@ h1,h2,h3,p{ margin:0; }
 }
 .nav__left{ display:flex; align-items:center; gap:clamp(20px,4vw,48px); }
 .nav__mark{
-  font-family:var(--font-display); font-weight:900; font-size:1.4rem;
+  font-family:var(--font-shout); font-size:1.2rem;
   display:flex; align-items:center; gap:10px;
 }
 .nav__mark .dot{ color:var(--coral-text); }
-.nav__links{ display:flex; gap:clamp(16px,3vw,40px); }
+.nav__links{ display:flex; gap:clamp(6px,1vw,10px); }
 .nav__links a{
-  font-family:var(--font-mono); font-size:0.8rem; text-transform:uppercase;
+  font-family:var(--font-mono); font-size:0.75rem; text-transform:uppercase;
   letter-spacing:0.03em; display:flex; align-items:center; gap:6px;
-  transition:color .15s;
+  padding:7px 14px; border-radius:100px;
+  transition:color .15s, background .15s;
 }
-.nav__links a:hover{ color:var(--violet); }
+.nav__links a:hover{ background:var(--ink); color:var(--cream); }
 .nav__cta{
   font-family:var(--font-mono); font-size:0.8rem; font-weight:700;
   padding:9px 16px; border:2px solid var(--ink); border-radius:100px;
@@ -145,8 +147,9 @@ h1,h2,h3,p{ margin:0; }
 
 .mobile-drawer__links{ display:flex; flex-direction:column; gap:26px; margin-top:20px; }
 .mobile-drawer__links a{
-  font-family:var(--font-display); font-weight:900; font-style:italic;
-  font-size:1.8rem; color:var(--ink);
+  font-family:var(--font-shout);
+  text-transform:uppercase;
+  font-size:1.5rem; color:var(--ink);
   display:flex; align-items:baseline; gap:12px;
 }
 .mobile-drawer__cta{
@@ -187,6 +190,22 @@ h1,h2,h3,p{ margin:0; }
   text-align:center;
 }
 
+/* faint oversized wordmark sitting behind the hero
+   content — the layered-scale depth cue from the Wix
+   template's parallax cards / Love & Money's giant
+   logo, done as a static outline instead of a second
+   scroll rig. */
+.hero__watermark{
+  position:absolute; top:50%; left:50%; z-index:1;
+  transform:translate(-50%,-52%);
+  font-family:var(--font-shout);
+  font-size:clamp(7rem,40vw,34rem);
+  line-height:1; white-space:nowrap;
+  color:transparent;
+  -webkit-text-stroke:1.5px rgba(255,255,255,0.07);
+  pointer-events:none; user-select:none;
+}
+
 .hero__scroll-cue{
   font-family:var(--font-mono); font-size:0.8rem; text-transform:uppercase;
   letter-spacing:0.08em; color:var(--muted);
@@ -221,10 +240,10 @@ h1,h2,h3,p{ margin:0; }
 }
 .hero__name{
   position:relative; z-index:1;
-  font-family:var(--font-display);
-  font-weight:900; font-style:italic;
-  font-size:clamp(3.6rem, 13vw, 11rem);
-  line-height:0.9; letter-spacing:-0.01em;
+  font-family:var(--font-shout);
+  text-transform:uppercase;
+  font-size:clamp(3rem, 11.5vw, 9.5rem);
+  line-height:0.92; letter-spacing:-0.01em;
   margin-bottom:clamp(28px, 5vw, 56px);
 }
 .hero__tagline{
@@ -322,6 +341,28 @@ h1,h2,h3,p{ margin:0; }
 }
 
 /* ============================================
+   STATEMENT — a full-bleed manifesto line between
+   Hero and Background, the "big single sentence"
+   beat both references use (Love & Money's "LOVE AND
+   MONEY BUILDS...", the Wix template's headline).
+   ============================================ */
+.statement{
+  text-align:center;
+  padding-top:clamp(60px,10vw,120px);
+  padding-bottom:clamp(60px,10vw,120px);
+}
+.statement__text{
+  font-family:var(--font-shout);
+  text-transform:uppercase; letter-spacing:-0.01em;
+  font-size:clamp(1.8rem,5.4vw,3.6rem);
+  line-height:1.12;
+  max-width:1000px; margin:0 auto;
+}
+.statement__text em{
+  font-style:normal; color:var(--coral-text);
+}
+
+/* ============================================
    BACKGROUND
    ============================================ */
 .background__content{
@@ -374,31 +415,70 @@ h1,h2,h3,p{ margin:0; }
 }
 
 /* ============================================
-   SECTION DIVIDERS
-   one continuous background (the same var(--cream)
-   as the hero) runs the whole page instead of each
-   section carrying its own full-bleed color block —
-   a thin rule marks where one section ends and the
-   next begins, and color stays reserved for small
-   marks (tags, links, icons, the accent rail in
-   Experience) rather than whole-viewport fills.
+   SECTION SURFACES — alternating full-bleed color
+   bands (statement/background/work/experience/skills/
+   contact), the loud high-contrast block rhythm from
+   the Love & Money / Wix Studio references. Each
+   section paints edge-to-edge via a ::before sized to
+   100vw (the same break-out trick already used by
+   .marquee-line/.hobby-collage) regardless of the
+   section element's own centered max-width box;
+   isolation:isolate gives the section its own stacking
+   context so the pseudo's z-index:-1 stays trapped
+   behind that section's content instead of leaking out
+   to sit behind the nav or an earlier section.
+   .surface-light/.surface-bold locally reassign
+   --cream/--ink/--muted, so every existing rule that
+   already reads those tokens (borders, hover inverts,
+   card fills) flips automatically — no per-component
+   overrides needed except where a section's own accent
+   color collides with its new background (see Contact).
    ============================================ */
-.background, .work, .experience, .skills, .contact{
+.statement, .background, .work, .experience, .skills, .contact{
+  position:relative;
+  isolation:isolate;
   border-top:3px solid var(--ink);
+}
+.statement::before, .background::before, .work::before,
+.experience::before, .skills::before, .contact::before{
+  content:"";
+  position:absolute; top:0; bottom:0;
+  left:50%; width:100vw; margin-left:-50vw;
+  background:var(--cream);
+  z-index:-1;
+}
+
+.surface-light{
+  --cream: #F2ECDD;
+  --ink: #15130F;
+  --muted: #6B6558;
+}
+
+.contact.surface-bold{
+  --cream: var(--coral);
+  --ink: #15130F;
+  --muted: #7A3324;
 }
 
 /* ============================================
    SHARED SECTION HEAD
    ============================================ */
-section{ padding:clamp(70px,9vw,130px) clamp(20px,4vw,56px); max-width:var(--max); margin:0 auto; }
+section{ padding:clamp(70px,9vw,130px) clamp(20px,4vw,56px); max-width:var(--max); margin:0 auto; background:var(--cream); color:var(--ink); }
 
 .section-head{
   display:flex; align-items:baseline; gap:18px; flex-wrap:wrap;
   margin-bottom:clamp(40px,6vw,70px);
 }
+.section-head__num{
+  font-family:var(--font-mono); font-weight:700; font-size:1rem;
+  color:var(--accent, var(--coral-text));
+  width:100%; margin-bottom:2px;
+}
 .section-head__title{
-  font-family:var(--font-display); font-weight:900;
-  font-size:clamp(2.2rem,6vw,4rem);
+  font-family:var(--font-shout);
+  text-transform:uppercase; letter-spacing:-0.01em;
+  font-size:clamp(2.4rem,7vw,4.6rem);
+  line-height:0.98;
 }
 .section-head__note{
   font-family:var(--font-mono); font-size:0.8rem; color:var(--muted);
@@ -590,6 +670,11 @@ html.has-custom-cursor .custom-cursor.is-down{
   padding:6px 14px;
   display:inline-flex; width:fit-content;
   white-space:nowrap;
+  /* a grid item's "inline-flex" is blockified to "flex", so
+     the default grid align-items/justify-items:stretch was
+     ballooning this into a full-height, full-width capsule
+     instead of hugging its text. */
+  align-self:start; justify-self:start;
 }
 
 .experience__body h3{
@@ -705,14 +790,15 @@ html.has-custom-cursor .custom-cursor.is-down{
    ============================================ */
 .contact{ text-align:left; }
 .contact__cta{
-  font-family:var(--font-display); font-weight:900; font-style:italic;
-  font-size:clamp(2.8rem,8vw,6rem); line-height:0.95; margin-bottom:20px;
+  font-family:var(--font-shout);
+  text-transform:uppercase;
+  font-size:clamp(2.6rem,8vw,5.6rem); line-height:0.96; margin-bottom:20px;
 }
 .contact__sub{ font-size:1.1rem; max-width:480px; margin-bottom:36px; color:var(--muted); }
 .contact__email{
   display:inline-block; font-family:var(--font-mono); font-weight:700;
   font-size:clamp(1.3rem,4vw,2rem);
-  border-bottom:4px solid var(--coral); padding-bottom:4px; margin-bottom:48px;
+  border-bottom:4px solid var(--ink); padding-bottom:4px; margin-bottom:48px;
   transition:color .2s, border-color .2s;
 }
 .contact__email:hover{ color:var(--violet); border-color:var(--violet); }
@@ -730,10 +816,12 @@ html.has-custom-cursor .custom-cursor.is-down{
 .contact__links a:hover{ color:var(--violet); }
 .contact__resume{
   font-family:var(--font-mono); font-weight:700; font-size:0.85rem;
-  padding:12px 22px; background:var(--ink); color:var(--cream);
+  padding:12px 22px; background:var(--ink); color:var(--coral);
   border-radius:100px; transition:transform .15s;
 }
-.contact__resume:hover{ transform:scale(1.03); background:var(--coral); }
+.contact__resume:hover{ transform:scale(1.03); }
+.contact:not(.surface-bold) .contact__resume{ color:var(--cream); }
+.contact:not(.surface-bold) .contact__resume:hover{ background:var(--coral); }
 
 /* ============================================
    FOOTER

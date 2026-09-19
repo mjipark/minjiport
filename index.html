@@ -9,7 +9,7 @@
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link
-    href="https://fonts.googleapis.com/css2?family=Fraunces:ital,opsz,wght@0,9..144,300;0,9..144,600;0,9..144,900;1,9..144,600;1,9..144,900&family=Space+Grotesk:wght@400;500;700&family=Space+Mono:wght@400;700&display=swap"
+    href="https://fonts.googleapis.com/css2?family=Archivo+Black&family=Fraunces:ital,opsz,wght@0,9..144,300;0,9..144,600;0,9..144,900;1,9..144,600;1,9..144,900&family=Space+Grotesk:wght@400;500;700&family=Space+Mono:wght@400;700&display=swap"
     rel="stylesheet">
   <link rel="stylesheet" href="style.css">
 </head>
@@ -64,6 +64,7 @@
        check in script.js. -->
   <div class="hero-flip" id="heroFlip">
     <section class="hero" id="top">
+      <span class="hero__watermark" aria-hidden="true">MJ</span>
       <div class="hero__intro">
         <p class="hero__eyebrow">Hello, I'm</p>
         <h1 class="hero__name">Minji Park</h1>
@@ -77,9 +78,16 @@
     </section>
   </div>
 
+  <!-- ============ STATEMENT ============ -->
+  <section class="statement surface-light reveal" id="statement">
+    <p class="statement__text">Minji designs and builds digital products around
+      <em>one loud idea</em> at a time.</p>
+  </section>
+
   <!-- ============ BACKGROUND ============ -->
   <section class="background reveal" id="background">
     <div class="section-head">
+      <p class="section-head__num" style="--accent:var(--violet)">01</p>
       <h2 class="section-head__title">Background</h2>
       <p class="section-head__note">A little about me →</p>
     </div>
@@ -108,8 +116,9 @@
   </section>
 
   <!-- ============ WORK ============ -->
-  <section class="work reveal" id="work">
+  <section class="work surface-light reveal" id="work">
     <div class="section-head">
+      <p class="section-head__num" style="--accent:var(--coral-text)">02</p>
       <h2 class="section-head__title">Selected&nbsp;Work</h2>
       <p class="section-head__note">Hover a row to preview →</p>
     </div>
@@ -191,6 +200,7 @@
   <!-- ============ EXPERIENCE ============ -->
   <section class="experience reveal" id="experience">
     <div class="section-head">
+      <p class="section-head__num" style="--accent:var(--lime)">03</p>
       <h2 class="section-head__title">Experience</h2>
     </div>
 
@@ -240,8 +250,9 @@
   </section>
 
   <!-- ============ SKILLS ============ -->
-  <section class="skills reveal" id="skills">
+  <section class="skills surface-light reveal" id="skills">
     <div class="section-head">
+      <p class="section-head__num" style="--accent:var(--coral)">04</p>
       <h2 class="section-head__title">Skills</h2>
     </div>
 
@@ -296,8 +307,9 @@
   </section>
 
   <!-- ============ CONTACT ============ -->
-  <section class="contact reveal" id="contact">
+  <section class="contact surface-bold reveal" id="contact">
     <div class="section-head">
+      <p class="section-head__num" style="--accent:var(--violet)">05</p>
       <h2 class="section-head__title">Contact</h2>
     </div>
 
