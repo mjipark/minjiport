@@ -1,6 +1,6 @@
 <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 300 340">
   <rect width="300" height="340" fill="#F5EFDD"/>
-  <rect x="14" y="14" width="272" height="242" fill="#6A4CFF"/>
+  <rect x="14" y="14" width="272" height="242" fill="#9D8FFF"/>
   <rect x="60" y="60" width="180" height="150" fill="#CFFF5C"/>
   <circle cx="150" cy="135" r="40" fill="#16131A"/>
   <text x="30" y="300" font-family="monospace" font-size="16" fill="#16131A">objet_02.jpg</text>

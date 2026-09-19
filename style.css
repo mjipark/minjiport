@@ -5,8 +5,9 @@
   --cream: #33343B;
   --ink: #FFFFFF;
   --coral: #FF4433;
+  --coral-text: #FF7566;
   --lime: #CFFF5C;
-  --violet: #7D9CCC;
+  --violet: #9D8FFF;
   --muted: #9AA4BD;
 
   --font-display: "Fraunces", serif;
@@ -56,14 +57,14 @@ h1,h2,h3,p{ margin:0; }
 .nav__mark{
   font-family:var(--font-display); font-weight:900; font-size:1.4rem;
 }
-.nav__mark .dot{ color:var(--coral); }
+.nav__mark .dot{ color:var(--coral-text); }
 .nav__links{ display:flex; gap:clamp(16px,3vw,40px); }
 .nav__links a{
   font-family:var(--font-mono); font-size:0.8rem; text-transform:uppercase;
   letter-spacing:0.03em; display:flex; align-items:center; gap:6px;
   transition:color .15s;
 }
-.nav__num{ color:var(--coral); font-weight:700; }
+.nav__num{ color:var(--coral-text); font-weight:700; }
 .nav__links a:hover{ color:var(--violet); }
 .nav__cta{
   font-family:var(--font-mono); font-size:0.8rem; font-weight:700;
@@ -198,7 +199,7 @@ section{ padding:clamp(70px,9vw,130px) clamp(20px,4vw,56px); max-width:var(--max
   margin-bottom:clamp(40px,6vw,70px);
 }
 .section-head__num{
-  font-family:var(--font-mono); font-weight:700; color:var(--coral);
+  font-family:var(--font-mono); font-weight:700; color:var(--coral-text);
   font-size:1.1rem;
 }
 .section-head__title{
@@ -295,7 +296,7 @@ section{ padding:clamp(70px,9vw,130px) clamp(20px,4vw,56px); max-width:var(--max
   font-size:0.95rem; line-height:1.55; padding-left:20px; position:relative;
 }
 .experience__body li::before{
-  content:"→"; position:absolute; left:0; color:var(--coral); font-weight:700;
+  content:"→"; position:absolute; left:0; color:var(--coral-text); font-weight:700;
 }
 .experience__tags{ display:flex; gap:8px; flex-wrap:wrap; }
 .experience__tags span{
@@ -392,5 +393,5 @@ section{ padding:clamp(70px,9vw,130px) clamp(20px,4vw,56px); max-width:var(--max
   font-family:var(--font-mono); font-size:0.8rem;
 }
 .footer__top{ display:block; padding:24px 0 8px; font-weight:700; }
-.footer__top:hover{ color:var(--coral); }
+.footer__top:hover{ color:var(--coral-text); }
 .footer__copy{ color:var(--muted); padding-bottom:10px; }
