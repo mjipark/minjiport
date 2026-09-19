@@ -165,44 +165,6 @@ const prefersReducedMotion = window.matchMedia("(prefers-reduced-motion: reduce)
 })();
 
 // ============================================
-// Scroll-driven hero reveal
-// the hero opens as text-only; once the user
-// scrolls a little way into it, the collage
-// (polaroids/stickers) pops in like notes being
-// pressed onto the page — a snappy one-shot
-// reveal, not a continuous scrub.
-// ============================================
-(function initHeroReveal(){
-  const collage = document.getElementById("heroCollage");
-  const hero = document.getElementById("top");
-  if (!hero) return;
-
-  if (prefersReducedMotion) {
-    if (collage) collage.classList.add("is-visible");
-    return;
-  }
-
-  const STICK_AT = 0.08; // fraction of hero scrolled before it reveals
-  let stuck = false;
-
-  function tick(){
-    const rect = hero.getBoundingClientRect();
-    const total = Math.max(rect.height, 1);
-    const progress = Math.min(1, Math.max(0, -rect.top / total));
-
-    if (!stuck && progress >= STICK_AT) {
-      collage && collage.classList.add("is-visible");
-      stuck = true;
-    } else if (stuck && progress < STICK_AT * 0.6) {
-      collage && collage.classList.remove("is-visible");
-      stuck = false;
-    }
-    requestAnimationFrame(tick);
-  }
-  requestAnimationFrame(tick);
-})();
-
-// ============================================
 // Scroll reveal for sections
 // ============================================
 (function initReveal(){
@@ -250,4 +212,26 @@ const prefersReducedMotion = window.matchMedia("(prefers-reduced-motion: reduce)
   }, { threshold: 0.3 });
 
   observer.observe(el);
+})();
+
+// ============================================
+// Smart "back" links (project detail pages)
+// prefer real browser history over a fresh
+// navigation so the Work list's scroll position
+// is restored, falling back to the href when
+// there's no history to go back to (e.g. the
+// page was opened directly).
+// ============================================
+(function initSmartBackLinks(){
+  const links = document.querySelectorAll(".js-back");
+  if (!links.length) return;
+
+  links.forEach((link) => {
+    link.addEventListener("click", (e) => {
+      if (window.history.length > 1) {
+        e.preventDefault();
+        window.history.back();
+      }
+    });
+  });
 })();

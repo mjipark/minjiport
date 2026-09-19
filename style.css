@@ -232,10 +232,7 @@ h1,h2,h3,p{ margin:0; }
 .hero__collage{
   position:absolute; inset:0; z-index:0;
   pointer-events:none;
-  opacity:0;
-  transition:opacity .8s ease;
 }
-.hero__collage.is-visible{ opacity:1; }
 .parallax-item{
   position:absolute;
   left:var(--x); top:var(--y);
@@ -308,18 +305,13 @@ h1,h2,h3,p{ margin:0; }
 }
 
 /* On narrow screens the absolutely-positioned collage overlaps
-   the text column, so once revealed it collapses into a static
-   horizontal strip above the copy instead. Both stay taken out of
-   the flex flow (position:absolute) until scroll reveals them, so
-   the hero opens as text-only with no reserved blank space. */
+   the text column, so it collapses into a static horizontal strip
+   above the copy instead. */
 @media (max-width:760px){
   .hero{ padding-top:40px; overflow:visible; }
   .hero__collage{
-    display:flex; align-items:flex-start; gap:14px;
-    overflow-x:auto; padding:4px 4px 24px;
-  }
-  .hero__collage.is-visible{
-    position:static; margin:0 -4px 28px;
+    position:static; display:flex; align-items:flex-start; gap:14px;
+    overflow-x:auto; padding:4px 4px 24px; margin:0 -4px 28px;
   }
   .parallax-item{ position:static !important; transform:rotate(var(--r)) !important; flex:none; }
   .hero__collage img.parallax-item{ width:96px; }
@@ -333,12 +325,14 @@ h1,h2,h3,p{ margin:0; }
    ============================================ */
 .background{ position:relative; }
 .background__content{
-  display:flex; align-items:center; justify-content:space-between;
-  gap:40px; flex-wrap:wrap;
+  display:grid;
+  grid-template-columns: minmax(0, 600px) auto;
+  justify-content:space-between;
+  align-items:center;
+  gap:40px;
 }
 .background__row{
   display:flex; gap:36px; align-items:flex-start;
-  flex:1 1 480px; max-width:600px;
 }
 .background__avatar{
   flex:none; width:140px; height:140px; border-radius:50%;
@@ -377,7 +371,11 @@ h1,h2,h3,p{ margin:0; }
 .background__minji-tape--r{ top:-12px; right:12%; transform:rotate(8deg); }
 
 @media (max-width:900px){
-  .background__content{ justify-content:center; }
+  .background__content{
+    grid-template-columns:1fr;
+    justify-items:center;
+    text-align:left;
+  }
 }
 
 @media (max-width:640px){
@@ -431,6 +429,7 @@ section{ padding:clamp(70px,9vw,130px) clamp(20px,4vw,56px); max-width:var(--max
 .work__row:hover .work__links a{ border-color:var(--coral); color:var(--coral); }
 
 .work__row-main{ max-width:600px; }
+.work__row-main:focus-visible{ outline:2px solid var(--coral); outline-offset:6px; border-radius:2px; }
 .work__title{
   font-family:var(--font-display); font-weight:700; font-style:italic;
   font-size:clamp(1.3rem,2.6vw,1.9rem); margin-bottom:8px;
