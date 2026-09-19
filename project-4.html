@@ -1,0 +1,133 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Project Four — Mobile App UI · Minji Park</title>
+  <meta name="description" content="End-to-end UI for a habit-tracking app, from wireframes through a shipped design system.">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link
+    href="https://fonts.googleapis.com/css2?family=Fraunces:ital,opsz,wght@0,9..144,300;0,9..144,600;0,9..144,900;1,9..144,600;1,9..144,900&family=Space+Grotesk:wght@400;500;700&family=Space+Mono:wght@400;700&display=swap"
+    rel="stylesheet">
+  <link rel="stylesheet" href="style.css">
+</head>
+
+<body>
+
+  <!-- ambient floating shapes -->
+  <div class="bg-field" id="bgField" aria-hidden="true">
+    <span class="bg-shape bg-shape--tri bg-shape--coral" data-depth="0.4" style="--x:6%; --y:16%;"></span>
+    <span class="bg-shape bg-shape--circle bg-shape--lime" data-depth="0.22" style="--x:90%; --y:10%;"></span>
+    <span class="bg-shape bg-shape--dash bg-shape--violet" data-depth="0.5" style="--x:14%; --y:66%;"></span>
+    <span class="bg-shape bg-shape--plus bg-shape--coral" data-depth="0.3" style="--x:93%; --y:60%;"></span>
+    <span class="bg-shape bg-shape--circle bg-shape--violet" data-depth="0.16" style="--x:48%; --y:88%;"></span>
+    <span class="bg-shape bg-shape--tri bg-shape--lime" data-depth="0.35" style="--x:72%; --y:36%;"></span>
+    <span class="bg-shape bg-shape--dash bg-shape--coral" data-depth="0.2" style="--x:34%; --y:6%;"></span>
+    <span class="bg-shape bg-shape--plus bg-shape--violet" data-depth="0.28" style="--x:4%; --y:92%;"></span>
+  </div>
+
+  <!-- grain overlay -->
+  <div class="grain" aria-hidden="true"></div>
+
+  <!-- ============ NAV ============ -->
+  <header class="nav">
+    <div class="nav__left">
+      <a href="index.html" class="nav__mark" id="navMark" aria-label="Open menu" aria-expanded="false"
+        aria-controls="mobileDrawer">
+        MJ<span class="dot">.</span>
+      </a>
+      <nav class="nav__links">
+        <a href="index.html#background"><span class="nav__num">01</span><span class="nav__label">Background</span></a>
+        <a href="index.html#work"><span class="nav__num">02</span><span class="nav__label">Work</span></a>
+        <a href="index.html#experience"><span class="nav__num">03</span><span class="nav__label">Experience</span></a>
+        <a href="index.html#skills"><span class="nav__num">04</span><span class="nav__label">Skills</span></a>
+        <a href="index.html#contact"><span class="nav__num">05</span><span class="nav__label">Contact</span></a>
+      </nav>
+    </div>
+    <a href="index.html#contact" class="nav__cta">Let's talk →</a>
+  </header>
+
+  <!-- ============ MOBILE DRAWER ============ -->
+  <div class="mobile-drawer__overlay" id="mobileDrawerOverlay"></div>
+  <div class="mobile-drawer" id="mobileDrawer" aria-hidden="true">
+    <button class="mobile-drawer__close" id="mobileDrawerClose" aria-label="Close menu">✕</button>
+    <nav class="mobile-drawer__links">
+      <a href="index.html#background"><span class="nav__num">01</span>Background</a>
+      <a href="index.html#work"><span class="nav__num">02</span>Work</a>
+      <a href="index.html#experience"><span class="nav__num">03</span>Experience</a>
+      <a href="index.html#skills"><span class="nav__num">04</span>Skills</a>
+      <a href="index.html#contact"><span class="nav__num">05</span>Contact</a>
+    </nav>
+    <a href="index.html#contact" class="mobile-drawer__cta">Let's talk →</a>
+  </div>
+
+  <!-- ============ PROJECT DETAIL ============ -->
+  <section class="project-detail reveal is-visible">
+    <a href="index.html#work" class="project-detail__back js-back">← Back to work</a>
+
+    <div class="section-head">
+      <span class="section-head__num">02</span>
+      <h2 class="section-head__title">Project Four</h2>
+      <p class="section-head__note">Mobile App UI →</p>
+    </div>
+
+    <div class="project-detail__hero">
+      <img src="images/work-4.svg" alt="Cover image for Project Four — Mobile App UI">
+    </div>
+
+    <div class="project-detail__meta">
+      <div class="project-detail__tags">
+        <span>Swift UI</span><span>Figma</span><span>Lottie</span>
+      </div>
+      <div class="work__links">
+        <a href="#" target="_blank" rel="noopener">Live ↗</a>
+        <a href="#" target="_blank" rel="noopener">GitHub ↗</a>
+      </div>
+    </div>
+
+    <div class="project-detail__body">
+      <p class="project-detail__lede">End-to-end UI for a habit-tracking app, from wireframes through a shipped
+        design system.</p>
+
+      <h3>Overview</h3>
+      <p>Designed and built the interface for a habit-tracking app from the first low-fidelity wireframes through
+        to a shipped, animated design system — covering onboarding, daily check-ins, and streak tracking.</p>
+
+      <h3>Role &amp; Tools</h3>
+      <p>End-to-end product design and SwiftUI implementation. Prototyped in Figma, animated key moments with
+        Lottie.</p>
+
+      <h3>Highlights</h3>
+      <ul>
+        <li>Ran the flow from low-fidelity wireframes to a reusable component library, not just a set of screens.</li>
+        <li>Designed the streak and check-in interactions to feel rewarding without relying on aggressive
+          gamification.</li>
+        <li>Built the SwiftUI layer myself so the shipped product matched the prototype closely.</li>
+      </ul>
+    </div>
+
+    <div class="project-detail__nav">
+      <a href="project-3.html">← Previous project</a>
+      <a href="index.html#work" class="js-back">Back to work →</a>
+    </div>
+  </section>
+
+  <footer class="footer">
+    <div class="footer__marquee">
+      <div class="footer__marquee-track">
+        <span>THANKS FOR SCROLLING ✦ BUILT WITH TOO MUCH COFFEE ✦ THANKS FOR SCROLLING ✦ BUILT WITH TOO MUCH COFFEE ✦
+        </span>
+        <span aria-hidden="true">THANKS FOR SCROLLING ✦ BUILT WITH TOO MUCH COFFEE ✦ THANKS FOR SCROLLING ✦ BUILT WITH
+          TOO MUCH COFFEE ✦ </span>
+      </div>
+    </div>
+    <a href="#" class="footer__top">Back to top ↑</a>
+    <p class="footer__copy">© <span id="year"></span> Minji Park. All rights reserved.</p>
+  </footer>
+
+  <script src="script.js"></script>
+</body>
+
+</html>
