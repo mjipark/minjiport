@@ -128,9 +128,10 @@ const prefersReducedMotion = window.matchMedia("(prefers-reduced-motion: reduce)
 
 // ============================================
 // Scroll-driven "minji" hero reveal
-// scrubs the cutout's position/scale/rotation
-// against scroll progress through the hero —
-// the animation plays as the user scrolls.
+// sticks the cutout onto the page like a note
+// being pressed down once the user scrolls a
+// little way into the hero — a snappy one-shot
+// pop, not a continuous scrub.
 // ============================================
 (function initMinjiScroll(){
   const el = document.getElementById("heroMinji");
@@ -144,23 +145,27 @@ const prefersReducedMotion = window.matchMedia("(prefers-reduced-motion: reduce)
     return;
   }
 
-  let progress = 0;
-
-  function updateProgress(){
-    const rect = hero.getBoundingClientRect();
-    const total = Math.max(rect.height, 1);
-    const scrolled = -rect.top;
-    progress = Math.min(1, Math.max(0, scrolled / total));
-  }
+  const STICK_AT = 0.08; // fraction of hero scrolled before it "sticks"
+  let stuck = false;
 
   function tick(){
-    updateProgress();
-    const translateY = (1 - progress) * 140;
-    const scale = 0.82 + progress * 0.18;
-    const rotate = (1 - progress) * -10;
-    const opacity = Math.min(1, progress * 2.4);
-    el.style.transform = `translateY(${translateY}px) scale(${scale}) rotate(${rotate}deg)`;
-    el.style.opacity = opacity;
+    if (!stuck) {
+      const rect = hero.getBoundingClientRect();
+      const total = Math.max(rect.height, 1);
+      const progress = Math.min(1, Math.max(0, -rect.top / total));
+      if (progress >= STICK_AT) {
+        el.classList.add("is-stuck");
+        stuck = true;
+      }
+    } else {
+      const rect = hero.getBoundingClientRect();
+      const total = Math.max(rect.height, 1);
+      const progress = -rect.top / total;
+      if (progress < STICK_AT * 0.6) {
+        el.classList.remove("is-stuck");
+        stuck = false;
+      }
+    }
     requestAnimationFrame(tick);
   }
   requestAnimationFrame(tick);

@@ -25,7 +25,6 @@
   <div class="nav__left">
     <a href="#top" class="nav__mark" id="navMark" aria-label="Open menu" aria-expanded="false" aria-controls="mobileDrawer">
       YN<span class="dot">.</span>
-      <span class="nav__menu-hint" aria-hidden="true"><span></span><span></span><span></span></span>
     </a>
     <nav class="nav__links">
       <a href="#work"><span class="nav__num">01</span><span class="nav__label">Work</span></a>
@@ -60,7 +59,11 @@
     <div class="sticker sticker--circle parallax-item" data-depth="0.5" style="--x:70%; --y:58%; --r:0deg;">Open to<br>work ↗</div>
   </div>
 
-  <img src="images/minji-sticker.png" class="hero__minji" id="heroMinji" alt="Cutout portrait sticker of Minji">
+  <div class="hero__minji" id="heroMinji">
+    <img src="images/minji-sticker.png" class="hero__minji-img" alt="Cutout portrait sticker of Minji">
+    <span class="hero__minji-tape hero__minji-tape--l" aria-hidden="true"></span>
+    <span class="hero__minji-tape hero__minji-tape--r" aria-hidden="true"></span>
+  </div>
 
   <p class="hero__eyebrow">Hello, I'm</p>
   <h1 class="hero__name">Your Name</h1>
