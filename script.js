@@ -214,15 +214,17 @@ const prefersReducedMotion = window.matchMedia("(prefers-reduced-motion: reduce)
 
 // ============================================
 // Hero name font-cycling
-// co-ux.framer.website style: every letter in "Minji
-// Park" (see the .hero__letter split above) flips
-// through a handful of very different typefaces on its
-// own independent, randomized timer, so letters are
-// never all showing the same font at once — a
-// constantly-shifting, eye-catching wordmark rather
-// than a static headline. Pauses when the hero scrolls
-// out of view (and never starts at all under reduced
-// motion) so it isn't running forever in the
+// co-ux.framer.website-inspired, but toned down: only
+// 1-2 letters in "Minji Park" (see the .hero__letter
+// split above) glitch to an accent typeface at a time,
+// while the rest sit in the normal Fraunces italic —
+// which letters glitch keeps rotating every second.
+// Cycling every letter at once (an earlier version)
+// read as noise rather than a name; this keeps the
+// eye-catching flicker as an accent instead of
+// replacing the whole headline. Pauses when the hero
+// scrolls out of view (and never starts at all under
+// reduced motion) so it isn't running forever in the
 // background.
 // ============================================
 (function initHeroFontCycle(){
@@ -230,56 +232,45 @@ const prefersReducedMotion = window.matchMedia("(prefers-reduced-motion: reduce)
   const letters = heroName ? Array.from(heroName.querySelectorAll(".hero__letter")) : [];
   if (!heroName || !letters.length || prefersReducedMotion) return;
 
-  const FONTS = [
-    { family: "var(--font-display)", weight: 900, style: "italic" },
+  const BASE_FONT = { family: "var(--font-display)", weight: 900, style: "italic" };
+  const ACCENT_FONTS = [
     { family: "'Space Grotesk', sans-serif", weight: 700, style: "normal" },
     { family: "'Space Mono', monospace", weight: 700, style: "normal" },
     { family: "'Unbounded', sans-serif", weight: 900, style: "normal" },
     { family: "'Instrument Serif', serif", weight: 400, style: "italic" },
     { family: "'Bebas Neue', sans-serif", weight: 400, style: "normal" },
   ];
-  const MIN_STEP = 350;
-  const MAX_STEP = 750;
+  const MAX_ACTIVE = Math.min(2, letters.length);
+  const STEP_MS = 1000;
   const START_DELAY_MS = 1000;
 
-  const timers = new Map();
-  let running = false;
-
-  function randomFont(excludeFamily){
-    let font;
-    do {
-      font = FONTS[Math.floor(Math.random() * FONTS.length)];
-    } while (FONTS.length > 1 && font.family === excludeFamily);
-    return font;
-  }
+  let timer = null;
 
   function applyFont(letterEl, font){
     letterEl.style.fontFamily = font.family;
     letterEl.style.fontWeight = font.weight;
     letterEl.style.fontStyle = font.style;
-    letterEl.dataset.font = font.family;
   }
 
-  function scheduleLetter(letterEl, delay){
-    const t = setTimeout(() => {
-      applyFont(letterEl, randomFont(letterEl.dataset.font));
-      scheduleLetter(letterEl, MIN_STEP + Math.random() * (MAX_STEP - MIN_STEP));
-    }, delay);
-    timers.set(letterEl, t);
+  function tick(){
+    letters.forEach((letterEl) => applyFont(letterEl, BASE_FONT));
+
+    const activeCount = 1 + Math.floor(Math.random() * MAX_ACTIVE);
+    const pool = letters.slice();
+    for (let i = 0; i < activeCount && pool.length; i++){
+      const letterEl = pool.splice(Math.floor(Math.random() * pool.length), 1)[0];
+      applyFont(letterEl, ACCENT_FONTS[Math.floor(Math.random() * ACCENT_FONTS.length)]);
+    }
+    timer = setTimeout(tick, STEP_MS);
   }
 
   function start(){
-    if (running) return;
-    running = true;
-    letters.forEach((letterEl) => {
-      scheduleLetter(letterEl, START_DELAY_MS + Math.random() * 400);
-    });
+    if (timer) return;
+    timer = setTimeout(tick, START_DELAY_MS);
   }
   function stop(){
-    if (!running) return;
-    running = false;
-    timers.forEach((t) => clearTimeout(t));
-    timers.clear();
+    clearTimeout(timer);
+    timer = null;
   }
 
   if ("IntersectionObserver" in window) {
