@@ -264,40 +264,92 @@ const prefersReducedMotion = window.matchMedia("(prefers-reduced-motion: reduce)
 
 // ============================================
 // Hobby photo lightbox
-// clicking a photo in the Hobbies grid pops a
-// bouncy modal with the full image and a caption
-// instead of navigating anywhere. Closes on the
-// close button, backdrop click, or Escape.
+// clicking a photo in the Hobbies moodboard pops a
+// small card that floats right next to that photo
+// (not a sidebar/modal) with the full image and a
+// caption, staying pinned beside it on scroll/resize.
+// On narrow screens, where there's no room to float
+// beside it, it falls back to a centered card with a
+// dimmed backdrop. Closes on the close button,
+// backdrop click, or Escape.
 // ============================================
 (function initHobbyLightbox(){
   const lightbox = document.getElementById("hobbyLightbox");
   const cards = document.querySelectorAll(".hobby-card__btn");
   if (!lightbox || !cards.length) return;
 
+  const panel = lightbox.querySelector(".lightbox__panel");
   const img = document.getElementById("lightboxImg");
   const title = document.getElementById("lightboxTitle");
   const caption = document.getElementById("lightboxCaption");
   const closeBtn = document.getElementById("lightboxClose");
   const backdrop = document.getElementById("lightboxBackdrop");
 
+  const GAP = 18;
+  const MARGIN = 16;
   let lastFocused = null;
+  let openCard = null;
+
+  function isCentered(){
+    return window.matchMedia("(max-width: 760px)").matches;
+  }
+
+  function position(){
+    if (isCentered() || !openCard){
+      lightbox.classList.add("is-centered");
+      panel.style.top = "50%";
+      panel.style.left = "50%";
+      panel.style.transform = lightbox.classList.contains("is-open")
+        ? "translate(-50%, -50%) scale(1)"
+        : "translate(-50%, -50%) scale(0.92)";
+      return;
+    }
+    lightbox.classList.remove("is-centered");
+
+    const rect = openCard.getBoundingClientRect();
+    const panelW = panel.offsetWidth;
+    const panelH = panel.offsetHeight;
+    const vw = window.innerWidth;
+    const vh = window.innerHeight;
+
+    let left = rect.right + GAP;
+    if (left + panelW > vw - MARGIN){
+      left = rect.left - GAP - panelW;
+    }
+    if (left < MARGIN){
+      left = Math.min(Math.max(rect.left, MARGIN), vw - panelW - MARGIN);
+    }
+
+    let top = rect.top + rect.height / 2 - panelH / 2;
+    top = Math.min(Math.max(top, MARGIN), vh - panelH - MARGIN);
+
+    panel.style.top = `${top}px`;
+    panel.style.left = `${left}px`;
+    panel.style.transform = lightbox.classList.contains("is-open") ? "scale(1)" : "scale(0.92)";
+  }
 
   function open(card){
     lastFocused = document.activeElement;
+    openCard = card;
     img.src = card.dataset.img;
     img.alt = card.dataset.title;
     title.textContent = card.dataset.title;
     caption.textContent = card.dataset.caption;
+
     lightbox.classList.add("is-open");
     lightbox.setAttribute("aria-hidden", "false");
-    document.body.style.overflow = "hidden";
+    position();
+    requestAnimationFrame(position);
     closeBtn.focus();
   }
 
   function close(){
     lightbox.classList.remove("is-open");
     lightbox.setAttribute("aria-hidden", "true");
-    document.body.style.overflow = "";
+    panel.style.transform = isCentered()
+      ? "translate(-50%, -50%) scale(0.92)"
+      : "scale(0.92)";
+    openCard = null;
     if (lastFocused) lastFocused.focus();
   }
 
@@ -310,4 +362,10 @@ const prefersReducedMotion = window.matchMedia("(prefers-reduced-motion: reduce)
   window.addEventListener("keydown", (e) => {
     if (e.key === "Escape" && lightbox.classList.contains("is-open")) close();
   });
+  window.addEventListener("resize", () => {
+    if (lightbox.classList.contains("is-open")) position();
+  });
+  window.addEventListener("scroll", () => {
+    if (lightbox.classList.contains("is-open")) position();
+  }, { passive: true });
 })();

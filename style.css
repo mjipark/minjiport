@@ -804,56 +804,80 @@ section{ padding:clamp(70px,9vw,130px) clamp(20px,4vw,56px); max-width:var(--max
 }
 
 /* ============================================
-   HOBBIES — scattered photo-wall collage (hobbies.html)
-   same language as the hero collage: photos and
-   stickers absolutely placed via --x/--y/--r and
-   drifting on mouse move (.parallax-item, see
-   script.js initParallax), thick ink border + hard
-   shadow on every photo. Clicking a photo opens the
-   side-panel lightbox below.
+   HOBBIES — scattered photo moodboard (hobbies.html)
+   full-bleed (breaks out to 100vw via the same
+   left:50%/margin-left:-50vw trick as the section
+   color blocks above), with tiles freely positioned
+   via per-tile --x/--y/--w custom properties instead
+   of a grid, so sizes and gaps stay irregular rather
+   than packed to a repeating track. Clicking a photo
+   opens the floating lightbox anchored right next to
+   that tile (see below).
    ============================================ */
 .hobby-collage{
   position:relative;
-  min-height:820px;
-  margin:12px 0 40px;
+  width:100vw; margin-left:calc(50% - 50vw);
+  min-height:1020px;
+  margin-top:12px; margin-bottom:40px;
 }
-.hobby-collage__item{
+.hobby-tile{
   position:absolute;
   left:var(--x); top:var(--y);
-  transform:rotate(var(--r,0deg));
-  will-change:transform;
+  width:var(--w);
 }
-.hobby-collage__item:hover,
-.hobby-collage__item:focus-within{ z-index:5; }
-.hobby-collage__item--md{ width:clamp(150px,18vw,210px); }
-.hobby-collage__item--lg{ width:clamp(190px,23vw,270px); }
+.hobby-tile:hover, .hobby-tile:focus-within{ z-index:5; }
+
+.hobby-tile--tall{ aspect-ratio:3/4; }
+.hobby-tile--square{ aspect-ratio:4/5; }
+.hobby-tile--wide{ aspect-ratio:4/3; }
+.hobby-tile--lg{ aspect-ratio:4/5; }
 
 .hobby-card__btn{
-  display:block;
-  width:100%;
+  display:block; position:relative;
+  width:100%; height:100%;
   background:none; border:none; padding:0; margin:0;
   font:inherit; color:inherit; text-align:left; cursor:pointer;
+  border:4px solid var(--ink);
+  box-shadow:10px 10px 0 rgba(0,0,0,0.35);
+  transition:transform .25s cubic-bezier(.34,1.56,.64,1), box-shadow .25s cubic-bezier(.34,1.56,.64,1);
+}
+.hobby-card__btn__frame{
+  display:block; width:100%; height:100%; overflow:hidden;
 }
 .hobby-card__btn img{
-  display:block; width:100%; aspect-ratio:300/340; object-fit:cover;
-  border:5px solid var(--ink);
-  box-shadow:8px 8px 0 var(--ink);
-  transition:transform .35s cubic-bezier(.34,1.56,.64,1), box-shadow .35s cubic-bezier(.34,1.56,.64,1);
+  display:block; width:100%; height:100%; object-fit:cover;
+  transition:transform .35s cubic-bezier(.34,1.56,.64,1), filter .35s ease;
 }
 .hobby-card__label{
-  display:block;
-  font-family:var(--font-mono); font-weight:700; font-size:0.85rem;
-  padding:10px 2px 0;
+  position:absolute; left:10px; bottom:10px; z-index:1;
+  font-family:var(--font-mono); font-weight:700; font-size:0.7rem;
+  text-transform:uppercase; letter-spacing:0.02em;
+  background:var(--ink); color:var(--cream);
+  padding:6px 10px;
+  opacity:0; transform:translateY(6px);
+  transition:opacity .25s ease, transform .25s ease;
 }
 
+.hobby-card__btn:hover,
+.hobby-card__btn:focus-visible{
+  transform:translate(-6px,-6px);
+  box-shadow:16px 16px 0 var(--coral);
+}
 .hobby-card__btn:hover img,
 .hobby-card__btn:focus-visible img{
-  transform:rotate(0deg) translateY(-6px) scale(1.05);
-  box-shadow:12px 12px 0 var(--coral);
+  transform:scale(1.06);
 }
-.hobby-card__btn:focus-visible{ outline:2px solid var(--coral); outline-offset:6px; }
+.hobby-card__btn:hover .hobby-card__label,
+.hobby-card__btn:focus-visible .hobby-card__label{
+  opacity:1; transform:translateY(0);
+}
+.hobby-card__btn:focus-visible{ outline:2px solid var(--coral); outline-offset:4px; }
 
-.hobby-collage .sticker{ position:absolute; left:var(--x); top:var(--y); transform:rotate(var(--r,0deg)); }
+.hobby-tile--text .sticker{ width:100%; height:100%; }
+.hobby-tile--text .sticker--tape{ border-width:3px; }
+.hobby-tile--text .sticker--circle{
+  width:100%; aspect-ratio:1/1; margin:0 auto;
+}
 
 @media (prefers-reduced-motion:reduce){
   .hobby-card__btn img{ transition:none; }
@@ -861,73 +885,97 @@ section{ padding:clamp(70px,9vw,130px) clamp(20px,4vw,56px); max-width:var(--max
 
 @media (max-width:760px){
   .hobby-collage{
-    position:static; min-height:0;
-    display:flex; flex-direction:column; align-items:center; gap:36px;
-    margin:32px 0 8px;
+    position:static; width:auto; margin-left:0;
+    min-height:0;
+    display:flex; flex-direction:column; align-items:center; gap:28px;
+    padding:0 clamp(20px,5vw,40px);
   }
-  .hobby-collage__item, .hobby-collage .sticker{
-    position:static !important; transform:rotate(var(--r)) !important;
+  .hobby-tile{
+    position:static !important;
+    width:min(340px, 82vw) !important;
   }
-  .hobby-collage__item--md, .hobby-collage__item--lg{ width:min(300px, 78vw); }
-  .hobby-collage .sticker--circle{ width:90px; height:90px; font-size:0.68rem; }
+  .hobby-tile--text{ width:min(220px, 60vw) !important; }
+  .hobby-card__label{ opacity:1; transform:none; }
 }
 
 /* ============================================
-   LIGHTBOX — slides in from the right edge as a
-   side panel rather than a centered modal, so the
-   moodboard stays visible (dimmed) behind it.
+   LIGHTBOX — a small card that pops up floating
+   right beside the photo you clicked (not a
+   sidebar/modal). JS (script.js) measures the
+   clicked tile and the panel, then positions it to
+   whichever side has room, staying anchored to that
+   tile instead of the viewport edge. Falls back to a
+   centered card with a dimmed backdrop on narrow
+   screens where there's no room to float beside it.
    ============================================ */
 .lightbox{
   position:fixed; inset:0; z-index:400;
   visibility:hidden;
   opacity:0;
-  transition:opacity .25s ease, visibility 0s linear .25s;
+  pointer-events:none;
+  transition:opacity .2s ease, visibility 0s linear .2s;
 }
 .lightbox.is-open{
   visibility:visible; opacity:1;
-  transition:opacity .25s ease;
+  pointer-events:auto;
+  transition:opacity .2s ease;
 }
 .lightbox__backdrop{
   position:absolute; inset:0;
-  background:rgba(0,0,0,0.6);
+  background:transparent;
+}
+.lightbox.is-centered .lightbox__backdrop{
+  background:rgba(0,0,0,0.55);
   backdrop-filter:blur(2px);
 }
 .lightbox__panel{
-  position:absolute; top:0; right:0; bottom:0; z-index:1;
-  width:min(420px, 92vw);
+  position:fixed; z-index:1;
+  top:0; left:0;
+  width:min(320px, 88vw);
   background:var(--cream);
   color:var(--ink);
-  border-left:5px solid var(--ink);
-  box-shadow:-14px 0 0 var(--coral);
-  padding:32px 28px;
+  border:5px solid var(--ink);
+  box-shadow:10px 10px 0 var(--coral);
+  padding:20px 22px 22px;
+  max-height:min(78vh, 560px);
   overflow-y:auto;
   display:flex; flex-direction:column;
-  transform:translateX(100%);
-  transition:transform .45s cubic-bezier(.34,1.56,.64,1);
+  opacity:0;
+  transform:scale(0.92);
+  transition:transform .3s cubic-bezier(.34,1.56,.64,1), opacity .2s ease, top .18s ease, left .18s ease;
 }
 .lightbox.is-open .lightbox__panel{
-  transform:translateX(0);
+  opacity:1;
+  transform:scale(1);
+}
+.lightbox.is-centered .lightbox__panel{
+  transition:opacity .2s ease, transform .2s ease;
 }
 .lightbox__close{
-  position:absolute; top:20px; right:20px;
-  width:38px; height:38px; border-radius:50%;
+  position:absolute; top:14px; right:14px; z-index:1;
+  width:32px; height:32px; border-radius:50%;
   background:var(--ink); color:var(--cream);
   border:3px solid var(--cream);
-  font-family:var(--font-mono); font-size:1rem; font-weight:700;
+  font-family:var(--font-mono); font-size:0.9rem; font-weight:700;
   cursor:pointer;
   transition:transform .2s, background .2s, color .2s;
 }
 .lightbox__close:hover{ background:var(--coral); transform:rotate(90deg); }
 .lightbox__img{
-  width:100%; aspect-ratio:300/242; object-fit:cover;
-  border:4px solid var(--ink); margin:44px 0 20px;
+  width:100%; aspect-ratio:300/280; object-fit:cover;
   flex:none;
 }
 .lightbox__title{
   font-family:var(--font-display); font-weight:700; font-style:italic;
-  font-size:1.5rem; margin-bottom:10px;
+  font-size:1.25rem; margin:16px 0 8px;
 }
-.lightbox__caption{ font-size:0.95rem; line-height:1.55; color:var(--muted); }
+.lightbox__caption{ font-size:0.88rem; line-height:1.5; color:var(--muted); }
+
+@media (max-width:640px){
+  .lightbox__panel{
+    width:min(340px, 88vw);
+  }
+}
 
 @media (prefers-reduced-motion:reduce){
   .lightbox, .lightbox__panel{ transition:opacity .15s ease; }

@@ -77,52 +77,68 @@
 
     <div class="hobby-collage" id="hobbyCollage">
 
-      <div class="hobby-collage__item hobby-collage__item--lg parallax-item" data-depth="0.4"
-        style="--x:2%; --y:0px; --r:-6deg;">
+      <!-- tiles hug the outer edges/corners of the frame,
+           leaving the center open — a bento-style scattered
+           border rather than a filled block. -->
+
+      <div class="hobby-tile hobby-tile--tall" style="--x:0%; --y:0px; --w:clamp(230px,24vw,340px);">
         <button type="button" class="hobby-card__btn" data-title="Running" data-img="images/hobby-1.svg"
           data-caption="Chasing a slow, unbothered 5K most mornings — it's when I do my best thinking.">
-          <img src="images/hobby-1.svg" alt="Running — placeholder, replace with your own photo">
+          <span class="hobby-card__btn__frame">
+            <img src="images/hobby-1.svg" alt="Running — placeholder, replace with your own photo">
+          </span>
           <span class="hobby-card__label">Running</span>
         </button>
       </div>
 
-      <div class="sticker sticker--tape parallax-item" data-depth="0.2" style="--x:42%; --y:-6px; --r:-3deg;">
-        Off Duty</div>
-
-      <div class="hobby-collage__item hobby-collage__item--md parallax-item" data-depth="0.3"
-        style="--x:62%; --y:36px; --r:8deg;">
-        <button type="button" class="hobby-card__btn" data-title="Coffee &amp; Friends" data-img="images/hobby-2.svg"
-          data-caption="Most of my best ideas get bounced around over coffee before they ever touch a screen.">
-          <img src="images/hobby-2.svg" alt="Coffee and friends — placeholder, replace with your own photo">
-          <span class="hobby-card__label">Coffee &amp; Friends</span>
-        </button>
+      <div class="hobby-tile hobby-tile--text" style="--x:2%; --y:400px; --w:clamp(120px,12vw,160px);">
+        <div class="sticker sticker--tape">Off Duty</div>
       </div>
 
-      <div class="hobby-collage__item hobby-collage__item--md parallax-item" data-depth="0.5"
-        style="--x:16%; --y:400px; --r:-9deg;">
-        <button type="button" class="hobby-card__btn" data-title="Photography" data-img="images/hobby-3.svg"
-          data-caption="Mostly street shots and bad light — same instinct as design, just slower and quieter.">
-          <img src="images/hobby-3.svg" alt="Photography — placeholder, replace with your own photo">
-          <span class="hobby-card__label">Photography</span>
-        </button>
-      </div>
-
-      <div class="sticker sticker--circle parallax-item" data-depth="0.45" style="--x:84%; --y:400px; --r:0deg;">
-        For fun<br>↗</div>
-
-      <div class="hobby-collage__item hobby-collage__item--lg parallax-item" data-depth="0.35"
-        style="--x:56%; --y:460px; --r:5deg;">
+      <div class="hobby-tile hobby-tile--lg" style="--x:6%; --y:520px; --w:clamp(260px,26vw,380px);">
         <button type="button" class="hobby-card__btn" data-title="Coloring &amp; Drawing" data-img="images/hobby-4.svg"
           data-caption="No brief, no client, no undo button — just color for the sake of it.">
-          <img src="images/hobby-4.svg" alt="Coloring and drawing — placeholder, replace with your own photo">
+          <span class="hobby-card__btn__frame">
+            <img src="images/hobby-4.svg" alt="Coloring and drawing — placeholder, replace with your own photo">
+          </span>
           <span class="hobby-card__label">Coloring &amp; Drawing</span>
         </button>
       </div>
 
-      <!-- duplicate a "hobby-collage__item" block above to add another photo.
-           Size variants: hobby-collage__item--md, hobby-collage__item--lg.
-           Position with --x/--y (top-left offset within the collage) and
-           --r (tilt). data-depth controls how far it drifts on mouse move. -->
+      <div class="hobby-tile hobby-tile--square" style="--x:70%; --y:-10px; --w:clamp(200px,20vw,280px);">
+        <button type="button" class="hobby-card__btn" data-title="Coffee &amp; Friends" data-img="images/hobby-2.svg"
+          data-caption="Most of my best ideas get bounced around over coffee before they ever touch a screen.">
+          <span class="hobby-card__btn__frame">
+            <img src="images/hobby-2.svg" alt="Coffee and friends — placeholder, replace with your own photo">
+          </span>
+          <span class="hobby-card__label">Coffee &amp; Friends</span>
+        </button>
+      </div>
+
+      <div class="hobby-tile hobby-tile--text" style="--x:58%; --y:60px; --w:clamp(110px,10vw,140px);">
+        <div class="sticker sticker--circle">For fun<br>↗</div>
+      </div>
+
+      <div class="hobby-tile hobby-tile--wide" style="--x:68%; --y:470px; --w:clamp(260px,27vw,390px);">
+        <button type="button" class="hobby-card__btn" data-title="Photography" data-img="images/hobby-3.svg"
+          data-caption="Mostly street shots and bad light — same instinct as design, just slower and quieter.">
+          <span class="hobby-card__btn__frame">
+            <img src="images/hobby-3.svg" alt="Photography — placeholder, replace with your own photo">
+          </span>
+          <span class="hobby-card__label">Photography</span>
+        </button>
+      </div>
+
+      <!-- duplicate a "hobby-tile" block above to add another photo.
+           Size variants: hobby-tile--tall, hobby-tile--square,
+           hobby-tile--wide, hobby-tile--lg, hobby-tile--text (for
+           sticker/text cards). Position freely with inline --x/--y
+           (top-left offset within the full-bleed collage) and --w
+           (tile width) — no grid track to line up with, so gaps and
+           sizes can stay irregular like a real moodboard. Keep the
+           img wrapped in a "hobby-card__btn__frame" span — that's
+           what crops the zoom-on-hover without also clipping the
+           button's own hover shadow. -->
 
     </div>
   </section>

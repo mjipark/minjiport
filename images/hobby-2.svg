@@ -1,12 +1,10 @@
 <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 300 340">
-  <rect width="300" height="340" fill="#F5EFDD"/>
-  <rect x="14" y="14" width="272" height="242" fill="#9D8FFF"/>
-  <path d="M95 150 h90 v55 a45 45 0 0 1 -90 0 Z" fill="#CFFF5C"/>
-  <path d="M185 160 h20 a20 20 0 0 1 0 40 h-14" fill="none" stroke="#16131A" stroke-width="8"/>
-  <path d="M112 120 q8 -14 0 -26" fill="none" stroke="#16131A" stroke-width="7" stroke-linecap="round"/>
-  <path d="M140 120 q8 -14 0 -26" fill="none" stroke="#16131A" stroke-width="7" stroke-linecap="round"/>
-  <circle cx="70" cy="95" r="16" fill="#16131A"/>
-  <circle cx="70" cy="95" r="16" fill="none" stroke="#F5EFDD" stroke-width="3"/>
-  <circle cx="230" cy="90" r="14" fill="#16131A"/>
-  <text x="30" y="300" font-family="monospace" font-size="16" fill="#16131A">coffee_friends.jpg</text>
+  <rect width="300" height="340" fill="#9D8FFF"/>
+  <path d="M100 175 h95 v58 a47.5 47.5 0 0 1 -95 0 Z" fill="#CFFF5C"/>
+  <path d="M195 186 h21 a21 21 0 0 1 0 42 h-15" fill="none" stroke="#16131A" stroke-width="9"/>
+  <path d="M118 143 q9 -15 0 -28" fill="none" stroke="#16131A" stroke-width="8" stroke-linecap="round"/>
+  <path d="M148 143 q9 -15 0 -28" fill="none" stroke="#16131A" stroke-width="8" stroke-linecap="round"/>
+  <circle cx="75" cy="115" r="18" fill="#16131A"/>
+  <circle cx="75" cy="115" r="18" fill="none" stroke="#F5EFDD" stroke-width="3"/>
+  <circle cx="240" cy="108" r="15" fill="#16131A"/>
 </svg>
