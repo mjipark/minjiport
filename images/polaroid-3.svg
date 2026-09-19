@@ -1,0 +1,7 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 300 340">
+  <rect width="300" height="340" fill="#F5EFDD"/>
+  <rect x="14" y="14" width="272" height="242" fill="#16131A"/>
+  <path d="M40 220 L150 60 L260 220 Z" fill="#FF4433"/>
+  <circle cx="150" cy="180" r="30" fill="#CFFF5C"/>
+  <text x="30" y="300" font-family="monospace" font-size="16" fill="#16131A">objet_03.jpg</text>
+</svg>
