@@ -351,9 +351,11 @@ const prefersReducedMotion = window.matchMedia("(prefers-reduced-motion: reduce)
   if (!count) return;
 
   const isStackMode = () => window.matchMedia("(max-width:760px)").matches;
-  const SECONDS_PER_CARD = 45;
+  const SECONDS_PER_CARD = 32;
   const AUTOPLAY_SPEED = 1 / SECONDS_PER_CARD;
   const MAX_DT = 0.05;
+  const SETTLE_RATE = 3.5; // how quickly released velocity eases back to AUTOPLAY_SPEED
+  const MAX_FLING_SPEED = 6; // units/sec, caps how fast a hard flick can spin the deck
 
   let pos = 0;
   let manualTarget = null;
@@ -363,6 +365,9 @@ const prefersReducedMotion = window.matchMedia("(prefers-reduced-motion: reduce)
   let slotWidthPx = 300;
   let lastTime = null;
   let visible = true;
+  let velocity = AUTOPLAY_SPEED;
+  let lastMoveTime = 0;
+  let lastMovePos = 0;
 
   const nav = document.createElement("div");
   nav.className = "skills__nav";
@@ -429,7 +434,11 @@ const prefersReducedMotion = window.matchMedia("(prefers-reduced-motion: reduce)
           pos += diff * Math.min(dt * 8, 1);
         }
       } else if (!dragging){
-        pos += AUTOPLAY_SPEED * dt;
+        // ease any release velocity back down (or up) to the
+        // steady autoplay speed instead of snapping straight
+        // to it, so a fast flick decelerates smoothly.
+        velocity += (AUTOPLAY_SPEED - velocity) * Math.min(dt * SETTLE_RATE, 1);
+        pos += velocity * dt;
       }
       render();
     }
@@ -448,6 +457,9 @@ const prefersReducedMotion = window.matchMedia("(prefers-reduced-motion: reduce)
     dragStartX = e.clientX;
     dragStartPos = pos;
     slotWidthPx = card.getBoundingClientRect().width * 1.05;
+    lastMoveTime = performance.now();
+    lastMovePos = pos;
+    velocity = 0;
     grid.classList.add("is-dragging");
     card.setPointerCapture(e.pointerId);
   });
@@ -457,11 +469,23 @@ const prefersReducedMotion = window.matchMedia("(prefers-reduced-motion: reduce)
     const dx = e.clientX - dragStartX;
     pos = dragStartPos - dx / slotWidthPx;
     render();
+
+    // smoothed instantaneous velocity, so releasing mid-flick
+    // carries that speed into the settle-down in tick().
+    const now = performance.now();
+    const dt = (now - lastMoveTime) / 1000;
+    if (dt > 0){
+      const instVelocity = (pos - lastMovePos) / dt;
+      velocity = velocity * 0.7 + instVelocity * 0.3;
+      lastMoveTime = now;
+      lastMovePos = pos;
+    }
   });
 
   function endDrag(){
     if (!dragging) return;
     dragging = false;
+    velocity = Math.max(-MAX_FLING_SPEED, Math.min(MAX_FLING_SPEED, velocity));
     grid.classList.remove("is-dragging");
   }
 
