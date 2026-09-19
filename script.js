@@ -354,8 +354,13 @@ const prefersReducedMotion = window.matchMedia("(prefers-reduced-motion: reduce)
   const SECONDS_PER_CARD = 32;
   const AUTOPLAY_SPEED = 1 / SECONDS_PER_CARD;
   const MAX_DT = 0.05;
-  const SETTLE_RATE = 3.5; // how quickly released velocity eases back to AUTOPLAY_SPEED
-  const MAX_FLING_SPEED = 6; // units/sec, caps how fast a hard flick can spin the deck
+  // velocity relaxes back to AUTOPLAY_SPEED as a damped spring
+  // (STIFFNESS/DAMPING below) rather than a plain exponential
+  // decay, so a released flick overshoots slightly and settles
+  // with a touch of bounce instead of just gliding to a stop.
+  const SPRING_STIFFNESS = 70;
+  const SPRING_DAMPING = 6; // well under 2*sqrt(stiffness) (~16.7) for a clear, visible bounce
+  const MAX_FLING_SPEED = 2.6; // units/sec, keeps a hard flick in scale with the slow drift
 
   let pos = 0;
   let manualTarget = null;
@@ -366,6 +371,7 @@ const prefersReducedMotion = window.matchMedia("(prefers-reduced-motion: reduce)
   let lastTime = null;
   let visible = true;
   let velocity = AUTOPLAY_SPEED;
+  let velocityAccel = 0;
   let lastMoveTime = 0;
   let lastMovePos = 0;
 
@@ -434,10 +440,12 @@ const prefersReducedMotion = window.matchMedia("(prefers-reduced-motion: reduce)
           pos += diff * Math.min(dt * 8, 1);
         }
       } else if (!dragging){
-        // ease any release velocity back down (or up) to the
-        // steady autoplay speed instead of snapping straight
-        // to it, so a fast flick decelerates smoothly.
-        velocity += (AUTOPLAY_SPEED - velocity) * Math.min(dt * SETTLE_RATE, 1);
+        // damped spring pulling velocity back to AUTOPLAY_SPEED —
+        // velocityAccel is the spring's "acceleration", so a hard
+        // flick eases past the resting speed and springs back
+        // instead of coasting straight down to it.
+        velocityAccel += (SPRING_STIFFNESS * (AUTOPLAY_SPEED - velocity) - SPRING_DAMPING * velocityAccel) * dt;
+        velocity += velocityAccel * dt;
         pos += velocity * dt;
       }
       render();
@@ -460,6 +468,7 @@ const prefersReducedMotion = window.matchMedia("(prefers-reduced-motion: reduce)
     lastMoveTime = performance.now();
     lastMovePos = pos;
     velocity = 0;
+    velocityAccel = 0;
     grid.classList.add("is-dragging");
     card.setPointerCapture(e.pointerId);
   });
