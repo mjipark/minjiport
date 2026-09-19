@@ -16,6 +16,20 @@
 
 <body>
 
+  <!-- ambient floating shapes — a fixed layer that sits behind every
+       section and drifts/reacts to the cursor, like a loose second
+       layer of the collage living behind the whole page -->
+  <div class="bg-field" id="bgField" aria-hidden="true">
+    <span class="bg-shape bg-shape--tri bg-shape--coral" data-depth="0.4" style="--x:6%; --y:16%;"></span>
+    <span class="bg-shape bg-shape--circle bg-shape--lime" data-depth="0.22" style="--x:90%; --y:10%;"></span>
+    <span class="bg-shape bg-shape--dash bg-shape--violet" data-depth="0.5" style="--x:14%; --y:66%;"></span>
+    <span class="bg-shape bg-shape--plus bg-shape--coral" data-depth="0.3" style="--x:93%; --y:60%;"></span>
+    <span class="bg-shape bg-shape--circle bg-shape--violet" data-depth="0.16" style="--x:48%; --y:88%;"></span>
+    <span class="bg-shape bg-shape--tri bg-shape--lime" data-depth="0.35" style="--x:72%; --y:36%;"></span>
+    <span class="bg-shape bg-shape--dash bg-shape--coral" data-depth="0.2" style="--x:34%; --y:6%;"></span>
+    <span class="bg-shape bg-shape--plus bg-shape--violet" data-depth="0.28" style="--x:4%; --y:92%;"></span>
+  </div>
+
   <!-- grain overlay -->
   <div class="grain" aria-hidden="true"></div>
 
@@ -71,12 +85,6 @@
         to<br>work ↗</div>
     </div>
 
-    <div class="hero__minji" id="heroMinji">
-      <img src="images/minji-sticker.png" class="hero__minji-img" alt="Cutout portrait sticker of Minji">
-      <span class="hero__minji-tape hero__minji-tape--l" aria-hidden="true"></span>
-      <span class="hero__minji-tape hero__minji-tape--r" aria-hidden="true"></span>
-    </div>
-
     <div class="hero__intro">
       <p class="hero__eyebrow">Hello, I'm</p>
       <h1 class="hero__name">Minji Park</h1>
@@ -88,10 +96,14 @@
 
     <div class="hero__marquee">
       <div class="hero__marquee-track">
-        <span> ----- ✦ ----- ✦ ----- ✦ ----- ✦ ----- ✦ ----- ✦ ----- ✦
+        <span> ------------------------------ ✦ ------------------------------ ✦ ------------------------------ ✦
+          ------------------------------ ✦ ------------------------------ ✦ ------------------------------ ✦
+          ------------------------------ ✦
           MOTION ✦ </span>
-        <span aria-hidden="true">----- ✦ ----- ✦ ----- ✦ ----- ✦ ----- ✦ ----- ✦
-          ----- ✦ ----- ✦ </span>
+        <span aria-hidden="true"> ------------------------------ ✦ ------------------------------ ✦
+          ------------------------------ ✦ ------------------------------ ✦ ------------------------------ ✦
+          ------------------------------ ✦
+          ------------------------------ ✦ ------------------------------ ✦ </span>
       </div>
     </div>
   </section>
@@ -104,16 +116,31 @@
       <p class="section-head__note">A little about me →</p>
     </div>
 
-    <div class="background__row">
-      <div class="background__avatar">
-        <img src="images/polaroid-1.svg" alt="portrait placeholder — replace with your own photo">
+    <div class="background__content">
+      <div class="background__row">
+        <div class="background__avatar">
+          <img src="images/polaroid-1.svg" alt="portrait placeholder — replace with your own photo">
+        </div>
+        <p class="background__bio">
+          Hi! I'm Minji Park, a senior double-majoring in Art & Technology and Computer Science at Sogang University,
+          working at the intersection of design and data. I started my journey in design, then got pulled toward data,
+          now I build things that use pattern recognition and sentiment analysis. While I'm still learning with machine
+          learning and training data, I care more about visible progress rather than the polished final product, which
+          is why I working with people I can bounce ideas off in real time.
+
+          Growing up between Thailand and Korea, I've learned to asking how a design choice lands for someone outside my
+          own frame of reference, it shows up in how I build, not just how I talk about myself.
+
+          I like working in the open with a team, shipping in visible pieces rather than disappearing until a "final"
+          version. Other than that, during free time I usually go for running, and have coffee and talk with friends.
+        </p>
       </div>
-      <p class="background__bio">
-        I'm a designer-developer hybrid based in [City]. Over the past [X] years
-        I've shipped brand sites, product UI, and playful web experiments for
-        teams that want more personality than a template allows. I care about
-        craft, motion, and interfaces that feel like they were made by hand.
-      </p>
+
+      <div class="background__minji" id="backgroundMinji">
+        <img src="images/minji-sticker.png" class="background__minji-img" alt="Cutout portrait sticker of Minji">
+        <span class="background__minji-tape background__minji-tape--l" aria-hidden="true"></span>
+        <span class="background__minji-tape background__minji-tape--r" aria-hidden="true"></span>
+      </div>
     </div>
   </section>
 

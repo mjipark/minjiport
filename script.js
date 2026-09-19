@@ -43,6 +43,44 @@ const prefersReducedMotion = window.matchMedia("(prefers-reduced-motion: reduce)
 })();
 
 // ============================================
+// Ambient background field mouse parallax
+// the fixed shape layer behind every section
+// drifts opposite the cursor, same depth-based
+// lerp technique as the hero collage, layered
+// on top of each shape's own CSS float loop via
+// the --mx/--my custom properties it animates.
+// ============================================
+(function initBgFieldParallax(){
+  const field = document.getElementById("bgField");
+  const isDesktop = window.matchMedia("(min-width: 761px)").matches;
+  if (!field || prefersReducedMotion || !isDesktop) return;
+
+  const shapes = Array.from(field.querySelectorAll(".bg-shape"));
+  let targetX = 0, targetY = 0;
+  let currentX = 0, currentY = 0;
+
+  window.addEventListener("mousemove", (e) => {
+    const { innerWidth, innerHeight } = window;
+    targetX = (e.clientX / innerWidth - 0.5) * 2;
+    targetY = (e.clientY / innerHeight - 0.5) * 2;
+  });
+
+  function tick(){
+    currentX += (targetX - currentX) * 0.04;
+    currentY += (targetY - currentY) * 0.04;
+
+    shapes.forEach((shape) => {
+      const depth = parseFloat(shape.dataset.depth) || 0.3;
+      shape.style.setProperty("--mx", `${currentX * depth * -50}px`);
+      shape.style.setProperty("--my", `${currentY * depth * -50}px`);
+    });
+
+    requestAnimationFrame(tick);
+  }
+  requestAnimationFrame(tick);
+})();
+
+// ============================================
 // Work list cursor-follow preview
 // eylonmalkevich.com style: a floating image
 // trails the cursor while hovering a row and
@@ -130,20 +168,17 @@ const prefersReducedMotion = window.matchMedia("(prefers-reduced-motion: reduce)
 // Scroll-driven hero reveal
 // the hero opens as text-only; once the user
 // scrolls a little way into it, the collage
-// (polaroids/stickers) and the "minji" cutout
-// pop in together like notes being pressed
-// onto the page — a snappy one-shot reveal,
-// not a continuous scrub.
+// (polaroids/stickers) pops in like notes being
+// pressed onto the page — a snappy one-shot
+// reveal, not a continuous scrub.
 // ============================================
 (function initHeroReveal(){
   const collage = document.getElementById("heroCollage");
-  const minji = document.getElementById("heroMinji");
   const hero = document.getElementById("top");
   if (!hero) return;
 
   if (prefersReducedMotion) {
     if (collage) collage.classList.add("is-visible");
-    if (minji) minji.classList.add("is-stuck");
     return;
   }
 
@@ -157,11 +192,9 @@ const prefersReducedMotion = window.matchMedia("(prefers-reduced-motion: reduce)
 
     if (!stuck && progress >= STICK_AT) {
       collage && collage.classList.add("is-visible");
-      minji && minji.classList.add("is-stuck");
       stuck = true;
     } else if (stuck && progress < STICK_AT * 0.6) {
       collage && collage.classList.remove("is-visible");
-      minji && minji.classList.remove("is-stuck");
       stuck = false;
     }
     requestAnimationFrame(tick);
@@ -191,4 +224,30 @@ const prefersReducedMotion = window.matchMedia("(prefers-reduced-motion: reduce)
   }, { threshold: 0.15 });
 
   targets.forEach((t) => observer.observe(t));
+})();
+
+// ============================================
+// "Minji" cutout pop-in for the Background section
+// appears on the right once the section scrolls
+// into view, one-shot like the other reveals.
+// ============================================
+(function initBackgroundMinjiReveal(){
+  const el = document.getElementById("backgroundMinji");
+  if (!el) return;
+
+  if (prefersReducedMotion || !("IntersectionObserver" in window)) {
+    el.classList.add("is-visible");
+    return;
+  }
+
+  const observer = new IntersectionObserver((entries) => {
+    entries.forEach((entry) => {
+      if (entry.isIntersecting) {
+        el.classList.add("is-visible");
+        observer.unobserve(entry.target);
+      }
+    });
+  }, { threshold: 0.3 });
+
+  observer.observe(el);
 })();
