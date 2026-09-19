@@ -358,8 +358,8 @@ const prefersReducedMotion = window.matchMedia("(prefers-reduced-motion: reduce)
   // (STIFFNESS/DAMPING below) rather than a plain exponential
   // decay, so a released flick overshoots slightly and settles
   // with a touch of bounce instead of just gliding to a stop.
-  const SPRING_STIFFNESS = 85;
-  const SPRING_DAMPING = 4; // well under 2*sqrt(stiffness) (~18.4) for a strong, multi-bounce spring
+  const SPRING_STIFFNESS = 50;
+  const SPRING_DAMPING = 18; // above 2*sqrt(stiffness) (~14.1) — overdamped, so it settles smoothly with no bounce
   const MAX_FLING_SPEED = 3; // units/sec, keeps a hard flick in scale with the drift
 
   let pos = 0;
