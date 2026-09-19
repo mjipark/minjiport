@@ -181,7 +181,26 @@ const prefersReducedMotion = window.matchMedia("(prefers-reduced-motion: reduce)
       .join(" ");
   }
 
-  document.querySelectorAll(".section-head__title, .hero__name").forEach(splitWords);
+  // hero name gets a further per-letter split (each
+  // letter wrapped inside its word's .word-reveal span,
+  // so the word-level rise-in above is unaffected) so
+  // initHeroFontCycle below can flip each letter's font
+  // independently instead of the whole name at once.
+  function splitWordsAndLetters(el){
+    const words = el.textContent.trim().split(/\s+/).filter(Boolean);
+    el.innerHTML = words
+      .map((w, i) => {
+        const letters = w
+          .split("")
+          .map((ch) => `<span class="hero__letter">${ch}</span>`)
+          .join("");
+        return `<span class="word-reveal" style="--i:${i}">${letters}</span>`;
+      })
+      .join(" ");
+  }
+
+  document.querySelectorAll(".section-head__title").forEach(splitWords);
+  document.querySelectorAll(".hero__name").forEach(splitWordsAndLetters);
 
   if (prefersReducedMotion) return;
 
@@ -195,18 +214,21 @@ const prefersReducedMotion = window.matchMedia("(prefers-reduced-motion: reduce)
 
 // ============================================
 // Hero name font-cycling
-// co-ux.framer.website style: "Minji Park" keeps
-// flipping through a handful of very different
-// typefaces for as long as the hero is on screen —
-// a constantly-shifting, eye-catching wordmark rather
-// than a static headline. Pauses when the hero
-// scrolls out of view (and never starts at all under
-// reduced motion) so it isn't running forever in the
+// co-ux.framer.website style: every letter in "Minji
+// Park" (see the .hero__letter split above) flips
+// through a handful of very different typefaces on its
+// own independent, randomized timer, so letters are
+// never all showing the same font at once — a
+// constantly-shifting, eye-catching wordmark rather
+// than a static headline. Pauses when the hero scrolls
+// out of view (and never starts at all under reduced
+// motion) so it isn't running forever in the
 // background.
 // ============================================
 (function initHeroFontCycle(){
   const heroName = document.querySelector(".hero__name");
-  if (!heroName || prefersReducedMotion) return;
+  const letters = heroName ? Array.from(heroName.querySelectorAll(".hero__letter")) : [];
+  if (!heroName || !letters.length || prefersReducedMotion) return;
 
   const FONTS = [
     { family: "var(--font-display)", weight: 900, style: "italic" },
@@ -216,31 +238,48 @@ const prefersReducedMotion = window.matchMedia("(prefers-reduced-motion: reduce)
     { family: "'Instrument Serif', serif", weight: 400, style: "italic" },
     { family: "'Bebas Neue', sans-serif", weight: 400, style: "normal" },
   ];
-  const STEP_MS = 900;
+  const MIN_STEP = 350;
+  const MAX_STEP = 750;
   const START_DELAY_MS = 1000;
 
-  let index = 0;
-  let timer = null;
+  const timers = new Map();
+  let running = false;
 
-  function applyFont(font){
-    heroName.style.fontFamily = font.family;
-    heroName.style.fontWeight = font.weight;
-    heroName.style.fontStyle = font.style;
+  function randomFont(excludeFamily){
+    let font;
+    do {
+      font = FONTS[Math.floor(Math.random() * FONTS.length)];
+    } while (FONTS.length > 1 && font.family === excludeFamily);
+    return font;
   }
 
-  function loop(){
-    index = (index + 1) % FONTS.length;
-    applyFont(FONTS[index]);
-    timer = setTimeout(loop, STEP_MS);
+  function applyFont(letterEl, font){
+    letterEl.style.fontFamily = font.family;
+    letterEl.style.fontWeight = font.weight;
+    letterEl.style.fontStyle = font.style;
+    letterEl.dataset.font = font.family;
+  }
+
+  function scheduleLetter(letterEl, delay){
+    const t = setTimeout(() => {
+      applyFont(letterEl, randomFont(letterEl.dataset.font));
+      scheduleLetter(letterEl, MIN_STEP + Math.random() * (MAX_STEP - MIN_STEP));
+    }, delay);
+    timers.set(letterEl, t);
   }
 
   function start(){
-    if (timer) return;
-    timer = setTimeout(loop, START_DELAY_MS);
+    if (running) return;
+    running = true;
+    letters.forEach((letterEl) => {
+      scheduleLetter(letterEl, START_DELAY_MS + Math.random() * 400);
+    });
   }
   function stop(){
-    clearTimeout(timer);
-    timer = null;
+    if (!running) return;
+    running = false;
+    timers.forEach((t) => clearTimeout(t));
+    timers.clear();
   }
 
   if ("IntersectionObserver" in window) {
