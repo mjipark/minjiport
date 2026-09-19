@@ -68,31 +68,27 @@
   </div>
 
   <!-- ============ HERO / BACKGROUND ============ -->
-  <section class="hero" id="top">
-    <div class="hero__collage" id="heroCollage">
-      <img src="images/polaroid-1.svg" class="parallax-item" data-depth="0.6" style="--x:80%; --y:2%; --r:-8deg;"
-        alt="collage object 1 — replace with your own photo">
-      <img src="images/polaroid-2.svg" class="parallax-item" data-depth="0.3" style="--x:58%; --y:28%; --r:10deg;"
-        alt="collage object 2 — replace with your own photo">
-      <img src="images/polaroid-3.svg" class="parallax-item" data-depth="0.45" style="--x:80%; --y:56%; --r:-5deg;"
-        alt="collage object 3 — replace with your own photo">
-      <div class="sticker sticker--tape parallax-item" data-depth="0.2" style="--x:44%; --y:0%; --r:-4deg;">EST. 2026
+  <!-- .hero-flip is a taller wrapper that keeps .hero
+       pinned (position:sticky) while you scroll through
+       it, driving a 3D rotate-away transition
+       (initHeroFlip in script.js) before the Background
+       section scrolls up underneath. Desktop only — see
+       the max-width:760px override below and the same
+       check in script.js. -->
+  <div class="hero-flip" id="heroFlip">
+    <section class="hero" id="top">
+      <div class="hero__intro">
+        <p class="hero__eyebrow">Hello, I'm</p>
+        <h1 class="hero__name">Minji Park</h1>
+        <p class="hero__tagline">Product designer &amp; front-end developer who builds<br>
+          <em>loud, tactile, story-driven</em> interfaces.
+        </p>
+        <p class="hero__scroll-cue" aria-hidden="true">Scroll ↓</p>
       </div>
-      <div class="sticker sticker--circle parallax-item" data-depth="0.5" style="--x:70%; --y:58%; --r:0deg;">Open
-        to<br>work ↗</div>
-    </div>
 
-    <div class="hero__intro">
-      <p class="hero__eyebrow">Hello, I'm</p>
-      <h1 class="hero__name">Minji Park</h1>
-      <p class="hero__tagline">Product designer &amp; front-end developer who builds<br>
-        <em>loud, tactile, story-driven</em> interfaces.
-      </p>
-      <p class="hero__scroll-cue" aria-hidden="true">Scroll ↓</p>
-    </div>
-
-    <div class="marquee-line" aria-hidden="true"></div>
-  </section>
+      <div class="marquee-line" aria-hidden="true"></div>
+    </section>
+  </div>
 
   <!-- ============ BACKGROUND ============ -->
   <section class="background reveal" id="background">

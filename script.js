@@ -6,38 +6,48 @@ document.getElementById("year").textContent = new Date().getFullYear();
 const prefersReducedMotion = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
 
 // ============================================
-// Hero mouse parallax
-// wow-showroom.com style: elements drift opposite
-// mouse position, scaled by each item's data-depth.
+// Hero scroll "flip" transition
+// .hero sits inside a taller #heroFlip wrapper and
+// stays pinned (position:sticky, set in CSS) while
+// that extra height scrolls past. This maps that
+// scroll distance to a 3D rotateX + fade on .hero, so
+// it flips away like a card before the Background
+// section rises into view underneath — a deliberate
+// transition "gate" rather than a plain scroll cut.
+// Desktop only (CSS drops the wrapper's extra height
+// on narrow screens/reduced motion, so there's no
+// scroll-jack there either).
 // ============================================
-(function initParallax(){
-  const isDesktop = window.matchMedia("(min-width: 761px)").matches;
-  const items = Array.from(document.querySelectorAll(".parallax-item"));
-  if (!items.length || prefersReducedMotion || !isDesktop) return;
-  let targetX = 0, targetY = 0;
-  let currentX = 0, currentY = 0;
+(function initHeroFlip(){
+  const wrapper = document.getElementById("heroFlip");
+  const hero = document.getElementById("top");
+  if (!wrapper || !hero || prefersReducedMotion) return;
+  if (!window.matchMedia("(min-width: 761px)").matches) return;
 
-  window.addEventListener("mousemove", (e) => {
-    const { innerWidth, innerHeight } = window;
-    targetX = (e.clientX / innerWidth - 0.5) * 2;   // -1 .. 1
-    targetY = (e.clientY / innerHeight - 0.5) * 2;  // -1 .. 1
-  });
+  const MAX_ROTATE_DEG = 80;
+  let ticking = false;
 
-  function tick(){
-    // lerp for smooth trailing motion
-    currentX += (targetX - currentX) * 0.06;
-    currentY += (targetY - currentY) * 0.06;
-
-    items.forEach((item) => {
-      const depth = parseFloat(item.dataset.depth) || 0.3;
-      const moveX = currentX * depth * 32;
-      const moveY = currentY * depth * 32;
-      item.style.transform = `rotate(var(--r)) translate(${moveX}px, ${moveY}px)`;
-    });
-
-    requestAnimationFrame(tick);
+  function update(){
+    ticking = false;
+    const scrollable = wrapper.offsetHeight - window.innerHeight;
+    if (scrollable <= 0) {
+      hero.style.transform = "";
+      hero.style.opacity = "";
+      return;
+    }
+    const rect = wrapper.getBoundingClientRect();
+    const progress = Math.min(Math.max(-rect.top / scrollable, 0), 1);
+    hero.style.transform = `rotateX(${progress * -MAX_ROTATE_DEG}deg)`;
+    hero.style.opacity = String(1 - progress * 0.95);
   }
-  requestAnimationFrame(tick);
+
+  window.addEventListener("scroll", () => {
+    if (ticking) return;
+    ticking = true;
+    requestAnimationFrame(update);
+  }, { passive: true });
+  window.addEventListener("resize", update);
+  update();
 })();
 
 // ============================================
