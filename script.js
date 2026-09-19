@@ -327,18 +327,21 @@ const prefersReducedMotion = window.matchMedia("(prefers-reduced-motion: reduce)
 
 // ============================================
 // Skills card carousel (mobile)
-// Horizontal "book page" carousel. One card is active
-// (.is-active), centered and fully visible, while its
-// neighbors peek in from the edges — every card's position
-// is driven by --dist, its signed circular distance from
-// the active index (0 = active, ±1 = the previous/next
-// page, ±2 = parked just off-screen — see the
-// max-width:760px rules in style.css), so paging always
-// slides the whole row together and loops at the ends.
-// Dragging the active card left/right past a threshold (or
-// tapping the Prev/Next controls below the deck) flips to
-// that neighbor. Scrolling the whole grid out of view
-// resets it back to the first page.
+// Horizontal "book page" marquee. `pos` is a continuous
+// (fractional) position along the loop, drifting forward on
+// its own at a slow constant rate via requestAnimationFrame.
+// Every card's placement is driven by --dist — its signed
+// circular distance from `pos` (0 = active/centered, ±1 =
+// the previous/next page peeking at the edges, ±2 = parked
+// off-screen — see the max-width:760px rules in style.css)
+// — recomputed every frame, so the whole row drifts
+// smoothly and loops forever. Dragging a card grabs `pos`
+// directly (1:1 with the finger, so it can run faster than
+// the drift in either direction); releasing hands control
+// straight back to the slow autoplay from wherever it
+// landed. The Prev/Next controls ease `pos` by one card
+// instead of jumping it. Scrolling the whole grid out of
+// view resets it back to the first page.
 // ============================================
 (function initSkillsStack(){
   const grid = document.querySelector(".skills__grid");
@@ -348,10 +351,18 @@ const prefersReducedMotion = window.matchMedia("(prefers-reduced-motion: reduce)
   if (!count) return;
 
   const isStackMode = () => window.matchMedia("(max-width:760px)").matches;
-  const DRAG_THRESHOLD = 60;
+  const SECONDS_PER_CARD = 45;
+  const AUTOPLAY_SPEED = 1 / SECONDS_PER_CARD;
+  const MAX_DT = 0.05;
 
-  let activeIndex = 0;
-  let drag = null;
+  let pos = 0;
+  let manualTarget = null;
+  let dragging = false;
+  let dragStartX = 0;
+  let dragStartPos = 0;
+  let slotWidthPx = 300;
+  let lastTime = null;
+  let visible = true;
 
   const nav = document.createElement("div");
   nav.className = "skills__nav";
@@ -367,35 +378,26 @@ const prefersReducedMotion = window.matchMedia("(prefers-reduced-motion: reduce)
   nav.append(prevBtn, sep, nextBtn);
   grid.after(nav);
 
-  function signedDist(i){
-    let d = ((i - activeIndex) % count + count) % count;
-    if (d > count / 2) d -= count;
-    return d;
-  }
-
   function render(){
+    const stackable = isStackMode();
     cards.forEach((card, i) => {
-      const dist = signedDist(i);
-      const isActive = dist === 0;
+      let d = ((i - pos) % count + count) % count;
+      if (d > count / 2) d -= count;
+      const isActive = Math.abs(d) < 0.5;
       card.classList.toggle("is-active", isActive);
-      card.style.setProperty("--dist", dist);
-      card.style.setProperty("--absdist", Math.abs(dist));
-      if (isStackMode()) card.setAttribute("tabindex", isActive ? "0" : "-1");
+      card.style.setProperty("--dist", d);
+      card.style.setProperty("--absdist", Math.abs(d));
+      if (stackable) card.setAttribute("tabindex", isActive ? "0" : "-1");
     });
   }
 
-  function next(){
-    activeIndex = (activeIndex + 1) % count;
-    render();
-  }
-
-  function prev(){
-    activeIndex = (activeIndex - 1 + count) % count;
-    render();
+  function goTo(delta){
+    manualTarget = (manualTarget != null ? manualTarget : pos) + delta;
   }
 
   function reset(){
-    activeIndex = 0;
+    pos = 0;
+    manualTarget = null;
     render();
   }
 
@@ -412,36 +414,55 @@ const prefersReducedMotion = window.matchMedia("(prefers-reduced-motion: reduce)
     if (!stackable) reset();
   }
 
-  prevBtn.addEventListener("click", prev);
-  nextBtn.addEventListener("click", next);
+  function tick(time){
+    if (lastTime == null) lastTime = time;
+    const dt = Math.min((time - lastTime) / 1000, MAX_DT);
+    lastTime = time;
+
+    if (isStackMode() && visible){
+      if (manualTarget != null){
+        const diff = manualTarget - pos;
+        if (Math.abs(diff) < 0.003){
+          pos = manualTarget;
+          manualTarget = null;
+        } else {
+          pos += diff * Math.min(dt * 8, 1);
+        }
+      } else if (!dragging){
+        pos += AUTOPLAY_SPEED * dt;
+      }
+      render();
+    }
+    requestAnimationFrame(tick);
+  }
+
+  prevBtn.addEventListener("click", () => goTo(-1));
+  nextBtn.addEventListener("click", () => goTo(1));
 
   grid.addEventListener("pointerdown", (e) => {
     if (!isStackMode()) return;
     const card = e.target.closest(".skills__cat");
-    if (!card || !card.classList.contains("is-active")) return;
-    drag = { startX: e.clientX, dx: 0, pointerId: e.pointerId };
-    card.classList.add("is-dragging");
+    if (!card) return;
+    dragging = true;
+    manualTarget = null;
+    dragStartX = e.clientX;
+    dragStartPos = pos;
+    slotWidthPx = card.getBoundingClientRect().width * 1.05;
     grid.classList.add("is-dragging");
     card.setPointerCapture(e.pointerId);
   });
 
   grid.addEventListener("pointermove", (e) => {
-    if (!drag || e.pointerId !== drag.pointerId) return;
-    drag.dx = e.clientX - drag.startX;
-    grid.style.transform = `translateX(${drag.dx}px)`;
+    if (!dragging) return;
+    const dx = e.clientX - dragStartX;
+    pos = dragStartPos - dx / slotWidthPx;
+    render();
   });
 
-  function endDrag(e){
-    if (!drag || (e.pointerId !== undefined && e.pointerId !== drag.pointerId)) return;
-    const { dx } = drag;
-    drag = null;
+  function endDrag(){
+    if (!dragging) return;
+    dragging = false;
     grid.classList.remove("is-dragging");
-    const activeCard = cards.find((c) => c.classList.contains("is-active"));
-    if (activeCard) activeCard.classList.remove("is-dragging");
-
-    grid.style.transform = "";
-    if (dx < -DRAG_THRESHOLD) next();
-    else if (dx > DRAG_THRESHOLD) prev();
   }
 
   grid.addEventListener("pointerup", endDrag);
@@ -450,19 +471,21 @@ const prefersReducedMotion = window.matchMedia("(prefers-reduced-motion: reduce)
   cards.forEach((card) => {
     card.addEventListener("keydown", (e) => {
       if (!isStackMode() || !card.classList.contains("is-active")) return;
-      if (e.key === "ArrowLeft"){ e.preventDefault(); prev(); }
-      if (e.key === "ArrowRight"){ e.preventDefault(); next(); }
+      if (e.key === "ArrowLeft"){ e.preventDefault(); goTo(-1); }
+      if (e.key === "ArrowRight"){ e.preventDefault(); goTo(1); }
     });
   });
 
   render();
   syncInteractivity();
   window.addEventListener("resize", syncInteractivity);
+  requestAnimationFrame(tick);
 
   if ("IntersectionObserver" in window){
     const observer = new IntersectionObserver((entries) => {
       entries.forEach((entry) => {
-        if (!entry.isIntersecting) reset();
+        visible = entry.isIntersecting;
+        if (!visible) reset();
       });
     }, { threshold: 0 });
     observer.observe(grid);

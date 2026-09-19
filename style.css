@@ -855,22 +855,26 @@ html.has-custom-cursor .custom-cursor.is-down{
 .skills__nav{ display:none; }
 
 @media (max-width:760px){
-  /* Horizontal "book page" carousel. Every card is pinned
+  /* Horizontal "book page" marquee. Every card is pinned
      into the same grid cell and positioned by --dist — its
-     signed circular distance from the active card (0 =
-     active/centered, ±1 = the previous/next page peeking
-     at the edges, ±2 = further pages parked just off-screen
-     — see initSkillsStack in script.js) — so flipping pages
-     always slides the whole row together. Dragging the
-     active card left/right past a threshold (or tapping
-     Prev/Next below) advances to that neighbor, looping at
-     the ends. */
+     signed circular distance from the current (continuous,
+     ever-drifting) position — 0 = active/centered, ±1 = the
+     previous/next page peeking at the edges, ±2 = further
+     pages parked just off-screen. initSkillsStack in
+     script.js recomputes --dist every animation frame and
+     writes the transform directly, so transform/opacity
+     have no CSS transition here — one would just lag a
+     beat behind the constantly-moving target. Dragging a
+     card grabs the position outright (script.js), and
+     Prev/Next eases it by one card. */
   .skills__grid{
     display:grid;
     grid-template-columns:1fr;
     overflow:hidden;
-    transition:transform .4s var(--ease);
+    cursor:grab;
+    touch-action:pan-y;
   }
+  .skills__grid.is-dragging{ cursor:grabbing; }
   .skills__cat{
     grid-row:1; grid-column:1;
     width:82%;
@@ -879,7 +883,7 @@ html.has-custom-cursor .custom-cursor.is-down{
     padding:20px 22px;
     z-index:calc(10 - var(--absdist,0));
     opacity:calc(1 - var(--absdist,0) * 0.4);
-    transition:transform .4s var(--ease), opacity .4s var(--ease), box-shadow .3s var(--ease);
+    transition:box-shadow .3s var(--ease);
   }
   /* .skills__grid-prefixed so this beats .pop-in.is-visible's
      transform (script.js's scroll-reveal stagger, same
@@ -889,18 +893,10 @@ html.has-custom-cursor .custom-cursor.is-down{
   .skills__grid .skills__cat{
     transform:translateX(calc(var(--dist,0) * 105%));
   }
-  /* only the active page is draggable, and touch-action:pan-y
-     hands its horizontal touch fully to our own pointer
-     handling (script.js) while still letting a vertical
-     drag started on it scroll the page normally. */
   .skills__cat.is-active{
     box-shadow:12px 12px 0 var(--accent, var(--coral));
     z-index:50;
-    cursor:grab;
-    touch-action:pan-y;
   }
-  .skills__cat.is-dragging{ cursor:grabbing; }
-  .skills__grid.is-dragging{ transition:none; }
   .skills__cat:focus-visible{
     outline:3px solid var(--ink); outline-offset:2px;
   }
