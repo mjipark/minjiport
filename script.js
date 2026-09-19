@@ -165,6 +165,34 @@ const prefersReducedMotion = window.matchMedia("(prefers-reduced-motion: reduce)
 })();
 
 // ============================================
+// Word-by-word text reveal
+// splits section titles (and the hero name) into
+// per-word spans with a staggered rise-in delay;
+// section titles piggyback on the existing
+// .reveal/.is-visible scroll trigger below, the
+// hero name plays once immediately on load.
+// ============================================
+(function initWordReveal(){
+  function splitWords(el){
+    const words = el.textContent.trim().split(/\s+/).filter(Boolean);
+    el.innerHTML = words
+      .map((w, i) => `<span class="word-reveal" style="--i:${i}">${w}</span>`)
+      .join(" ");
+  }
+
+  document.querySelectorAll(".section-head__title, .hero__name").forEach(splitWords);
+
+  if (prefersReducedMotion) return;
+
+  const heroName = document.querySelector(".hero__name");
+  if (heroName) {
+    requestAnimationFrame(() => {
+      requestAnimationFrame(() => heroName.classList.add("is-visible"));
+    });
+  }
+})();
+
+// ============================================
 // Scroll reveal for sections
 // ============================================
 (function initReveal(){
@@ -233,5 +261,55 @@ const prefersReducedMotion = window.matchMedia("(prefers-reduced-motion: reduce)
         window.history.back();
       }
     });
+  });
+})();
+
+// ============================================
+// Hobby photo lightbox
+// clicking a photo in the Hobbies grid pops a
+// bouncy modal with the full image and a caption
+// instead of navigating anywhere. Closes on the
+// close button, backdrop click, or Escape.
+// ============================================
+(function initHobbyLightbox(){
+  const lightbox = document.getElementById("hobbyLightbox");
+  const cards = document.querySelectorAll(".hobby-card__btn");
+  if (!lightbox || !cards.length) return;
+
+  const img = document.getElementById("lightboxImg");
+  const title = document.getElementById("lightboxTitle");
+  const caption = document.getElementById("lightboxCaption");
+  const closeBtn = document.getElementById("lightboxClose");
+  const backdrop = document.getElementById("lightboxBackdrop");
+
+  let lastFocused = null;
+
+  function open(card){
+    lastFocused = document.activeElement;
+    img.src = card.dataset.img;
+    img.alt = card.dataset.title;
+    title.textContent = card.dataset.title;
+    caption.textContent = card.dataset.caption;
+    lightbox.classList.add("is-open");
+    lightbox.setAttribute("aria-hidden", "false");
+    document.body.style.overflow = "hidden";
+    closeBtn.focus();
+  }
+
+  function close(){
+    lightbox.classList.remove("is-open");
+    lightbox.setAttribute("aria-hidden", "true");
+    document.body.style.overflow = "";
+    if (lastFocused) lastFocused.focus();
+  }
+
+  cards.forEach((card) => {
+    card.addEventListener("click", () => open(card));
+  });
+
+  closeBtn.addEventListener("click", close);
+  backdrop.addEventListener("click", close);
+  window.addEventListener("keydown", (e) => {
+    if (e.key === "Escape" && lightbox.classList.contains("is-open")) close();
   });
 })();

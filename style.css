@@ -21,6 +21,24 @@
 *{ box-sizing:border-box; }
 html{ scroll-behavior:smooth; }
 
+/* ============================================
+   VIEW TRANSITIONS — clicking a Work row "zooms"
+   into its project page. Progressive enhancement:
+   browsers without cross-document view-transition
+   support (Safari/Firefox as of writing) just do a
+   normal navigation, no fallback code needed.
+   ============================================ */
+@view-transition{
+  navigation:auto;
+}
+::view-transition-group(*){
+  animation-duration:.5s;
+  animation-timing-function:cubic-bezier(.34,1.56,.64,1);
+}
+@media (prefers-reduced-motion:reduce){
+  ::view-transition-group(*){ animation-duration:.001s; }
+}
+
 body{
   margin:0;
   background:var(--cream);
@@ -287,21 +305,37 @@ h1,h2,h3,p{ margin:0; }
 
 .hero__marquee{
   position:absolute; left:0; right:0; bottom:0; z-index:2;
-  border-top:3px solid var(--ink); border-bottom:3px solid var(--ink);
-  background:var(--ink); color:var(--cream);
-  overflow:hidden; white-space:nowrap;
   margin:0;
 }
-.hero__marquee-track{
-  display:inline-flex; animation:marquee 22s linear infinite;
-  font-family:var(--font-mono); font-weight:700; font-size:1rem;
-  padding:14px 0;
+
+/* ============================================
+   MARQUEE LINE — a bare strip of moving dashes,
+   no text. Reused for the hero footer bar and
+   the site footer bar.
+   ============================================ */
+.marquee-line{
+  position:relative;
+  height:18px;
+  overflow:hidden;
+  border-top:3px solid var(--ink); border-bottom:3px solid var(--ink);
+  background:var(--ink);
 }
-@keyframes marquee{ from{ transform:translateX(0); } to{ transform:translateX(-50%); } }
+.marquee-line::before{
+  content:"";
+  position:absolute; inset:0;
+  background-image:repeating-linear-gradient(to right, var(--cream) 0 26px, transparent 26px 42px);
+  animation:marqueeLine 3.5s linear infinite;
+}
+.marquee-line--reverse::before{ animation-direction:reverse; }
+.marquee-line--violet{ background:var(--violet); }
+.marquee-line--violet::before{
+  background-image:repeating-linear-gradient(to right, var(--cream) 0 26px, transparent 26px 42px);
+}
+@keyframes marqueeLine{ from{ transform:translateX(0); } to{ transform:translateX(-42px); } }
 
 @media (prefers-reduced-motion:reduce){
   .parallax-item{ transform:rotate(var(--r)) !important; }
-  .hero__marquee-track{ animation:none; }
+  .marquee-line::before{ animation:none; }
 }
 
 /* On narrow screens the absolutely-positioned collage overlaps
@@ -323,7 +357,6 @@ h1,h2,h3,p{ margin:0; }
 /* ============================================
    BACKGROUND
    ============================================ */
-.background{ position:relative; }
 .background__content{
   display:grid;
   grid-template-columns: minmax(0, 600px) auto;
@@ -387,6 +420,27 @@ h1,h2,h3,p{ margin:0; }
 }
 
 /* ============================================
+   SECTION COLOR BLOCKS
+   each section gets its own full-bleed color —
+   the "0 0 0 100vmax" box-shadow trick paints
+   past the max-width column while the section's
+   own overflow:hidden clips it to that section's
+   height, so no extra wrapper markup is needed.
+   ============================================ */
+.background, .work, .experience, .skills, .hobbies, .contact{
+  position:relative;
+  overflow:hidden;
+  box-shadow:0 0 0 100vmax var(--section-bg);
+  border-top:4px solid var(--ink);
+}
+.background{ --section-bg:#1b1330; }
+.work{ --section-bg:#2a1210; }
+.experience{ --section-bg:#0f1f18; }
+.skills{ --section-bg:#10152b; }
+.hobbies{ --section-bg:#241a10; }
+.contact{ --section-bg:var(--coral); }
+
+/* ============================================
    SHARED SECTION HEAD
    ============================================ */
 section{ padding:clamp(70px,9vw,130px) clamp(20px,4vw,56px); max-width:var(--max); margin:0 auto; }
@@ -410,6 +464,24 @@ section{ padding:clamp(70px,9vw,130px) clamp(20px,4vw,56px); max-width:var(--max
 
 .reveal{ opacity:0; transform:translateY(28px); transition:opacity .6s ease, transform .6s ease; }
 .reveal.is-visible{ opacity:1; transform:translateY(0); }
+
+/* word-by-word title reveal — piggybacks on the
+   .reveal/.is-visible trigger above for section
+   titles; .hero__name gets its own is-visible
+   class added once on load (see script.js). */
+.word-reveal{
+  display:inline-block;
+  opacity:0; transform:translateY(24px);
+  transition:opacity .5s ease, transform .6s cubic-bezier(.22,1,.36,1);
+  transition-delay:calc(var(--i,0) * 70ms);
+}
+.reveal.is-visible .word-reveal,
+.hero__name.is-visible .word-reveal{
+  opacity:1; transform:translateY(0);
+}
+@media (prefers-reduced-motion:reduce){
+  .word-reveal{ transition:none; opacity:1; transform:none; }
+}
 
 /* ============================================
    WORK
@@ -537,17 +609,22 @@ section{ padding:clamp(70px,9vw,130px) clamp(20px,4vw,56px); max-width:var(--max
 
 /* ============================================
    CONTACT
+   loud coral finale — everything here flips to
+   dark ink text/borders for contrast against the
+   saturated background instead of the site's
+   usual white-on-dark.
    ============================================ */
-.contact{ text-align:left; }
+.contact{ text-align:left; color:var(--cream); }
+.contact .section-head__num{ color:var(--cream); }
 .contact__cta{
   font-family:var(--font-display); font-weight:900; font-style:italic;
   font-size:clamp(2.8rem,8vw,6rem); line-height:0.95; margin-bottom:20px;
 }
-.contact__sub{ font-size:1.1rem; max-width:480px; margin-bottom:36px; color:var(--muted); }
+.contact__sub{ font-size:1.1rem; max-width:480px; margin-bottom:36px; color:#5a2620; }
 .contact__email{
   display:inline-block; font-family:var(--font-mono); font-weight:700;
   font-size:clamp(1.3rem,4vw,2rem);
-  border-bottom:4px solid var(--coral); padding-bottom:4px; margin-bottom:48px;
+  border-bottom:4px solid var(--cream); padding-bottom:4px; margin-bottom:48px;
   transition:color .2s, border-color .2s;
 }
 .contact__email:hover{ color:var(--violet); border-color:var(--violet); }
@@ -569,20 +646,11 @@ section{ padding:clamp(70px,9vw,130px) clamp(20px,4vw,56px); max-width:var(--max
   border-radius:100px; transition:transform .15s;
 }
 .contact__resume:hover{ transform:rotate(-2deg) scale(1.03); background:var(--coral); }
+.contact .contact__resume:hover{ background:var(--violet); }
 
 /* ============================================
    FOOTER
    ============================================ */
-.footer{ padding-top:0; }
-.footer__marquee{
-  border-top:3px solid var(--ink); border-bottom:3px solid var(--ink);
-  background:var(--violet); color:var(--cream);
-  overflow:hidden; white-space:nowrap;
-}
-.footer__marquee-track{
-  display:inline-flex; animation:marquee 18s linear infinite reverse;
-  font-family:var(--font-mono); font-weight:700; font-size:0.9rem; padding:12px 0;
-}
 .footer{
   padding:0 clamp(20px,4vw,56px) 40px;
 }
@@ -653,4 +721,123 @@ section{ padding:clamp(70px,9vw,130px) clamp(20px,4vw,56px); max-width:var(--max
 
 @media (max-width:640px){
   .project-detail__meta{ flex-direction:column; align-items:flex-start; }
+}
+
+/* ============================================
+   HOBBIES
+   scattered polaroid-style photo grid, same
+   bordered-photo language as the hero collage
+   (thick ink border + hard shadow), each card
+   holding a slight fixed tilt via --r and
+   popping straight/forward on hover. Clicking
+   opens a bouncy lightbox instead of navigating.
+   ============================================ */
+.hobbies__grid{
+  display:flex; flex-wrap:wrap; gap:34px 28px;
+  justify-content:flex-start;
+}
+.hobby-card{
+  transform:rotate(var(--r,0deg));
+}
+.hobby-card:nth-child(2n){ margin-top:26px; }
+.hobby-card:nth-child(3n){ margin-top:0; }
+
+.hobby-card__btn{
+  display:flex; flex-direction:column;
+  width:clamp(150px,18vw,210px);
+  background:none; border:none; padding:0; margin:0;
+  font:inherit; color:inherit; text-align:left; cursor:pointer;
+  transition:transform .35s cubic-bezier(.34,1.56,.64,1);
+}
+.hobby-card__btn img{
+  width:100%; aspect-ratio:300/242; object-fit:cover;
+  border:5px solid var(--ink);
+  box-shadow:8px 8px 0 var(--ink);
+  transition:box-shadow .35s cubic-bezier(.34,1.56,.64,1);
+}
+.hobby-card__label{
+  font-family:var(--font-mono); font-weight:700; font-size:0.85rem;
+  padding:12px 2px 0;
+}
+
+.hobby-card__btn:hover,
+.hobby-card__btn:focus-visible{
+  transform:rotate(0deg) translateY(-8px) scale(1.04);
+}
+.hobby-card__btn:hover img,
+.hobby-card__btn:focus-visible img{
+  box-shadow:12px 12px 0 var(--coral);
+}
+.hobby-card__btn:focus-visible{ outline:2px solid var(--coral); outline-offset:6px; }
+
+@media (prefers-reduced-motion:reduce){
+  .hobby-card__btn{ transition:none; }
+  .hobby-card__btn img{ transition:none; }
+}
+
+@media (max-width:640px){
+  .hobby-card{ transform:none; }
+  .hobby-card:nth-child(2n), .hobby-card:nth-child(3n){ margin-top:0; }
+  .hobbies__grid{ justify-content:center; }
+}
+
+/* ============================================
+   LIGHTBOX
+   ============================================ */
+.lightbox{
+  position:fixed; inset:0; z-index:400;
+  display:flex; align-items:center; justify-content:center;
+  padding:24px;
+  visibility:hidden;
+  opacity:0;
+  transition:opacity .25s ease, visibility 0s linear .25s;
+}
+.lightbox.is-open{
+  visibility:visible; opacity:1;
+  transition:opacity .25s ease;
+}
+.lightbox__backdrop{
+  position:absolute; inset:0;
+  background:rgba(18,18,20,0.78);
+  backdrop-filter:blur(4px);
+}
+.lightbox__panel{
+  position:relative; z-index:1;
+  width:min(420px, 100%);
+  background:var(--cream);
+  color:var(--ink);
+  border:5px solid var(--ink);
+  box-shadow:14px 14px 0 var(--coral);
+  padding:22px;
+  transform:scale(0.82) translateY(24px) rotate(-2deg);
+  opacity:0;
+  transition:transform .4s cubic-bezier(.34,1.56,.64,1), opacity .25s ease;
+}
+.lightbox.is-open .lightbox__panel{
+  transform:scale(1) translateY(0) rotate(0deg);
+  opacity:1;
+}
+.lightbox__close{
+  position:absolute; top:-16px; right:-16px;
+  width:38px; height:38px; border-radius:50%;
+  background:var(--ink); color:var(--cream);
+  border:3px solid var(--cream);
+  font-family:var(--font-mono); font-size:1rem; font-weight:700;
+  cursor:pointer;
+  transition:transform .2s, background .2s, color .2s;
+}
+.lightbox__close:hover{ background:var(--coral); transform:rotate(90deg); }
+.lightbox__img{
+  width:100%; aspect-ratio:300/242; object-fit:cover;
+  border:4px solid var(--ink); margin-bottom:18px;
+}
+.lightbox__title{
+  font-family:var(--font-display); font-weight:700; font-style:italic;
+  font-size:1.5rem; margin-bottom:10px;
+}
+.lightbox__caption{ font-size:0.95rem; line-height:1.55; color:var(--muted); }
+
+@media (prefers-reduced-motion:reduce){
+  .lightbox, .lightbox__panel{ transition:opacity .15s ease; }
+  .lightbox__panel{ transform:none !important; }
 }
