@@ -194,6 +194,66 @@ const prefersReducedMotion = window.matchMedia("(prefers-reduced-motion: reduce)
 })();
 
 // ============================================
+// Hero name font-cycling
+// co-ux.framer.website style: "Minji Park" keeps
+// flipping through a handful of very different
+// typefaces for as long as the hero is on screen —
+// a constantly-shifting, eye-catching wordmark rather
+// than a static headline. Pauses when the hero
+// scrolls out of view (and never starts at all under
+// reduced motion) so it isn't running forever in the
+// background.
+// ============================================
+(function initHeroFontCycle(){
+  const heroName = document.querySelector(".hero__name");
+  if (!heroName || prefersReducedMotion) return;
+
+  const FONTS = [
+    { family: "var(--font-display)", weight: 900, style: "italic" },
+    { family: "'Space Grotesk', sans-serif", weight: 700, style: "normal" },
+    { family: "'Space Mono', monospace", weight: 700, style: "normal" },
+    { family: "'Unbounded', sans-serif", weight: 900, style: "normal" },
+    { family: "'Instrument Serif', serif", weight: 400, style: "italic" },
+    { family: "'Bebas Neue', sans-serif", weight: 400, style: "normal" },
+  ];
+  const STEP_MS = 900;
+  const START_DELAY_MS = 1000;
+
+  let index = 0;
+  let timer = null;
+
+  function applyFont(font){
+    heroName.style.fontFamily = font.family;
+    heroName.style.fontWeight = font.weight;
+    heroName.style.fontStyle = font.style;
+  }
+
+  function loop(){
+    index = (index + 1) % FONTS.length;
+    applyFont(FONTS[index]);
+    timer = setTimeout(loop, STEP_MS);
+  }
+
+  function start(){
+    if (timer) return;
+    timer = setTimeout(loop, START_DELAY_MS);
+  }
+  function stop(){
+    clearTimeout(timer);
+    timer = null;
+  }
+
+  if ("IntersectionObserver" in window) {
+    const observer = new IntersectionObserver((entries) => {
+      entries.forEach((entry) => (entry.isIntersecting ? start() : stop()));
+    }, { threshold: 0 });
+    observer.observe(heroName);
+  } else {
+    start();
+  }
+})();
+
+// ============================================
 // Scroll reveal for sections
 // ============================================
 (function initReveal(){
