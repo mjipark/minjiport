@@ -433,13 +433,13 @@ h1,h2,h3,p{ margin:0; }
    scoped behind that section's content instead of
    comparing against the page's other layers.
    ============================================ */
-.background, .work, .experience, .skills, .hobbies, .contact{
+.background, .work, .experience, .skills, .contact{
   position:relative;
   z-index:0;
   border-top:4px solid var(--ink);
 }
 .background::before, .work::before, .experience::before,
-.skills::before, .hobbies::before, .contact::before{
+.skills::before, .contact::before{
   content:"";
   position:absolute;
   top:0; bottom:0; left:50%; right:50%;
@@ -447,12 +447,28 @@ h1,h2,h3,p{ margin:0; }
   background:var(--section-bg);
   z-index:-1;
 }
-.background{ --section-bg:#2E1A4D; }
-.work{ --section-bg:#4A1B12; }
-.experience{ --section-bg:#123B26; }
-.skills{ --section-bg:#142A66; }
-.hobbies{ --section-bg:#4A3110; }
-.contact{ --section-bg:var(--coral); }
+/* a small repeating poster palette — black, red, white,
+   purple — cycling back to black so the last section
+   (Contact) reads as a return to the opening black. */
+.background{ --section-bg:#000000; }
+.work{ --section-bg:#D7263D; }
+.experience{ --section-bg:#F4F0E6; }
+.skills{ --section-bg:#5B2A86; }
+.contact{ --section-bg:#000000; }
+
+/* Experience sits on the palette's "white" block, so it
+   flips to dark ink text/borders instead of the site's
+   usual white-on-dark — same pattern as Contact used to
+   need back when it was the coral block. */
+.experience{
+  color:#1A1410;
+  border-top-color:#1A1410;
+}
+.experience .section-head__num{ color:#A5261A; }
+.experience__dates{ color:#4B1F73; }
+.experience__body h3 span{ color:#6B6B6B; }
+.experience__item, .experience__item:last-child{ border-color:#1A1410; }
+.experience__body li::before{ color:#A5261A; }
 
 /* ============================================
    SHARED SECTION HEAD
@@ -650,22 +666,19 @@ section{ padding:clamp(70px,9vw,130px) clamp(20px,4vw,56px); max-width:var(--max
 
 /* ============================================
    CONTACT
-   loud coral finale — everything here flips to
-   dark ink text/borders for contrast against the
-   saturated background instead of the site's
-   usual white-on-dark.
+   back to black to close the palette loop —
+   normal white-on-dark, same as Background/Work.
    ============================================ */
-.contact{ text-align:left; color:var(--cream); }
-.contact .section-head__num{ color:var(--cream); }
+.contact{ text-align:left; }
 .contact__cta{
   font-family:var(--font-display); font-weight:900; font-style:italic;
   font-size:clamp(2.8rem,8vw,6rem); line-height:0.95; margin-bottom:20px;
 }
-.contact__sub{ font-size:1.1rem; max-width:480px; margin-bottom:36px; color:#5a2620; }
+.contact__sub{ font-size:1.1rem; max-width:480px; margin-bottom:36px; color:var(--muted); }
 .contact__email{
   display:inline-block; font-family:var(--font-mono); font-weight:700;
   font-size:clamp(1.3rem,4vw,2rem);
-  border-bottom:4px solid var(--cream); padding-bottom:4px; margin-bottom:48px;
+  border-bottom:4px solid var(--coral); padding-bottom:4px; margin-bottom:48px;
   transition:color .2s, border-color .2s;
 }
 .contact__email:hover{ color:var(--violet); border-color:var(--violet); }
@@ -687,7 +700,6 @@ section{ padding:clamp(70px,9vw,130px) clamp(20px,4vw,56px); max-width:var(--max
   border-radius:100px; transition:transform .15s;
 }
 .contact__resume:hover{ transform:rotate(-2deg) scale(1.03); background:var(--coral); }
-.contact .contact__resume:hover{ background:var(--violet); }
 
 /* ============================================
    FOOTER
@@ -765,45 +777,52 @@ section{ padding:clamp(70px,9vw,130px) clamp(20px,4vw,56px); max-width:var(--max
 }
 
 /* ============================================
-   HOBBIES
-   scattered polaroid-style photo grid, same
+   HOBBIES — bento/masonry moodboard (hobbies.html)
+   varied-size tiles in a dense grid, same
    bordered-photo language as the hero collage
-   (thick ink border + hard shadow), each card
+   (thick ink border + hard shadow), each tile
    holding a slight fixed tilt via --r and
    popping straight/forward on hover. Clicking
-   opens a bouncy lightbox instead of navigating.
+   opens the side-panel lightbox below.
    ============================================ */
-.hobbies__grid{
-  display:flex; flex-wrap:wrap; gap:34px 28px;
-  justify-content:flex-start;
+.hobby-bento{
+  display:grid;
+  grid-template-columns:repeat(6, 1fr);
+  grid-auto-rows:100px;
+  grid-auto-flow:row dense;
+  gap:22px;
 }
-.hobby-card{
+.hobby-tile{
+  grid-column:span 2; grid-row:span 2;
   transform:rotate(var(--r,0deg));
+  transition:transform .2s;
 }
-.hobby-card:nth-child(2n){ margin-top:26px; }
-.hobby-card:nth-child(3n){ margin-top:0; }
+.hobby-tile:hover{ z-index:2; }
+.hobby-tile--large{ grid-column:span 3; grid-row:span 3; }
+.hobby-tile--wide{ grid-column:span 3; grid-row:span 2; }
+.hobby-tile--tall{ grid-column:span 2; grid-row:span 3; }
 
 .hobby-card__btn{
   display:flex; flex-direction:column;
-  width:clamp(150px,18vw,210px);
+  width:100%; height:100%;
   background:none; border:none; padding:0; margin:0;
   font:inherit; color:inherit; text-align:left; cursor:pointer;
   transition:transform .35s cubic-bezier(.34,1.56,.64,1);
 }
 .hobby-card__btn img{
-  width:100%; aspect-ratio:300/242; object-fit:cover;
+  flex:1; min-height:0; width:100%; object-fit:cover;
   border:5px solid var(--ink);
   box-shadow:8px 8px 0 var(--ink);
   transition:box-shadow .35s cubic-bezier(.34,1.56,.64,1);
 }
 .hobby-card__label{
   font-family:var(--font-mono); font-weight:700; font-size:0.85rem;
-  padding:12px 2px 0;
+  padding:10px 2px 0; flex:none;
 }
 
 .hobby-card__btn:hover,
 .hobby-card__btn:focus-visible{
-  transform:rotate(0deg) translateY(-8px) scale(1.04);
+  transform:rotate(0deg) translateY(-6px) scale(1.03);
 }
 .hobby-card__btn:hover img,
 .hobby-card__btn:focus-visible img{
@@ -812,23 +831,25 @@ section{ padding:clamp(70px,9vw,130px) clamp(20px,4vw,56px); max-width:var(--max
 .hobby-card__btn:focus-visible{ outline:2px solid var(--coral); outline-offset:6px; }
 
 @media (prefers-reduced-motion:reduce){
+  .hobby-tile{ transition:none; }
   .hobby-card__btn{ transition:none; }
   .hobby-card__btn img{ transition:none; }
 }
 
-@media (max-width:640px){
-  .hobby-card{ transform:none; }
-  .hobby-card:nth-child(2n), .hobby-card:nth-child(3n){ margin-top:0; }
-  .hobbies__grid{ justify-content:center; }
+@media (max-width:760px){
+  .hobby-bento{ grid-template-columns:repeat(2, 1fr); grid-auto-rows:150px; }
+  .hobby-tile, .hobby-tile--large, .hobby-tile--wide, .hobby-tile--tall{
+    grid-column:span 2; grid-row:span 2; transform:none;
+  }
 }
 
 /* ============================================
-   LIGHTBOX
+   LIGHTBOX — slides in from the right edge as a
+   side panel rather than a centered modal, so the
+   moodboard stays visible (dimmed) behind it.
    ============================================ */
 .lightbox{
   position:fixed; inset:0; z-index:400;
-  display:flex; align-items:center; justify-content:center;
-  padding:24px;
   visibility:hidden;
   opacity:0;
   transition:opacity .25s ease, visibility 0s linear .25s;
@@ -839,27 +860,27 @@ section{ padding:clamp(70px,9vw,130px) clamp(20px,4vw,56px); max-width:var(--max
 }
 .lightbox__backdrop{
   position:absolute; inset:0;
-  background:rgba(18,18,20,0.78);
-  backdrop-filter:blur(4px);
+  background:rgba(0,0,0,0.6);
+  backdrop-filter:blur(2px);
 }
 .lightbox__panel{
-  position:relative; z-index:1;
-  width:min(420px, 100%);
+  position:absolute; top:0; right:0; bottom:0; z-index:1;
+  width:min(420px, 92vw);
   background:var(--cream);
   color:var(--ink);
-  border:5px solid var(--ink);
-  box-shadow:14px 14px 0 var(--coral);
-  padding:22px;
-  transform:scale(0.82) translateY(24px) rotate(-2deg);
-  opacity:0;
-  transition:transform .4s cubic-bezier(.34,1.56,.64,1), opacity .25s ease;
+  border-left:5px solid var(--ink);
+  box-shadow:-14px 0 0 var(--coral);
+  padding:32px 28px;
+  overflow-y:auto;
+  display:flex; flex-direction:column;
+  transform:translateX(100%);
+  transition:transform .45s cubic-bezier(.34,1.56,.64,1);
 }
 .lightbox.is-open .lightbox__panel{
-  transform:scale(1) translateY(0) rotate(0deg);
-  opacity:1;
+  transform:translateX(0);
 }
 .lightbox__close{
-  position:absolute; top:-16px; right:-16px;
+  position:absolute; top:20px; right:20px;
   width:38px; height:38px; border-radius:50%;
   background:var(--ink); color:var(--cream);
   border:3px solid var(--cream);
@@ -870,7 +891,8 @@ section{ padding:clamp(70px,9vw,130px) clamp(20px,4vw,56px); max-width:var(--max
 .lightbox__close:hover{ background:var(--coral); transform:rotate(90deg); }
 .lightbox__img{
   width:100%; aspect-ratio:300/242; object-fit:cover;
-  border:4px solid var(--ink); margin-bottom:18px;
+  border:4px solid var(--ink); margin:44px 0 20px;
+  flex:none;
 }
 .lightbox__title{
   font-family:var(--font-display); font-weight:700; font-style:italic;

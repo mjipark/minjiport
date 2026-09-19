@@ -50,7 +50,7 @@
         <a href="#work"><span class="nav__num">02</span><span class="nav__label">Work</span></a>
         <a href="#experience"><span class="nav__num">03</span><span class="nav__label">Experience</span></a>
         <a href="#skills"><span class="nav__num">04</span><span class="nav__label">Skills</span></a>
-        <a href="#hobbies"><span class="nav__num">05</span><span class="nav__label">Hobbies</span></a>
+        <a href="hobbies.html"><span class="nav__num">05</span><span class="nav__label">Hobbies</span></a>
         <a href="#contact"><span class="nav__num">06</span><span class="nav__label">Contact</span></a>
       </nav>
     </div>
@@ -66,7 +66,7 @@
       <a href="#work"><span class="nav__num">02</span>Work</a>
       <a href="#experience"><span class="nav__num">03</span>Experience</a>
       <a href="#skills"><span class="nav__num">04</span>Skills</a>
-      <a href="#hobbies"><span class="nav__num">05</span>Hobbies</a>
+      <a href="hobbies.html"><span class="nav__num">05</span>Hobbies</a>
       <a href="#contact"><span class="nav__num">06</span>Contact</a>
     </nav>
     <a href="#contact" class="mobile-drawer__cta">Let's talk →</a>
@@ -326,53 +326,6 @@
     </div>
   </section>
 
-  <!-- ============ HOBBIES ============ -->
-  <section class="hobbies reveal" id="hobbies">
-    <div class="section-head">
-      <span class="section-head__num">05</span>
-      <h2 class="section-head__title">Off the&nbsp;Clock</h2>
-      <p class="section-head__note">Click a photo →</p>
-    </div>
-
-    <ul class="hobbies__grid">
-
-      <li class="hobby-card" style="--r:-6deg;">
-        <button type="button" class="hobby-card__btn" data-title="Running" data-img="images/hobby-1.svg"
-          data-caption="Chasing a slow, unbothered 5K most mornings — it's when I do my best thinking.">
-          <img src="images/hobby-1.svg" alt="Running — placeholder, replace with your own photo">
-          <span class="hobby-card__label">Running</span>
-        </button>
-      </li>
-
-      <li class="hobby-card" style="--r:4deg;">
-        <button type="button" class="hobby-card__btn" data-title="Coffee &amp; Friends" data-img="images/hobby-2.svg"
-          data-caption="Most of my best ideas get bounced around over coffee before they ever touch a screen.">
-          <img src="images/hobby-2.svg" alt="Coffee and friends — placeholder, replace with your own photo">
-          <span class="hobby-card__label">Coffee &amp; Friends</span>
-        </button>
-      </li>
-
-      <li class="hobby-card" style="--r:-3deg;">
-        <button type="button" class="hobby-card__btn" data-title="Photography" data-img="images/hobby-3.svg"
-          data-caption="Mostly street shots and bad light — same instinct as design, just slower and quieter.">
-          <img src="images/hobby-3.svg" alt="Photography — placeholder, replace with your own photo">
-          <span class="hobby-card__label">Photography</span>
-        </button>
-      </li>
-
-      <li class="hobby-card" style="--r:5deg;">
-        <button type="button" class="hobby-card__btn" data-title="Coloring &amp; Drawing" data-img="images/hobby-4.svg"
-          data-caption="No brief, no client, no undo button — just color for the sake of it.">
-          <img src="images/hobby-4.svg" alt="Coloring and drawing — placeholder, replace with your own photo">
-          <span class="hobby-card__label">Coloring &amp; Drawing</span>
-        </button>
-      </li>
-
-      <!-- duplicate an <li class="hobby-card"> block above to add another photo -->
-
-    </ul>
-  </section>
-
   <!-- ============ CONTACT ============ -->
   <section class="contact reveal" id="contact">
     <div class="section-head">
@@ -400,17 +353,6 @@
     <a href="#top" class="footer__top">Back to top ↑</a>
     <p class="footer__copy">© <span id="year"></span> Minji Park. All rights reserved.</p>
   </footer>
-
-  <!-- ============ HOBBY LIGHTBOX ============ -->
-  <div class="lightbox" id="hobbyLightbox" aria-hidden="true">
-    <div class="lightbox__backdrop" id="lightboxBackdrop"></div>
-    <div class="lightbox__panel" role="dialog" aria-modal="true" aria-labelledby="lightboxTitle">
-      <button type="button" class="lightbox__close" id="lightboxClose" aria-label="Close">✕</button>
-      <img class="lightbox__img" id="lightboxImg" src="" alt="">
-      <h3 class="lightbox__title" id="lightboxTitle"></h3>
-      <p class="lightbox__caption" id="lightboxCaption"></p>
-    </div>
-  </div>
 
   <script src="script.js"></script>
 </body>
