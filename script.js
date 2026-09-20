@@ -511,6 +511,32 @@ const prefersReducedMotion = window.matchMedia("(prefers-reduced-motion: reduce)
   grid.addEventListener("pointerup", endDrag);
   grid.addEventListener("pointercancel", endDrag);
 
+  // Mouse-wheel panning, desktop/tablet only. Grabs `pos` the
+  // same way a drag does, but nudges it by a normalized amount
+  // per tick instead of 1:1 with pixels (wheel deltas vary
+  // wildly by device/browser). No preventDefault — the page
+  // keeps scrolling normally while the deck pans, so the wheel
+  // never gets trapped here even though the loop has no "end"
+  // to release it at. A short idle timer snaps back to the
+  // nearest whole card once scrolling stops, reusing the same
+  // manualTarget easing the Prev/Next controls use.
+  const WHEEL_SENSITIVITY = 0.0022;
+  const WHEEL_IDLE_MS = 140;
+  let wheelIdleTimer = null;
+
+  grid.addEventListener("wheel", (e) => {
+    if (!isVertical()) return;
+    manualTarget = null;
+    dragging = false;
+    grid.classList.remove("is-dragging");
+    pos += e.deltaY * WHEEL_SENSITIVITY;
+    velocity = 0;
+    velocityAccel = 0;
+    render();
+    clearTimeout(wheelIdleTimer);
+    wheelIdleTimer = setTimeout(() => { manualTarget = Math.round(pos); }, WHEEL_IDLE_MS);
+  }, { passive: true });
+
   cards.forEach((card) => {
     card.addEventListener("keydown", (e) => {
       if (!isStackMode() || !card.classList.contains("is-active")) return;

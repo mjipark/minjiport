@@ -941,7 +941,7 @@ html.has-custom-cursor .custom-cursor.is-down{
   .skills__grid{
     display:grid;
     grid-template-columns:1fr;
-    max-width:620px;
+    max-width:min(980px, 92%);
     margin:0 auto;
     overflow:hidden;
     cursor:grab;
@@ -950,7 +950,8 @@ html.has-custom-cursor .custom-cursor.is-down{
   .skills__grid.is-dragging{ cursor:grabbing; }
   .skills__cat{
     grid-row:1; grid-column:1;
-    min-height:300px;
+    min-height:clamp(360px, 44vw, 520px);
+    padding:clamp(32px, 4vw, 52px);
     z-index:calc(10 - var(--absdist,0));
     opacity:calc(1 - var(--absdist,0) * 0.4);
     transition:box-shadow .3s var(--ease);
@@ -958,15 +959,27 @@ html.has-custom-cursor .custom-cursor.is-down{
   /* .skills__grid-prefixed for the same specificity-over-pop-in
      reason as the mobile rule above. */
   .skills__grid .skills__cat{
-    transform:translateY(calc(var(--dist,0) * 110%));
+    transform:translateY(calc(var(--dist,0) * 112%));
   }
   .skills__cat.is-active{
-    box-shadow:14px 14px 0 var(--accent, var(--coral));
+    box-shadow:18px 18px 0 var(--accent, var(--coral));
     z-index:50;
   }
   .skills__cat:focus-visible{
     outline:3px solid var(--ink); outline-offset:2px;
   }
+  /* scale the card's internals up with it — the base sizes
+     (42px icon, 1.3rem h3) read small once the card itself
+     is filling most of the viewport. */
+  .skills__cat h3{ font-size:clamp(1.3rem, 2.2vw, 1.8rem); margin-bottom:22px; }
+  .skills__cat .skills__icon--circle,
+  .skills__cat .skills__icon--diamond,
+  .skills__cat .skills__icon--rounded{ width:clamp(42px, 4vw, 56px); height:clamp(42px, 4vw, 56px); }
+  .skills__cat .skills__icon--tri{
+    border-left-width:clamp(20px, 2vw, 26px); border-right-width:clamp(20px, 2vw, 26px);
+    border-bottom-width:clamp(36px, 3.5vw, 46px);
+  }
+  .skills__cat .skills__tags span{ font-size:0.85rem; padding:7px 14px; }
 
   /* Prev | Next page controls below the carousel. */
   .skills__nav{
