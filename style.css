@@ -779,10 +779,10 @@ html.has-custom-cursor .custom-cursor.is-down{
 /* ============================================
    SKILLS
    ============================================ */
-/* aligned grid, evenly sized cards — a level, orderly
-   row reads more like a credentials shelf than a tossed
-   stack, while the hover lift + hard shadow still gives
-   each card some tactility. */
+/* base/fallback layout — overridden into a looping
+   book-page marquee by both the max-width:760px (horizontal,
+   touch-panned) and min-width:761px (vertical, mouse-panned)
+   blocks below; initSkillsStack in script.js drives both. */
 .skills__grid{
   display:grid;
   grid-template-columns:repeat(auto-fit, minmax(230px, 1fr));
@@ -924,6 +924,62 @@ html.has-custom-cursor .custom-cursor.is-down{
     background:none; border:none; padding:6px; cursor:pointer;
     color:var(--ink); font:inherit;
   }
+  .skills__nav__prev::before{ content:"‹ "; }
+  .skills__nav__next::after{ content:" ›"; }
+  .skills__nav__sep{ opacity:.4; }
+}
+
+@media (min-width:761px){
+  /* Same book-page marquee as the mobile block above, turned
+     90°: cards share one grid cell and are positioned by
+     --dist along the Y axis instead of X, so the deck is
+     panned with a vertical mouse drag rather than a
+     horizontal swipe. initSkillsStack (script.js) drives
+     --dist identically on both breakpoints — only the axis
+     it reads from pointer events, and the transform property
+     below, differ. */
+  .skills__grid{
+    display:grid;
+    grid-template-columns:1fr;
+    max-width:620px;
+    margin:0 auto;
+    overflow:hidden;
+    cursor:grab;
+    touch-action:pan-x;
+  }
+  .skills__grid.is-dragging{ cursor:grabbing; }
+  .skills__cat{
+    grid-row:1; grid-column:1;
+    min-height:300px;
+    z-index:calc(10 - var(--absdist,0));
+    opacity:calc(1 - var(--absdist,0) * 0.4);
+    transition:box-shadow .3s var(--ease);
+  }
+  /* .skills__grid-prefixed for the same specificity-over-pop-in
+     reason as the mobile rule above. */
+  .skills__grid .skills__cat{
+    transform:translateY(calc(var(--dist,0) * 110%));
+  }
+  .skills__cat.is-active{
+    box-shadow:14px 14px 0 var(--accent, var(--coral));
+    z-index:50;
+  }
+  .skills__cat:focus-visible{
+    outline:3px solid var(--ink); outline-offset:2px;
+  }
+
+  /* Prev | Next page controls below the carousel. */
+  .skills__nav{
+    display:flex; align-items:center; justify-content:center; gap:14px;
+    margin-top:22px;
+    font-family:var(--font-mono); font-size:0.85rem; letter-spacing:.02em;
+  }
+  .skills__nav button{
+    background:none; border:none; padding:6px; cursor:pointer;
+    color:var(--ink); font:inherit;
+  }
+  .skills__nav__prev::before{ content:"↑ "; }
+  .skills__nav__next::after{ content:" ↓"; }
   .skills__nav__sep{ opacity:.4; }
 }
 

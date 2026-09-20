@@ -104,7 +104,11 @@ const prefersReducedMotion = window.matchMedia("(prefers-reduced-motion: reduce)
     mouseY = e.clientY;
   });
 
-  const interactiveSelector = "a, button, input, textarea, select, [role='button'], label";
+  // .work__row is included even though only its nested <a> actually
+  // navigates — the whole row is styled clickable (cursor:pointer,
+  // hover invert in style.css), so the cursor should swell over its
+  // tags/meta area too, not just the title/description link.
+  const interactiveSelector = "a, button, input, textarea, select, [role='button'], label, .work__row";
   document.addEventListener("mouseover", (e) => {
     if (e.target.closest(interactiveSelector)) cursor.classList.add("is-hover");
   });
@@ -326,22 +330,25 @@ const prefersReducedMotion = window.matchMedia("(prefers-reduced-motion: reduce)
 })();
 
 // ============================================
-// Skills card carousel (mobile)
-// Horizontal "book page" marquee. `pos` is a continuous
+// Skills card carousel
+// Book-page marquee, horizontal on mobile (<=760px, page
+// slides in from the left/right) and vertical on tablet/
+// desktop (>=761px, page slides in from top/bottom, panned
+// with the mouse instead of touch). `pos` is a continuous
 // (fractional) position along the loop, drifting forward on
 // its own at a slow constant rate via requestAnimationFrame.
 // Every card's placement is driven by --dist — its signed
 // circular distance from `pos` (0 = active/centered, ±1 =
-// the previous/next page peeking at the edges, ±2 = parked
-// off-screen — see the max-width:760px rules in style.css)
-// — recomputed every frame, so the whole row drifts
-// smoothly and loops forever. Dragging a card grabs `pos`
-// directly (1:1 with the finger, so it can run faster than
-// the drift in either direction); releasing hands control
-// straight back to the slow autoplay from wherever it
-// landed. The Prev/Next controls ease `pos` by one card
-// instead of jumping it. Scrolling the whole grid out of
-// view resets it back to the first page.
+// the previous/next page peeking at the edge, ±2 = parked
+// off-screen — see the skills__grid rules in style.css) —
+// recomputed every frame, so the whole stack drifts smoothly
+// and loops forever. Dragging a card grabs `pos` directly
+// along whichever axis is active (1:1 with the pointer, so
+// it can run faster than the drift in either direction);
+// releasing hands control straight back to the slow autoplay
+// from wherever it landed. The Prev/Next controls ease `pos`
+// by one card instead of jumping it. Scrolling the whole grid
+// out of view resets it back to the first page.
 // ============================================
 (function initSkillsStack(){
   const grid = document.querySelector(".skills__grid");
@@ -350,7 +357,8 @@ const prefersReducedMotion = window.matchMedia("(prefers-reduced-motion: reduce)
   const count = cards.length;
   if (!count) return;
 
-  const isStackMode = () => window.matchMedia("(max-width:760px)").matches;
+  const isStackMode = () => true;
+  const isVertical = () => window.matchMedia("(min-width:761px)").matches;
   const SECONDS_PER_CARD = 22;
   const AUTOPLAY_SPEED = 1 / SECONDS_PER_CARD;
   const MAX_DT = 0.05;
@@ -365,9 +373,10 @@ const prefersReducedMotion = window.matchMedia("(prefers-reduced-motion: reduce)
   let pos = 0;
   let manualTarget = null;
   let dragging = false;
-  let dragStartX = 0;
+  let dragVertical = false;
+  let dragStartCoord = 0;
   let dragStartPos = 0;
-  let slotWidthPx = 300;
+  let slotSizePx = 300;
   let lastTime = null;
   let visible = true;
   let velocity = AUTOPLAY_SPEED;
@@ -375,17 +384,25 @@ const prefersReducedMotion = window.matchMedia("(prefers-reduced-motion: reduce)
   let lastMoveTime = 0;
   let lastMovePos = 0;
 
+  // reads the axis coordinate a drag in progress cares about —
+  // locked to dragVertical (set once at pointerdown) rather than
+  // re-checking isVertical(), so a drag never flips axis mid-gesture
+  // if the viewport is resized while dragging.
+  const axisCoord = (e) => dragVertical ? e.clientY : e.clientX;
+
   const nav = document.createElement("div");
   nav.className = "skills__nav";
   const prevBtn = document.createElement("button");
   prevBtn.type = "button";
-  prevBtn.textContent = "‹ Prev";
+  prevBtn.className = "skills__nav__prev";
+  prevBtn.textContent = "Prev";
   const sep = document.createElement("span");
   sep.className = "skills__nav__sep";
   sep.textContent = "|";
   const nextBtn = document.createElement("button");
   nextBtn.type = "button";
-  nextBtn.textContent = "Next ›";
+  nextBtn.className = "skills__nav__next";
+  nextBtn.textContent = "Next";
   nav.append(prevBtn, sep, nextBtn);
   grid.after(nav);
 
@@ -413,16 +430,7 @@ const prefersReducedMotion = window.matchMedia("(prefers-reduced-motion: reduce)
   }
 
   function syncInteractivity(){
-    const stackable = isStackMode();
-    cards.forEach((card) => {
-      if (stackable){
-        card.setAttribute("role", "group");
-      } else {
-        card.removeAttribute("role");
-        card.removeAttribute("tabindex");
-      }
-    });
-    if (!stackable) reset();
+    cards.forEach((card) => card.setAttribute("role", "group"));
   }
 
   function tick(time){
@@ -461,10 +469,12 @@ const prefersReducedMotion = window.matchMedia("(prefers-reduced-motion: reduce)
     const card = e.target.closest(".skills__cat");
     if (!card) return;
     dragging = true;
+    dragVertical = isVertical();
     manualTarget = null;
-    dragStartX = e.clientX;
+    dragStartCoord = axisCoord(e);
     dragStartPos = pos;
-    slotWidthPx = card.getBoundingClientRect().width * 1.05;
+    const rect = card.getBoundingClientRect();
+    slotSizePx = (dragVertical ? rect.height : rect.width) * 1.05;
     lastMoveTime = performance.now();
     lastMovePos = pos;
     velocity = 0;
@@ -475,8 +485,8 @@ const prefersReducedMotion = window.matchMedia("(prefers-reduced-motion: reduce)
 
   grid.addEventListener("pointermove", (e) => {
     if (!dragging) return;
-    const dx = e.clientX - dragStartX;
-    pos = dragStartPos - dx / slotWidthPx;
+    const d = axisCoord(e) - dragStartCoord;
+    pos = dragStartPos - d / slotSizePx;
     render();
 
     // smoothed instantaneous velocity, so releasing mid-flick
@@ -504,8 +514,8 @@ const prefersReducedMotion = window.matchMedia("(prefers-reduced-motion: reduce)
   cards.forEach((card) => {
     card.addEventListener("keydown", (e) => {
       if (!isStackMode() || !card.classList.contains("is-active")) return;
-      if (e.key === "ArrowLeft"){ e.preventDefault(); goTo(-1); }
-      if (e.key === "ArrowRight"){ e.preventDefault(); goTo(1); }
+      if (e.key === "ArrowLeft" || e.key === "ArrowUp"){ e.preventDefault(); goTo(-1); }
+      if (e.key === "ArrowRight" || e.key === "ArrowDown"){ e.preventDefault(); goTo(1); }
     });
   });
 
