@@ -394,7 +394,11 @@ h1,h2,h3,p{ margin:0; }
   align-items:center;
   gap:40px;
 }
-.background__bio{ font-size:1.05rem; line-height:1.7; padding-top:6px; }
+.background__bio{
+  font-size:1.05rem; line-height:1.7;
+  padding-top:clamp(28px, 5vw, 56px);
+  padding-bottom:clamp(28px, 5vw, 56px);
+}
 
 .background__minji{
   position:relative; flex:none; z-index:1; pointer-events:none;
@@ -416,13 +420,18 @@ h1,h2,h3,p{ margin:0; }
 }
 .background__minji-tape{
   position:absolute;
-  width:56px; height:22px;
-  background:rgba(245,239,221,0.82);
-  border:1px solid rgba(0,0,0,0.15);
-  box-shadow:0 2px 4px rgba(0,0,0,0.25);
+  width:64px; height:26px;
+  border:3px solid var(--ink);
+  box-shadow:4px 4px 0 var(--ink);
 }
-.background__minji-tape--l{ top:-8px; left:8%; transform:rotate(-4deg); }
-.background__minji-tape--r{ top:-12px; right:12%; transform:rotate(3deg); }
+.background__minji-tape--l{
+  top:-16px; left:6%; transform:rotate(-6deg);
+  background:var(--lime);
+}
+.background__minji-tape--r{
+  top:-18px; right:10%; transform:rotate(5deg);
+  background:var(--coral);
+}
 
 @media (max-width:900px){
   .background__content{
