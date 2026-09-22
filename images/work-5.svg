@@ -1,0 +1,8 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 480 360">
+  <rect width="480" height="360" fill="#F5EFDD"/>
+  <rect x="24" y="24" width="432" height="312" fill="#16131A"/>
+  <circle cx="240" cy="150" r="70" fill="#FF4433"/>
+  <rect x="205" y="115" width="70" height="70" fill="#F5EFDD"/>
+  <rect x="150" y="250" width="180" height="14" fill="#CFFF5C"/>
+  <text x="40" y="330" font-family="monospace" font-size="20" fill="#F5EFDD">proj_05</text>
+</svg>
