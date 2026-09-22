@@ -267,7 +267,7 @@ h1,h2,h3,p{ margin:0; }
   text-transform:uppercase;
   font-size:clamp(3rem, 11.5vw, 9.5rem);
   line-height:0.92; letter-spacing:-0.01em;
-  margin-bottom:clamp(44px, 8vw, 104px);
+  margin-bottom:clamp(16px, 2.4vw, 28px);
 }
 .hero__tagline{
   position:relative; z-index:1;
