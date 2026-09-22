@@ -282,9 +282,12 @@ h1,h2,h3,p{ margin:0; }
 
 /* ============================================
    MARQUEE LINE — a bare strip of moving dashes,
-   no text. Reused for the hero footer bar (pinned
-   to the hero's bottom edge) and the site footer
-   bar (sits in normal flow there).
+   no text. Used for the footer bar (in normal flow)
+   and the site footer bar. The hero has its own
+   text ticker instead (.hero__ticker below) — a bare
+   dash strip alone at the bottom of the hero's tall
+   scroll-parallax wrapper read as an unstyled leftover
+   floating in empty space.
    ============================================ */
 .marquee-line{
   position:relative;
@@ -292,15 +295,6 @@ h1,h2,h3,p{ margin:0; }
   overflow:hidden;
   border-top:3px solid var(--ink); border-bottom:3px solid var(--ink);
   background:var(--ink);
-}
-.hero .marquee-line{
-  /* .hero is a <section>, which the shared rule below
-     caps at max-width:1240px — left:0/right:0 here would
-     only span that inner box, not the viewport. Break out
-     to the true edges with the same 100vw trick used for
-     the section color blocks. */
-  position:absolute; bottom:0; z-index:2;
-  left:50%; width:100vw; margin-left:-50vw;
 }
 .marquee-line::before{
   content:"";
@@ -319,9 +313,39 @@ h1,h2,h3,p{ margin:0; }
   .marquee-line::before{ animation:none; }
 }
 
+/* ============================================
+   HERO TICKER — a scrolling coral banner pinned to
+   the hero's bottom edge, replacing the old bare dash
+   marquee with something that actually reads as part
+   of the design during the scroll-parallax dead zone.
+   Content is written twice in the HTML back-to-back;
+   the keyframe scrolls exactly half the track's width,
+   so the loop seam is invisible.
+   ============================================ */
+.hero__ticker{
+  position:absolute; bottom:0; z-index:2;
+  left:50%; width:100vw; margin-left:-50vw;
+  height:40px;
+  overflow:hidden;
+  border-top:3px solid var(--ink); border-bottom:3px solid var(--ink);
+  background:var(--coral);
+}
+.hero__ticker-track{
+  display:flex; align-items:center; gap:14px;
+  height:100%; width:max-content; white-space:nowrap;
+  font-family:var(--font-mono); font-weight:700; font-size:0.8rem;
+  text-transform:uppercase; letter-spacing:0.06em; color:var(--ink);
+  animation:heroTicker 16s linear infinite;
+}
+@keyframes heroTicker{ from{ transform:translateX(0); } to{ transform:translateX(-50%); } }
+
+@media (prefers-reduced-motion:reduce){
+  .hero__ticker-track{ animation:none; }
+}
+
 @media (max-width:760px){
   .hero{ padding-top:40px; overflow:visible; }
-  .hero .marquee-line{
+  .hero__ticker{
     position:relative; left:auto;
     width:100vw; margin-left:calc(50% - 50vw);
     margin-top:40px;
@@ -344,7 +368,7 @@ h1,h2,h3,p{ margin:0; }
    ============================================ */
 .hero-flip{
   position:relative;
-  height:160vh;
+  height:125vh;
   /* slide up under the sticky nav so .hero's own
      min-height:100svh box actually starts at the true
      top of the viewport — otherwise the nav's reserved
