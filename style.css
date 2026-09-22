@@ -206,6 +206,28 @@ h1,h2,h3,p{ margin:0; }
   pointer-events:none; user-select:none;
 }
 
+/* magnetic cursor glow — a soft coral spotlight that
+   trails the pointer across the hero, lighting up the
+   watermark as it passes. Injected by script.js
+   (initHeroGlow), desktop/fine-pointer/motion-OK only —
+   see its JS gate and the media query below, same as
+   the custom cursor. */
+.hero__glow{
+  position:absolute; top:0; left:0; z-index:1;
+  width:640px; height:640px; margin:-320px 0 0 -320px;
+  border-radius:50%;
+  background:radial-gradient(circle, rgba(255,68,51,0.55) 0%, rgba(255,68,51,0) 70%);
+  pointer-events:none;
+  opacity:0;
+  transition:opacity .4s ease;
+  will-change:transform;
+}
+.hero__glow.is-visible{ opacity:1; }
+
+@media (hover:none), (pointer:coarse){
+  .hero__glow{ display:none; }
+}
+
 .hero__scroll-cue{
   font-family:var(--font-mono); font-size:0.8rem; text-transform:uppercase;
   letter-spacing:0.08em; color:var(--muted);
@@ -244,7 +266,7 @@ h1,h2,h3,p{ margin:0; }
   text-transform:uppercase;
   font-size:clamp(3rem, 11.5vw, 9.5rem);
   line-height:0.92; letter-spacing:-0.01em;
-  margin-bottom:clamp(28px, 5vw, 56px);
+  margin-bottom:clamp(44px, 8vw, 104px);
 }
 .hero__tagline{
   position:relative; z-index:1;

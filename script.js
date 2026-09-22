@@ -47,8 +47,8 @@ const prefersReducedMotion = window.matchMedia("(prefers-reduced-motion: reduce)
   if (!wrapper || !hero || !intro || prefersReducedMotion) return;
   if (!window.matchMedia("(min-width: 761px)").matches) return;
 
-  const DRIFT_PX = 140;
-  const MIN_SCALE = 0.9;
+  const DRIFT_PX = 220;
+  const MIN_SCALE = 0.82;
   let ticking = false;
 
   function update(){
@@ -73,6 +73,53 @@ const prefersReducedMotion = window.matchMedia("(prefers-reduced-motion: reduce)
   }, { passive: true });
   window.addEventListener("resize", update);
   update();
+})();
+
+// ============================================
+// Hero magnetic glow
+// A soft coral spotlight that trails the cursor across
+// the hero, lighting up the ghost "MJ" watermark as it
+// passes (parallax-bgs.webflow.io's "magnetic background"
+// idea, adapted as a hover effect layered behind the
+// hero copy). Lerped toward the pointer like the custom
+// cursor below. Desktop, fine-pointer, motion-OK only —
+// gated the same way. Tracks the pointer via a window-level
+// listener (rather than one on the hero itself) and checks
+// containment against the hero's rect, so it still works
+// correctly if something above it ever intercepts bubbling —
+// visibility is toggled by that containment check, so the
+// effect itself stays scoped to the hero either way.
+// ============================================
+(function initHeroGlow(){
+  const hero = document.getElementById("top");
+  if (!hero || prefersReducedMotion) return;
+  if (!window.matchMedia("(hover: hover) and (pointer: fine)").matches) return;
+
+  const glow = document.createElement("div");
+  glow.className = "hero__glow";
+  glow.setAttribute("aria-hidden", "true");
+  hero.appendChild(glow);
+
+  let targetX = 0, targetY = 0, x = 0, y = 0, primed = false;
+
+  window.addEventListener("mousemove", (e) => {
+    const rect = hero.getBoundingClientRect();
+    const inside = e.clientX >= rect.left && e.clientX <= rect.right &&
+                    e.clientY >= rect.top && e.clientY <= rect.bottom;
+    glow.classList.toggle("is-visible", inside);
+    if (!inside) return;
+    targetX = e.clientX - rect.left;
+    targetY = e.clientY - rect.top;
+    if (!primed){ x = targetX; y = targetY; primed = true; }
+  });
+
+  function tick(){
+    x += (targetX - x) * 0.15;
+    y += (targetY - y) * 0.15;
+    glow.style.transform = `translate(${x}px, ${y}px)`;
+    requestAnimationFrame(tick);
+  }
+  requestAnimationFrame(tick);
 })();
 
 // ============================================
