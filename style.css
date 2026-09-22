@@ -964,14 +964,15 @@ html.has-custom-cursor .custom-cursor.is-down{
 }
 
 @media (min-width:761px){
-  /* Same book-page marquee as the mobile block above, turned
-     90°: cards share one grid cell and are positioned by
-     --dist along the Y axis instead of X, so the deck is
-     panned with a vertical mouse drag rather than a
-     horizontal swipe. initSkillsStack (script.js) drives
-     --dist identically on both breakpoints — only the axis
-     it reads from pointer events, and the transform property
-     below, differ. */
+  /* Same book-page marquee as the mobile block above, just
+     bigger — cards share one grid cell and are positioned by
+     --dist along the X axis, same as mobile, so the deck
+     loops left-to-right on every breakpoint (panned by mouse
+     drag or wheel here instead of touch). touch-action:pan-y
+     leaves normal vertical page scroll alone; only the
+     horizontal drag gesture is captured by the grid, so
+     swiping here never fights page scroll or bleeds outside
+     the carousel. */
   .skills__grid{
     display:grid;
     grid-template-columns:1fr;
@@ -979,7 +980,7 @@ html.has-custom-cursor .custom-cursor.is-down{
     margin:0 auto;
     overflow:hidden;
     cursor:grab;
-    touch-action:pan-x;
+    touch-action:pan-y;
   }
   .skills__grid.is-dragging{ cursor:grabbing; }
   .skills__cat{
@@ -993,7 +994,7 @@ html.has-custom-cursor .custom-cursor.is-down{
   /* .skills__grid-prefixed for the same specificity-over-pop-in
      reason as the mobile rule above. */
   .skills__grid .skills__cat{
-    transform:translateY(calc(var(--dist,0) * 112%));
+    transform:translateX(calc(var(--dist,0) * 105%));
   }
   .skills__cat.is-active{
     box-shadow:18px 18px 0 var(--accent, var(--coral));
@@ -1025,8 +1026,8 @@ html.has-custom-cursor .custom-cursor.is-down{
     background:none; border:none; padding:6px; cursor:pointer;
     color:var(--ink); font:inherit;
   }
-  .skills__nav__prev::before{ content:"↑ "; }
-  .skills__nav__next::after{ content:" ↓"; }
+  .skills__nav__prev::before{ content:"‹ "; }
+  .skills__nav__next::after{ content:" ›"; }
   .skills__nav__sep{ opacity:.4; }
 }
 

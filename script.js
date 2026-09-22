@@ -378,10 +378,9 @@ const prefersReducedMotion = window.matchMedia("(prefers-reduced-motion: reduce)
 
 // ============================================
 // Skills card carousel
-// Book-page marquee, horizontal on mobile (<=760px, page
-// slides in from the left/right) and vertical on tablet/
-// desktop (>=761px, page slides in from top/bottom, panned
-// with the mouse instead of touch). `pos` is a continuous
+// Book-page marquee, horizontal on every breakpoint (page
+// slides in from the left/right, dragged with touch on
+// mobile and mouse on tablet/desktop). `pos` is a continuous
 // (fractional) position along the loop, drifting forward on
 // its own at a slow constant rate via requestAnimationFrame.
 // Every card's placement is driven by --dist — its signed
@@ -390,12 +389,14 @@ const prefersReducedMotion = window.matchMedia("(prefers-reduced-motion: reduce)
 // off-screen — see the skills__grid rules in style.css) —
 // recomputed every frame, so the whole stack drifts smoothly
 // and loops forever. Dragging a card grabs `pos` directly
-// along whichever axis is active (1:1 with the pointer, so
-// it can run faster than the drift in either direction);
-// releasing hands control straight back to the slow autoplay
-// from wherever it landed. The Prev/Next controls ease `pos`
-// by one card instead of jumping it. Scrolling the whole grid
-// out of view resets it back to the first page.
+// (1:1 with the pointer, so it can run faster than the drift
+// in either direction) and captures the pointer, so the drag
+// stays contained to the card even if the cursor strays off
+// it mid-gesture; releasing hands control straight back to
+// the slow autoplay from wherever it landed. The Prev/Next
+// controls ease `pos` by one card instead of jumping it.
+// Scrolling the whole grid out of view resets it back to the
+// first page.
 // ============================================
 (function initSkillsStack(){
   const grid = document.querySelector(".skills__grid");
@@ -405,7 +406,6 @@ const prefersReducedMotion = window.matchMedia("(prefers-reduced-motion: reduce)
   if (!count) return;
 
   const isStackMode = () => true;
-  const isVertical = () => window.matchMedia("(min-width:761px)").matches;
   const SECONDS_PER_CARD = 22;
   const AUTOPLAY_SPEED = 1 / SECONDS_PER_CARD;
   const MAX_DT = 0.05;
@@ -420,7 +420,6 @@ const prefersReducedMotion = window.matchMedia("(prefers-reduced-motion: reduce)
   let pos = 0;
   let manualTarget = null;
   let dragging = false;
-  let dragVertical = false;
   let dragStartCoord = 0;
   let dragStartPos = 0;
   let slotSizePx = 300;
@@ -431,11 +430,9 @@ const prefersReducedMotion = window.matchMedia("(prefers-reduced-motion: reduce)
   let lastMoveTime = 0;
   let lastMovePos = 0;
 
-  // reads the axis coordinate a drag in progress cares about —
-  // locked to dragVertical (set once at pointerdown) rather than
-  // re-checking isVertical(), so a drag never flips axis mid-gesture
-  // if the viewport is resized while dragging.
-  const axisCoord = (e) => dragVertical ? e.clientY : e.clientX;
+  // the deck loops left-to-right on every breakpoint, so a drag
+  // always reads the horizontal coordinate.
+  const axisCoord = (e) => e.clientX;
 
   const nav = document.createElement("div");
   nav.className = "skills__nav";
@@ -516,12 +513,11 @@ const prefersReducedMotion = window.matchMedia("(prefers-reduced-motion: reduce)
     const card = e.target.closest(".skills__cat");
     if (!card) return;
     dragging = true;
-    dragVertical = isVertical();
     manualTarget = null;
     dragStartCoord = axisCoord(e);
     dragStartPos = pos;
     const rect = card.getBoundingClientRect();
-    slotSizePx = (dragVertical ? rect.height : rect.width) * 1.05;
+    slotSizePx = rect.width * 1.05;
     lastMoveTime = performance.now();
     lastMovePos = pos;
     velocity = 0;
@@ -557,32 +553,6 @@ const prefersReducedMotion = window.matchMedia("(prefers-reduced-motion: reduce)
 
   grid.addEventListener("pointerup", endDrag);
   grid.addEventListener("pointercancel", endDrag);
-
-  // Mouse-wheel panning, desktop/tablet only. Grabs `pos` the
-  // same way a drag does, but nudges it by a normalized amount
-  // per tick instead of 1:1 with pixels (wheel deltas vary
-  // wildly by device/browser). No preventDefault — the page
-  // keeps scrolling normally while the deck pans, so the wheel
-  // never gets trapped here even though the loop has no "end"
-  // to release it at. A short idle timer snaps back to the
-  // nearest whole card once scrolling stops, reusing the same
-  // manualTarget easing the Prev/Next controls use.
-  const WHEEL_SENSITIVITY = 0.0022;
-  const WHEEL_IDLE_MS = 140;
-  let wheelIdleTimer = null;
-
-  grid.addEventListener("wheel", (e) => {
-    if (!isVertical()) return;
-    manualTarget = null;
-    dragging = false;
-    grid.classList.remove("is-dragging");
-    pos += e.deltaY * WHEEL_SENSITIVITY;
-    velocity = 0;
-    velocityAccel = 0;
-    render();
-    clearTimeout(wheelIdleTimer);
-    wheelIdleTimer = setTimeout(() => { manualTarget = Math.round(pos); }, WHEEL_IDLE_MS);
-  }, { passive: true });
 
   cards.forEach((card) => {
     card.addEventListener("keydown", (e) => {
